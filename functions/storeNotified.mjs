@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import fetchNotifiedEvents from './fetchnotifiedEvents.mjs';
 
 /**
  * Writes events to notifiedEvents.txt (they are coming up but they dont have a join link yet)

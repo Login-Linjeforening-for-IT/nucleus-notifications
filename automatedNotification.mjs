@@ -1,5 +1,5 @@
 import storeNewAndRemoveOldEvents from "./functions/storeNewAndRemoveOldEvents.mjs";
-import fetchNotifiedEvents from "./functions/fetchnotifiedEvents.mjs";
+import fetchNotifiedEvents from "./functions/fetchNotifiedEvents.mjs";
 import notifyNewWithLink from "./functions/notifyNewWithLink.mjs";
 import notifyLinkFound from "./functions/notifyLinkFound.mjs";
 import fetchSlowEvents from "./functions/fetchSlowEvents.mjs";

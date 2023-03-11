@@ -1,6 +1,6 @@
 import fetchEventDetails from "./fetchEventDetails.mjs";
-import fetchEvents from "./fetchEvents.mjs";
 import filterEvents from "./filterEvents.mjs";
+import fetchEvents from "./fetchEvents.mjs";
 
 /**
  * Calls fetchEventDetails for each event to map out all details to be monitored 

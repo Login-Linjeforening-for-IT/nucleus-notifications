@@ -14,11 +14,11 @@ import joinlink from "./functions/joinlink.mjs";
  * - Monitors events every 30 minutes
  * - Schedules notifications on changes
  * 
+ * @see storeSlowMonitored()    Stores events in file after all checks are completed
  * @see detailedEvents()        Returns all information about all events
  * @see fetchSlowEvents()       Reads events from slowMonitored.txt
  * @see joinlink()              Fetches the joinlink of an event
  * @see sendNotification()      Sends notification on change
- * @see storeSlowMonitored()    Stores events in file after all checks are completed
  */
 export default async function slowMonitored() {
     console.log("Slow monitoring every 30 minutes");
