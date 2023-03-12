@@ -1,5 +1,6 @@
 import sendNotification from "./sendNotification.mjs";
 import fetchSlowEvents from "./fetchSlowEvents.mjs";
+import fetchEmoji from "./fetchEmoji.mjs";
 
 /**
  * Schedules a notification to FCM if a join link has been found and updates slowMonitored.txt
@@ -17,8 +18,8 @@ export default async function notifyLinkFound(event) {
 
     let formattedStartime = `${event.startt[8] + event.startt[9] + "." + event.startt[5] + event.startt[6]}`
     let title = event.eventname + " " + formattedStartime;
-    let nBody = "Påmelding er ute!";
-    let eBody = "Registration available!";
+    let nBody = "Påmelding er ute! " + fetchEmoji(event);
+    let eBody = "Registration available! " + fetchEmoji(event);
 
     let slowMonitored = await fetchSlowEvents();
     if(slowMonitored) {

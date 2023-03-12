@@ -7,6 +7,7 @@ import notifyNewEntry from "./functions/notifyNewEntry.mjs";
 import detailedEvents from "./functions/detailedEvents.mjs";
 import fetchEvents from "./functions/fetchEvents.mjs";
 import timeToEvent from "./functions/timeToEvent.mjs";
+import reminders from "./functions/reminders.mjs";
 import joinlink from "./functions/joinlink.mjs";
 
 /**
@@ -30,6 +31,9 @@ import joinlink from "./functions/joinlink.mjs";
 export default async function automatedNotifications() {
 
     console.log("Automated notifications every minute.");
+    
+    // Schedules notifications
+    await reminders();
 
     // Terminates early if there are no events in database
     if(!(await fetchEvents()).length) {
@@ -54,12 +58,12 @@ export default async function automatedNotifications() {
         newEvents.forEach(event => {
             console.log(event.eventID)
             if(joinlink(event)) {
-                notifyNewWithLink(event); 
+                notifyNewWithLink(event, event.category); 
                 slow.push(event);
             }
             else {
                 if(timeToEvent(event) <= 1209600) {
-                    notifyNewEntry(event); 
+                    notifyNewEntry(event, event.category); 
                     notified.push(event);
                 }
             }
