@@ -46,60 +46,96 @@ export default async function reminders() {
     notify10m.forEach(event => {
         let formattedStartime = `${event.startt[8] + event.startt[9] + "." + event.startt[5] + event.startt[6]}`
         let title = event.eventname + " " + formattedStartime;
+
+        let nTopic = "norwegian" + event.eventID + (event.category).toLowerCase() + "10m";
+        let eTopic = "english"+ event.eventID + (event.category).toLowerCase() + "10m";
+
         let nBody = "Begynner om 10 minutter! " + fetchEmoji(event);
         let eBody = "Starts in 10 minutes! " + fetchEmoji(event);
-        sendNotification(title, nBody, eBody);
-        reminders++;
+        
+        if(nTopic) sendNotification(title, nBody, nTopic);
+        if(eTopic) sendNotification(title, eBody, eTopic);
+        reminders+=2;
     });
 
     // Schedules notifications for events 30 minutes away
     notify30m.forEach(event => {
         let formattedStartime = `${event.startt[8] + event.startt[9] + "." + event.startt[5] + event.startt[6]}`
         let title = event.eventname + " " + formattedStartime;
+
+        let nTopic = "norwegian" + event.eventID + (event.category).toLowerCase() + "30m";
+        let eTopic = "english"+ event.eventID + (event.category).toLowerCase() + "30m";
+
         let nBody = "Begynner om 30 minutter! " + fetchEmoji(event);
         let eBody = "Starts in 30 minutes! " + fetchEmoji(event);
-        sendNotification(title, nBody, eBody);
-        reminders++;
+        
+        if(nTopic) sendNotification(title, nBody, nTopic);
+        if(eTopic) sendNotification(title, eBody, eTopic);
+        reminders+=2;
     });
 
     // Schedules notifications for events 1 hour away
     notify1h.forEach(event => {
         let formattedStartime = `${event.startt[8] + event.startt[9] + "." + event.startt[5] + event.startt[6]}`
         let title = event.eventname + " " + formattedStartime;
+
+        let nTopic = "norwegian" + event.eventID + (event.category).toLowerCase() + "1h";
+        let eTopic = "english"+ event.eventID + (event.category).toLowerCase() + "1h";
+
         let nBody = "Begynner om 1 time! " + fetchEmoji(event);
         let eBody = "Starts in 1 hour! " + fetchEmoji(event);
-        sendNotification(title, nBody, eBody);
-        reminders++;
+        
+        if(nTopic) sendNotification(title, nBody, nTopic);
+        if(eTopic) sendNotification(title, eBody, eTopic);
+        reminders+=2;
     });
 
     // Schedules notifications for events 2 hours away
     notify2h.forEach(event => {
         let formattedStartime = `${event.startt[8] + event.startt[9] + "." + event.startt[5] + event.startt[6]}`
         let title = event.eventname + " " + formattedStartime;
+        
+        let nTopic = "norwegian" + event.eventID + (event.category).toLowerCase() + "2h";
+        let eTopic = "english"+ event.eventID + (event.category).toLowerCase() + "2h";
+
         let nBody = "Begynner om 2 timer! " + fetchEmoji(event);
         let eBody = "Starts in 2 hours! " + fetchEmoji(event);
-        sendNotification(title, nBody, eBody);
-        reminders++;
+
+        if(nTopic) sendNotification(title, nBody, nTopic);
+        if(eTopic) sendNotification(title, eBody, eTopic);
+        reminders+=2;
     });
 
     // Schedules notifications for events 3 hours away
     notify3h.forEach(event => {
         let formattedStartime = `${event.startt[8] + event.startt[9] + "." + event.startt[5] + event.startt[6]}`
         let title = event.eventname + " " + formattedStartime;
+
+        let nTopic = "norwegian" + event.eventID + (event.category).toLowerCase() + "3h";
+        let eTopic = "english"+ event.eventID + (event.category).toLowerCase() + "3h";
+
         let nBody = "Begynner om 3 timer! " + fetchEmoji(event);
         let eBody = "Starts in 3 hours! " + fetchEmoji(event);
-        sendNotification(title, nBody, eBody);
-        reminders++;
+        
+        if(nTopic) sendNotification(title, nBody, nTopic);
+        if(eTopic) sendNotification(title, eBody, eTopic);
+        reminders+=2;
     });
 
     // Schedules notifications for events 6 hours away
     notify6h.forEach(event => {
         let formattedStartime = `${event.startt[8] + event.startt[9] + "." + event.startt[5] + event.startt[6]}`
         let title = event.eventname + " " + formattedStartime;
+
+        let nTopic = "norwegian" + event.eventID + (event.category).toLowerCase() + "6h";
+        let eTopic = "english"+ event.eventID + (event.category).toLowerCase() + "6h";
+
         let nBody = "Begynner om 6 timer! " + fetchEmoji(event);
         let eBody = "Starts in 6 hours! " + fetchEmoji(event);
-        sendNotification(title, nBody, eBody);
-        reminders++;
+        
+        if(nTopic) sendNotification(title, nBody, nTopic);
+        if(eTopic) sendNotification(title, eBody, eTopic);
+        reminders+=2;
     });
 
     // Schedules notifications for events 1 day away.
@@ -110,10 +146,16 @@ export default async function reminders() {
         let ampm = (hour > 0 && hour <= 12) ? "am":"pm";
 
         let title = event.eventname + " " + formattedStartime;
+
+        let nTopic = "norwegian" + event.eventID + (event.category).toLowerCase() + "1d";
+        let eTopic = "english"+ event.eventID + (event.category).toLowerCase() + "1d";
+
         let nBody = `I morgen klokken ${time}! ` + fetchEmoji(event);
         let eBody = `Tomorrow at ${hour + ampm}! ` + fetchEmoji(event);
-        sendNotification(title, nBody, eBody);
-        reminders++;
+        
+        if(nTopic) sendNotification(title, nBody, nTopic);
+        if(eTopic) sendNotification(title, eBody, eTopic);
+        reminders+=2;
     });
 
     // Schedules notifications for events 2 days away.
@@ -124,10 +166,16 @@ export default async function reminders() {
         let ampm = (hour > 0 && hour <= 12) ? "am":"pm";
 
         let title = event.eventname + " " + formattedStartime;
+
+        let nTopic = "norwegian" + event.eventID + (event.category).toLowerCase() + "2d";
+        let eTopic = "english"+ event.eventID + (event.category).toLowerCase() + "2d";
+
         let nBody = `Overimorgen ${time}! ` + fetchEmoji(event);
         let eBody = `In 2 days at ${hour + ampm}! ` + fetchEmoji(event);
-        sendNotification(title, nBody, eBody);
-        reminders++;
+        
+        if(nTopic) sendNotification(title, nBody, nTopic);
+        if(eTopic) sendNotification(title, eBody, eTopic);
+        reminders+=2;
     });
 
     // Schedules notifications for events 1 week away.
@@ -147,11 +195,16 @@ export default async function reminders() {
         let weekday = weekdays[date.getDay()];
 
         let title = event.eventname + " " + formattedStartime;
+
+        let nTopic = "norwegian" + event.eventID + (event.category).toLowerCase() + "1w";
+        let eTopic = "english"+ event.eventID + (event.category).toLowerCase() + "1w";
+
         let nBody = `Neste ${ukedag} kl. ${time}! ` + fetchEmoji(event);
         let eBody = `Next ${weekday} at ${hour + ampm}! ` + fetchEmoji(event);
 
-        sendNotification(title, nBody, eBody);
-        reminders++;
+        if(nTopic) sendNotification(title, nBody, nTopic);
+        if(eTopic) sendNotification(title, eBody, eTopic);
+        reminders+=2;
     });
 
     // Declaring new intervals
