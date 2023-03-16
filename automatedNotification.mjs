@@ -31,9 +31,8 @@ import joinlink from "./functions/joinlink.mjs";
 export default async function automatedNotifications() {
 
     console.log("Automated notifications every minute.");
-    
-    // Schedules notifications
-    await reminders();
+
+    await reminders();  // Schedules reminders
 
     // Terminates early if there are no events in database
     if(!(await fetchEvents()).length) {
@@ -51,21 +50,20 @@ export default async function automatedNotifications() {
 
     // Finds new events
     let newEvents = (notified.length > 0 || slow.length > 0) ? events.filter(event => {
-        !slow.some(Aevents => Aevents.eventID === event.eventID) || !notified.some(Nevents => Nevents.eventID === event.eventID);
+        return (!slow.some(Aevents => Aevents.eventID === event.eventID) && !notified.some(Nevents => Nevents.eventID === event.eventID));
     }):events;
 
+    console.log("new", newEvents.length, "events", events.length, "slow", slow.length, "notified", notified.length)
     if(newEvents.length > 0) {
         newEvents.forEach(event => {
-            console.log(event.eventID)
-            if(joinlink(event)) {
-                notifyNewWithLink(event, event.category); 
+            if (joinlink(event)) {
+                notifyNewWithLink(event); 
                 slow.push(event);
-            }
-            else {
+            } else {
                 if(timeToEvent(event) <= 1209600) {
-                    notifyNewEntry(event, event.category); 
+                    notifyNewEntry(event); 
                     notified.push(event);
-                }
+                } else console.log(event.eventID, "will not be added till another", timeToEvent(event)-1209600, "seconds have passed.")
             }
         });
     } else console.log("Nothing new to notify.");

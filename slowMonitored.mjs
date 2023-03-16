@@ -31,10 +31,8 @@ export default async function slowMonitored() {
     for (const APIevent of APIevents) {
         const slow = slowEvents.find(event => event.eventID === APIevent.eventID);
 
-        let nTopic = "norwegian91";         // "norwegian" + APIevent.category;
-        let eTopic = "norwegian91";         // "english" + APIevent.category;
-        let nEventTopic = "norwegian91";    // "norwegian" + APIevent.eventID;
-        let eEventTopic = "norwegian91";    // "english" + APIevent.eventID;
+        let nTopic = "norwegian" + APIevent.eventID;
+        let eTopic = "english" + APIevent.eventID;
 
         let time = false;
         let link = false;
@@ -64,61 +62,55 @@ export default async function slowMonitored() {
 
             if(nTopic)      sendNotification(title, nBody, nTopic);
             if(eTopic)      sendNotification(title, eBody, eTopic);
-            if(nEventTopic) sendNotification(title, nBody, nEventTopic);
-            if(eEventTopic) sendNotification(title, eBody, eEventTopic);
+
         }else if(time && link){
             let nBody = `Tid endret til kl: ${hour} den ${formattedStartime}. Påmeldingslinken er også endret. Trykk her for flere detaljer.`;
             let eBody = `Time changed to: ${hour} on ${formattedStartime}. Registration link has also changed. Tap here for details.`;
 
             if(nTopic)      sendNotification(title, nBody, nTopic);
             if(eTopic)      sendNotification(title, eBody, eTopic);
-            if(nEventTopic) sendNotification(title, nBody, nEventTopic);
-            if(eEventTopic) sendNotification(title, eBody, eEventTopic);
+           
         }else if(time && location) {
             let nBody = `Tid og sted endret. Ny tid: ${hour} den ${formattedStartime}. Nytt sted: ${loc}. Trykk her for å se den oppdaterte informasjonen.`;
             let eBody = `Time and location changed. New time: ${hour} on ${formattedStartime}. New location: ${loc}. Tap here for details.`;
 
             if(nTopic)      sendNotification(title, nBody, nTopic);
             if(eTopic)      sendNotification(title, eBody, eTopic);
-            if(nEventTopic) sendNotification(title, nBody, nEventTopic);
-            if(eEventTopic) sendNotification(title, eBody, eEventTopic);
+          
         }else if(link && location) {
             let nBody = `Nytt sted: ${loc}. Påmeldingslink har også blitt endret. Trykk her for mer informasjon.`;
             let eBody = `New location: ${loc}. Registration link has also changed. Click here for more information.`;
 
             if(nTopic)      sendNotification(title, nBody, nTopic);
             if(eTopic)      sendNotification(title, eBody, eTopic);
-            if(nEventTopic) sendNotification(title, nBody, nEventTopic);
-            if(eEventTopic) sendNotification(title, eBody, eEventTopic);
+        
         }else if(time) {
             let nBody = `Tidspunkt endret til kl ${hour} den ${formattedStartime}.`;
             let eBody = `Time changed to ${hour} on ${formattedStartime}.`;
 
             if(nTopic)      sendNotification(title, nBody, nTopic);
             if(eTopic)      sendNotification(title, eBody, eTopic);
-            if(nEventTopic) sendNotification(title, nBody, nEventTopic);
-            if(eEventTopic) sendNotification(title, eBody, eEventTopic);
+           
         }else if(location) {
             let nBody = `Sted endret til ${loc}`;
             let eBody = `Location changed to ${loc}`;
 
             if(nTopic)      sendNotification(title, nBody, nTopic);
             if(eTopic)      sendNotification(title, eBody, eTopic);
-            if(nEventTopic) sendNotification(title, nBody, nEventTopic);
-            if(eEventTopic) sendNotification(title, eBody, eEventTopic);
+
         }else if(link) {
             let nBody = `Ny påmeldingslink lagt ut!`;
             let eBody = `New registration link available!`;
 
             if(nTopic)      sendNotification(title, nBody, nTopic);
             if(eTopic)      sendNotification(title, eBody, eTopic);
-            if(nEventTopic) sendNotification(title, nBody, nEventTopic);
-            if(eEventTopic) sendNotification(title, eBody, eEventTopic);
+
         }
     }
 
     let newSlow = APIevents.filter(api => (slowEvents.some(slow => slow.eventID === api.eventID)))
     console.log("newslow", newSlow.length)
+    
     if(newSlow.length > 0) storeSlowMonitored(newSlow,1);       // Overwrites slowMonitored.txt after checking for changes.
     else console.log("Found nothing new.");                     // Otherwise logs that there are no events in api.
 

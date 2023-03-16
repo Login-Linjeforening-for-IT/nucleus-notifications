@@ -13,9 +13,8 @@ export default async function filterEvents() {
     try {
         let events = await fetchEvents();
         let slowEvents = await fetchSlowEvents();
-        console.log("events: ", events.length, "slowevents:", slowEvents.length ? slowEvents.length:0);
+         console.log("inside filter", "events: ", events.length, "slowevents:", slowEvents.length ? slowEvents.length:0);
         let filteredEvents = slowEvents.length ? await events.filter(event => !slowEvents.some(slowevents => slowevents.eventID === event.eventID)):events;
-        console.log('Events left after removing slowMonitored:', filteredEvents.length);
         return filteredEvents;   
     } catch (e) {console.log(e)};
 }

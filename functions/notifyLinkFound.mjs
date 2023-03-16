@@ -11,21 +11,18 @@ import fetchEmoji from "./fetchEmoji.mjs";
  * @param {object} event        Event to schedule notification for
  */
 export default async function notifyLinkFound(event) {
-    let nTopic = "norwegian91";    //"norwegian" + event.category;
-    let eTopic = "norwegian91";    //"english" + event.category;
-    let nEventTopic = "norwegian91"; // "norwegian" + event.eventID;
-    let eEventTopic = "norwegian91"; // "english" + event.eventID;
+    let cat = event.category.toUpperCase();
+
+    let nTopic = "norwegian" + cat;
+    let eTopic = "english" + cat;
 
     let formattedStartime = `${event.startt[8] + event.startt[9] + "." + event.startt[5] + event.startt[6]}`
     let title = event.eventname + " " + formattedStartime;
     let nBody = "Påmelding er ute! " + fetchEmoji(event);
     let eBody = "Registration available! " + fetchEmoji(event);
 
-    let slowMonitored = await fetchSlowEvents();
-    if(slowMonitored) {
-        if(nTopic)      sendNotification(title, nBody, nTopic);
-        if(eTopic)      sendNotification(title, eBody, eTopic);
-        if(nEventTopic) sendNotification(title, nBody, nEventTopic);
-        if(eEventTopic) sendNotification(title, eBody, eEventTopic);
-    }
+    if(nTopic)      sendNotification(title, nBody, nTopic);
+    if(eTopic)      sendNotification(title, eBody, eTopic);
+
+    console.log(`Scheduled notifyLinkFound notification for event ${event.eventID}`);
 }

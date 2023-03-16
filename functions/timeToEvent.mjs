@@ -6,6 +6,7 @@
  * @returns Seconds till event
  */
 export default function timeToEvent (event) {
+   
     var year     = new Date().getFullYear()                                                                 // Current year
     var month    = 1 + new Date().getMonth()                                                                // Current month
     var day      = new Date().getDate()                                                                     // Current day

@@ -23,6 +23,7 @@ export default async function detailedEvents(unfiltered) {
 
     let events = await filterEvents();
     let detailedEvents = await Promise.all(events.map(fetchEventDetails));
+   
     console.log("Fetched details for all events successfully.");
     return detailedEvents;
 }

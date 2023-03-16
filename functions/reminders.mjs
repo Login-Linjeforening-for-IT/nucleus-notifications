@@ -32,15 +32,15 @@ export default async function reminders() {
     let stored1w = await fetchInterval("1w");
 
     // Filters out events that are ready to be notified about
-    let notify10m = stored10m.filter(event => {timeToEvent(event) <= 600});
-    let notify30m = stored30m.filter(event => {timeToEvent(event) <= 1800});
-    let notify1h = stored1h.filter(event => {timeToEvent(event) <= 3600});
-    let notify2h = stored2h.filter(event => {timeToEvent(event) <= 7200});
-    let notify3h = stored3h.filter(event => {timeToEvent(event) <= 10800});
-    let notify6h = stored6h.filter(event => {timeToEvent(event) <= 21600});
-    let notify1d = stored1d.filter(event => {timeToEvent(event) <= 86400});
-    let notify2d = stored2d.filter(event => {timeToEvent(event) <= 172800});
-    let notify1w = stored1w.filter(event => {timeToEvent(event) <= 604800});
+    let notify10m = stored10m.filter(event => timeToEvent(event) <= 600)
+    let notify30m = stored30m.filter(event => timeToEvent(event) <= 1800);
+    let notify1h = stored1h.filter(event => timeToEvent(event) <= 3600);
+    let notify2h = stored2h.filter(event => timeToEvent(event) <= 7200);
+    let notify3h = stored3h.filter(event => timeToEvent(event) <= 10800);
+    let notify6h = stored6h.filter(event => timeToEvent(event) <= 21600);
+    let notify1d = stored1d.filter(event => timeToEvent(event) <= 86400);
+    let notify2d = stored2d.filter(event => timeToEvent(event) <= 172800);
+    let notify1w = stored1w.filter(event => timeToEvent(event) <= 604800);
 
     // Schedules notifications for events 10 minutes away
     notify10m.forEach(event => {
@@ -222,7 +222,7 @@ export default async function reminders() {
     events.forEach(event => {
         if(timeToEvent(event) > 604800) new1w.push(event);
         else if (timeToEvent(event) <= 604800 && timeToEvent(event) > 172800) new2d.push(event);
-        else if (timeToEvent(event) < 172800 && timeToEvent(event) > 86400) new1d.push(event);
+        else if (timeToEvent(event) <= 172800 && timeToEvent(event) > 86400) new1d.push(event);
         else if (timeToEvent(event) <= 86400 && timeToEvent(event) > 21600) new6h.push(event);
         else if (timeToEvent(event) <= 21600 && timeToEvent(event) > 10800) new3h.push(event);
         else if (timeToEvent(event) <= 10800 && timeToEvent(event) > 7200) new2h.push(event);
@@ -242,5 +242,5 @@ export default async function reminders() {
     await storeInterval(new30m, "30m");
     await storeInterval(new10m, "10m");
 
-    // console.log(`Scheduled ${reminders} reminders.`);
+    console.log(`Scheduled ${reminders} reminders.`);
 }

@@ -28,10 +28,6 @@ export default function joinlink(event) {
         if(tikkioLink)  return tikkioLink.trim();
         if(netLink)     return netLink.trim();
 
-        if(formLink)    console.log(formLink.trim())
-        if(tikkioLink)  console.log(tikkioLink.trim())
-        if(netLink)     console.log(netLink.trim())
-
         return null;
     } else return null;
 }

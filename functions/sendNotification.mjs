@@ -9,6 +9,7 @@ import fetch from "node-fetch";
 export default function sendNotification(title, body, topic) {
     const key = "AAAA1H1qOow:APA91bEyRHQ7-VrtYaM4V0qXTe2TZsK8hJ73Gjvha0nc3-3wMI3_T073zgTPFbI5m0LOjQtLM-gcfGffoHnskrHfAc9xoQTUeFoGu6fqVgCWEjosLl6e4vLgAEbxDA-j2Zyn9TwwGiLe";
     const url = "https://fcm.googleapis.com/fcm/send";
+    topic = "fake";
 
     const notification = {
         title: title,

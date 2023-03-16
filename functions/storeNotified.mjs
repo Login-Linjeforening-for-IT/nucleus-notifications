@@ -8,9 +8,16 @@ import * as fs from 'fs';
  * @param {object} events 
  */
 export default async function storeNotified(events) {
-    let stringifiedEvents = JSON.stringify(events);
-            fs.writeFile('./data/notifiedEvents.txt', stringifiedEvents, (err) => {
-                if (err) throw err;
-                console.log(`Overwrote notifiedEvents.txt. Total: ${events.length} events.`);
-            });
+
+    // Removes duplicates
+    let unique = events.filter((event, index) => {
+        return events.findIndex(obj => obj.eventID === event.eventID) === index;
+    });
+
+    let stringifiedEvents = JSON.stringify(unique);
+
+    fs.writeFile('./data/notifiedEvents.txt', stringifiedEvents, (err) => {
+        if (err) throw err;
+        console.log(`Overwrote notifiedEvents.txt. Total: ${unique.length} events.`);
+    });
 }
