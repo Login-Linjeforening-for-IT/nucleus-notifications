@@ -23,4 +23,5 @@ export default async function storeNewAndRemoveOldEvents(events, notified, slow)
 
     await storeNotified(newNotifiedEvents);
     await storeSlowMonitored(newSlowEvents);
+
 }

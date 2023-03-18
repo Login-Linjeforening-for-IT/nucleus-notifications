@@ -1,5 +1,5 @@
-import fetchEmoji from "./fetchEmoji.mjs";
 import sendNotification from "./sendNotification.mjs";
+import fetchEmoji from "./fetchEmoji.mjs";
 
 /**
  * Schedules a notification to FCM if a new event with a join link already available has been found and updates slowMonitored.txt

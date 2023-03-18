@@ -1,5 +1,4 @@
 import sendNotification from "./sendNotification.mjs";
-import fetchSlowEvents from "./fetchSlowEvents.mjs";
 import fetchEmoji from "./fetchEmoji.mjs";
 
 /**

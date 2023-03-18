@@ -1,9 +1,10 @@
 import sendNotification from "./sendNotification.mjs";
 import detailedEvents from "./detailedEvents.mjs";
-import fetchInterval from "./fetchInterval.mjs";
-import storeInterval from "./storeInterval.mjs";
+import currentTime from "./currentTime.mjs";
 import timeToEvent from "./timeToEvent.mjs";
 import fetchEmoji from "./fetchEmoji.mjs";
+import readFile from "./readFile.mjs";
+import writeFile from "./writeFile.mjs";
 
 /**
  * Schedules a notification to FCM if a new event with a join link already available has been found and updates slowMonitored.txt
@@ -19,17 +20,17 @@ export default async function reminders() {
 
     // Fetches details for all events unfiltered.
     let events = await detailedEvents(1); 
-
+    
     // Fetches events in each interval
-    let stored10m = await fetchInterval("10m");
-    let stored30m = await fetchInterval("30m");
-    let stored1h = await fetchInterval("1h");
-    let stored2h = await fetchInterval("2h");
-    let stored3h = await fetchInterval("3h");
-    let stored6h = await fetchInterval("6h");
-    let stored1d = await fetchInterval("1d");
-    let stored2d = await fetchInterval("2d");
-    let stored1w = await fetchInterval("1w");
+    let stored10m = await readFile("10m");
+    let stored30m = await readFile("30m");
+    let stored1h  = await readFile("1h");
+    let stored2h  = await readFile("2h");
+    let stored3h  = await readFile("3h");
+    let stored6h  = await readFile("6h");
+    let stored1d  = await readFile("1d");
+    let stored2d  = await readFile("2d");
+    let stored1w  = await readFile("1w");
 
     // Filters out events that are ready to be notified about
     let notify10m = stored10m.filter(event => timeToEvent(event) <= 600)
@@ -180,6 +181,8 @@ export default async function reminders() {
 
     // Schedules notifications for events 1 week away.
     notify1w.forEach(event => {
+        let formattedStartime = `${event.startt[8] + event.startt[9] + "." + event.startt[5] + event.startt[6]}`;
+
         let weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         let ukedager = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'];
 
@@ -189,16 +192,16 @@ export default async function reminders() {
         let time = `${event.startt[11] + event.startt[12] + ":" + event.startt[14] + event.startt[15]}`
         let hour = Number(event.startt[11]+event.startt[12])
         let ampm = (hour > 0 && hour <= 12) ? "am":"pm";
-
+        
         let date = new Date(`${year}-${month}-${day}`);
         let ukedag = ukedager[date.getDay()];
         let weekday = weekdays[date.getDay()];
-
+        
         let title = event.eventname + " " + formattedStartime;
-
+        
         let nTopic = "norwegian" + event.eventID + (event.category).toLowerCase() + "1w";
         let eTopic = "english"+ event.eventID + (event.category).toLowerCase() + "1w";
-
+        
         let nBody = `Neste ${ukedag} kl. ${time}! ` + fetchEmoji(event);
         let eBody = `Next ${weekday} at ${hour + ampm}! ` + fetchEmoji(event);
 
@@ -218,6 +221,7 @@ export default async function reminders() {
     let new2d = [];
     let new1w = [];
 
+    
     // Filters events to appropriate interval
     events.forEach(event => {
         if(timeToEvent(event) > 604800) new1w.push(event);
@@ -230,17 +234,18 @@ export default async function reminders() {
         else if (timeToEvent(event) <= 3600 && timeToEvent(event) > 1800) new30m.push(event);
         else if (timeToEvent(event) <= 1800 && timeToEvent(event) > 600) new10m.push(event);
     });
-
+    
     // Stores events
-    await storeInterval(new1w, "1w");
-    await storeInterval(new2d, "2d");
-    await storeInterval(new1d, "1d");
-    await storeInterval(new6h, "6h");
-    await storeInterval(new3h, "3h");
-    await storeInterval(new2h, "2h");
-    await storeInterval(new1h, "1h");
-    await storeInterval(new30m, "30m");
-    await storeInterval(new10m, "10m");
+    await writeFile("1w", new1w);
+    await writeFile("2d", new2d);
+    await writeFile("1d", new1d);
+    await writeFile("6h", new6h);
+    await writeFile("3h", new3h);
+    await writeFile("2h", new2h);
+    await writeFile("1h", new1h);
+    await writeFile("30m", new30m);
+    await writeFile("10m", new10m);
 
-    console.log(`Scheduled ${reminders} reminders.`);
+    if(reminders)   console.log(`Scheduled ${reminders} reminders at`, currentTime());
+    else            console.log("No reminders to be sent at this time", currentTime());
 }

@@ -1,5 +1,4 @@
 import sendNotification from "./sendNotification.mjs";
-import joinlink from "./joinlink.mjs";
 import fetchEmoji from "./fetchEmoji.mjs";
 
 /**

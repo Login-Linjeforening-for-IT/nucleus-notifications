@@ -1,3 +1,5 @@
+import handleError from './handleError.mjs';
+import file from './file.mjs';
 import * as fs from 'fs';
 
 /**
@@ -8,16 +10,17 @@ import * as fs from 'fs';
  * @param {object} events 
  */
 export default async function storeNotified(events) {
+    let f = file("notified");
 
     // Removes duplicates
-    let unique = events.filter((event, index) => {
+    let unique = await events.filter((event, index) => {
         return events.findIndex(obj => obj.eventID === event.eventID) === index;
     });
 
     let stringifiedEvents = JSON.stringify(unique);
 
-    fs.writeFile('./data/notifiedEvents.txt', stringifiedEvents, (err) => {
-        if (err) throw err;
-        console.log(`Overwrote notifiedEvents.txt. Total: ${unique.length} events.`);
+    fs.writeFile(f, stringifiedEvents, (err) => {
+        if (err) return handleError(f, err);
+        console.log(`Overwrote ${f}. Total: ${unique.length} events.`);
     });
-}
+};

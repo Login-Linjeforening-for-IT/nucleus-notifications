@@ -1,4 +1,6 @@
 import fetchSlowEvents from './fetchSlowEvents.mjs';
+import handleError from './handleError.mjs';
+import file from './file.mjs';
 import * as fs from 'fs';
 
 /**
@@ -9,13 +11,15 @@ import * as fs from 'fs';
  * @param {object} events   Events to be stored in slowMonitored.txt
  */
 export default async function storeSlowMonitored(events, overwrite) {
+    let f = file("slow");
+
     try {
         // Option to overwrite all slowmonitored events
         if(overwrite) {
             let stringifiedEvents = JSON.stringify(events);
-            fs.writeFile('./data/slowMonitored.txt', stringifiedEvents, (err) => {
-                if (err) throw err;
-                console.log(`Overwrote slowMonitored.txt. Now slowmonitoring ${events.length} events.`);
+            fs.writeFile(f, stringifiedEvents, (err) => {
+                if (err) return handleError(f, err);
+                console.log(`Overwrote ${f}. Now slowmonitoring ${events.length} events.`);
             });
             return;
         }
@@ -32,10 +36,10 @@ export default async function storeSlowMonitored(events, overwrite) {
         // Stores the events
         if(events.length > 0) {
             let stringifiedEvents = JSON.stringify(filteredEvents);
-            fs.writeFile('./data/slowMonitored.txt', stringifiedEvents, (err) => {
-                if (err) throw err;
+            fs.writeFile(f, stringifiedEvents, (err) => {
+                if (err) return handleError(f, err)
                 console.log(`Added ${events.length} events to slowMonitored.txt. Total: ${allevents.length} events.`);
             });
         } else console.log(`Nothing new to store in slowMonitored.txt. Total: ${allevents.length} events.`)
-    } catch (e) {console.log(e)};
+    } catch (e) {return handleError(f, e)};
 }

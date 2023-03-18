@@ -1,14 +1,12 @@
 import storeNewAndRemoveOldEvents from "./functions/storeNewAndRemoveOldEvents.mjs";
 import fetchNotifiedEvents from "./functions/fetchNotifiedEvents.mjs";
-import notifyNewWithLink from "./functions/notifyNewWithLink.mjs";
-import notifyLinkFound from "./functions/notifyLinkFound.mjs";
 import fetchSlowEvents from "./functions/fetchSlowEvents.mjs";
-import notifyNewEntry from "./functions/notifyNewEntry.mjs";
 import detailedEvents from "./functions/detailedEvents.mjs";
+import sortNotified from "./functions/sortNotified.mjs";
 import fetchEvents from "./functions/fetchEvents.mjs";
-import timeToEvent from "./functions/timeToEvent.mjs";
+import currentTime from "./functions/currentTime.mjs";
+import sortEvents from "./functions/sortEvents.mjs";
 import reminders from "./functions/reminders.mjs";
-import joinlink from "./functions/joinlink.mjs";
 
 /**
  * **Automated event notifications**
@@ -30,7 +28,7 @@ import joinlink from "./functions/joinlink.mjs";
  */
 export default async function automatedNotifications() {
 
-    console.log("Automated notifications every minute.");
+    console.log("Interval started at", currentTime());
 
     await reminders();  // Schedules reminders
 
@@ -53,35 +51,23 @@ export default async function automatedNotifications() {
         return (!slow.some(Aevents => Aevents.eventID === event.eventID) && !notified.some(Nevents => Nevents.eventID === event.eventID));
     }):events;
 
-    console.log("new", newEvents.length, "events", events.length, "slow", slow.length, "notified", notified.length)
-    if(newEvents.length > 0) {
-        newEvents.forEach(event => {
-            if (joinlink(event)) {
-                notifyNewWithLink(event); 
-                slow.push(event);
-            } else {
-                if(timeToEvent(event) <= 1209600) {
-                    notifyNewEntry(event); 
-                    notified.push(event);
-                } else console.log(event.eventID, "will not be added till another", timeToEvent(event)-1209600, "seconds have passed.")
-            }
-        });
-    } else console.log("Nothing new to notify.");
+    let sortedEvents = sortEvents(newEvents, true);
 
-    if(notified.length > 0) {
-        notified.forEach(event => {
-            if(joinlink(event)) {
-                notifyLinkFound(event); 
-                slow.push(event);
-            } else console.log(`Event ${event.eventID} does not satisfy. The joinlink is ${joinlink(event)}`)
-        });
-    } else console.log("No new links found.");
+    sortedEvents.slow.forEach(event => {slow.push(event)});
+    sortedEvents.notified.forEach(event => {notified.push(event)});
+
+    let sortedNotified = sortNotified(notified, true);
+    console.log("sortednotified", sortedNotified)
+    sortedNotified.forEach(event => {slow.push(event)})
 
     let newNotified = notified.filter(notified => !slow.some(slow => slow.eventID === notified.eventID));
-    
+
     if(notified.length == newNotified.length) console.log("No new links found.");
 
     // Removes events that have already taken place and stores new events
-    console.log("events:", events.length, "notified:", notified.length ? notified.length:0, "slowmonitored:", slow.length ? slow.length:0, "final");
-    storeNewAndRemoveOldEvents(events, newNotified, slow);
-}
+    console.log("Storing", "events:", events.length, "notified:", notified.length ? notified.length:0, "slowmonitored:", slow.length ? slow.length:0);
+
+    await storeNewAndRemoveOldEvents(events, newNotified, slow);
+
+    console.log("Interval complete at", currentTime());
+};
