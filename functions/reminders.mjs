@@ -5,6 +5,7 @@ import timeToEvent from "./timeToEvent.mjs";
 import fetchEmoji from "./fetchEmoji.mjs";
 import readFile from "./readFile.mjs";
 import writeFile from "./writeFile.mjs";
+import handleError from "./handleError.mjs";
 
 /**
  * Schedules a notification to FCM if a new event with a join link already available has been found and updates slowMonitored.txt
@@ -20,7 +21,8 @@ export default async function reminders() {
 
     // Fetches details for all events unfiltered.
     let events = await detailedEvents(1); 
-    
+    if(!events) return handleError("reminders.mjs", "events is undefined");
+
     // Fetches events in each interval
     let stored10m = await readFile("10m");
     let stored30m = await readFile("30m");

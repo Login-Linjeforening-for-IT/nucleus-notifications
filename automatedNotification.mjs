@@ -7,6 +7,7 @@ import fetchEvents from "./functions/fetchEvents.mjs";
 import currentTime from "./functions/currentTime.mjs";
 import sortEvents from "./functions/sortEvents.mjs";
 import reminders from "./functions/reminders.mjs";
+import handleError from "./functions/handleError.mjs";
 
 /**
  * **Automated event notifications**
@@ -30,19 +31,21 @@ export default async function automatedNotifications() {
 
     console.log("Interval started at", currentTime());
 
-    await reminders();  // Schedules reminders
-
-    // Terminates early if there are no events in database
     if(!(await fetchEvents()).length) {
         console.log("Found no events in database.");
         return null;
     }
 
+    await reminders();  // Schedules reminders
+
+    // Terminates early if there are no events in database
+
     // Fetches api and txt files
     let events = await detailedEvents();
     let notified = await fetchNotifiedEvents();
     let slow = await fetchSlowEvents();
-    
+    if(events == undefined || newNotified == undefined || slow == undefined) return handleError("automatedNotification.mjs", `${events == undefined? "events":''} ${newNotified == undefined? "newNotified":''} ${slow == undefined? "slow":''} is undefined`);
+
     // Logs amount of events of each type
     console.log("events:", events.length, "notified:", notified.length ? notified.length:0, "slowmonitored:", slow.length ? slow.length:0);
 
@@ -50,14 +53,15 @@ export default async function automatedNotifications() {
     let newEvents = (notified.length > 0 || slow.length > 0) ? events.filter(event => {
         return (!slow.some(Aevents => Aevents.eventID === event.eventID) && !notified.some(Nevents => Nevents.eventID === event.eventID));
     }):events;
+    if(newEvents == undefined) return handleError("automatedNotification.mjs", "newEvents is undefined");
 
     let sortedEvents = sortEvents(newEvents, true);
-
+    if(sortedEvents == undefined) return handleError("automatedNotification.mjs", "sortedEvents is undefined");
     sortedEvents.slow.forEach(event => {slow.push(event)});
     sortedEvents.notified.forEach(event => {notified.push(event)});
 
     let sortedNotified = sortNotified(notified, true);
-    console.log("sortednotified", sortedNotified)
+    if(sortedNotified == undefined) return handleError("automatedNotification.mjs", "sortedNotified is undefined");
     sortedNotified.forEach(event => {slow.push(event)})
 
     let newNotified = notified.filter(notified => !slow.some(slow => slow.eventID === notified.eventID));
@@ -67,6 +71,7 @@ export default async function automatedNotifications() {
     // Removes events that have already taken place and stores new events
     console.log("Storing", "events:", events.length, "notified:", notified.length ? notified.length:0, "slowmonitored:", slow.length ? slow.length:0);
 
+    if(events == undefined || newNotified == undefined || slow == undefined) return handleError("automatedNotification.mjs", `${events == undefined? "events":''} ${newNotified == undefined? "newNotified":''} ${slow == undefined? "slow":''} is undefined`);
     await storeNewAndRemoveOldEvents(events, newNotified, slow);
 
     console.log("Interval complete at", currentTime());
