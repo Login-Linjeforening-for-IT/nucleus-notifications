@@ -20,8 +20,8 @@ export default async function notifyNewEntry(event) {
     let nBody = "Trykk her for å lese mer. " + fetchEmoji(event);
     let eBody = "Click here to read more. " + fetchEmoji(event);
 
-    if(nTopic)      sendNotification(title, nBody, nTopic);
-    if(eTopic)      sendNotification(title, eBody, eTopic);
+    if(nTopic)      sendNotification(title, nBody, event, nTopic);
+    if(eTopic)      sendNotification(title, eBody, event, eTopic);
 
     console.log(`Scheduled notifyNewEntry notification for event ${event.eventID}`);
 }

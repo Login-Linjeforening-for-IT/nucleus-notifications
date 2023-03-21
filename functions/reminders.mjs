@@ -56,8 +56,8 @@ export default async function reminders() {
         let nBody = "Begynner om 10 minutter! " + fetchEmoji(event);
         let eBody = "Starts in 10 minutes! " + fetchEmoji(event);
         
-        if(nTopic) sendNotification(title, nBody, nTopic);
-        if(eTopic) sendNotification(title, eBody, eTopic);
+        if(nTopic) sendNotification(title, nBody, event, nTopic);
+        if(eTopic) sendNotification(title, eBody, event, eTopic);
         reminders+=2;
     });
 
@@ -72,8 +72,8 @@ export default async function reminders() {
         let nBody = "Begynner om 30 minutter! " + fetchEmoji(event);
         let eBody = "Starts in 30 minutes! " + fetchEmoji(event);
         
-        if(nTopic) sendNotification(title, nBody, nTopic);
-        if(eTopic) sendNotification(title, eBody, eTopic);
+        if(nTopic) sendNotification(title, nBody, event, nTopic);
+        if(eTopic) sendNotification(title, eBody, event, eTopic);
         reminders+=2;
     });
 
@@ -88,8 +88,8 @@ export default async function reminders() {
         let nBody = "Begynner om 1 time! " + fetchEmoji(event);
         let eBody = "Starts in 1 hour! " + fetchEmoji(event);
         
-        if(nTopic) sendNotification(title, nBody, nTopic);
-        if(eTopic) sendNotification(title, eBody, eTopic);
+        if(nTopic) sendNotification(title, nBody, event, nTopic);
+        if(eTopic) sendNotification(title, eBody, event, eTopic);
         reminders+=2;
     });
 
@@ -104,8 +104,8 @@ export default async function reminders() {
         let nBody = "Begynner om 2 timer! " + fetchEmoji(event);
         let eBody = "Starts in 2 hours! " + fetchEmoji(event);
 
-        if(nTopic) sendNotification(title, nBody, nTopic);
-        if(eTopic) sendNotification(title, eBody, eTopic);
+        if(nTopic) sendNotification(title, nBody, event, nTopic);
+        if(eTopic) sendNotification(title, eBody, event, eTopic);
         reminders+=2;
     });
 
@@ -120,8 +120,8 @@ export default async function reminders() {
         let nBody = "Begynner om 3 timer! " + fetchEmoji(event);
         let eBody = "Starts in 3 hours! " + fetchEmoji(event);
         
-        if(nTopic) sendNotification(title, nBody, nTopic);
-        if(eTopic) sendNotification(title, eBody, eTopic);
+        if(nTopic) sendNotification(title, nBody, event, nTopic);
+        if(eTopic) sendNotification(title, eBody, event, eTopic);
         reminders+=2;
     });
 
@@ -136,8 +136,8 @@ export default async function reminders() {
         let nBody = "Begynner om 6 timer! " + fetchEmoji(event);
         let eBody = "Starts in 6 hours! " + fetchEmoji(event);
         
-        if(nTopic) sendNotification(title, nBody, nTopic);
-        if(eTopic) sendNotification(title, eBody, eTopic);
+        if(nTopic) sendNotification(title, nBody, event, nTopic);
+        if(eTopic) sendNotification(title, eBody, event, eTopic);
         reminders+=2;
     });
 
@@ -156,8 +156,8 @@ export default async function reminders() {
         let nBody = `I morgen klokken ${time}! ` + fetchEmoji(event);
         let eBody = `Tomorrow at ${hour + ampm}! ` + fetchEmoji(event);
         
-        if(nTopic) sendNotification(title, nBody, nTopic);
-        if(eTopic) sendNotification(title, eBody, eTopic);
+        if(nTopic) sendNotification(title, nBody, event, nTopic);
+        if(eTopic) sendNotification(title, eBody, event, eTopic);
         reminders+=2;
     });
 
@@ -176,8 +176,8 @@ export default async function reminders() {
         let nBody = `Overimorgen ${time}! ` + fetchEmoji(event);
         let eBody = `In 2 days at ${hour + ampm}! ` + fetchEmoji(event);
         
-        if(nTopic) sendNotification(title, nBody, nTopic);
-        if(eTopic) sendNotification(title, eBody, eTopic);
+        if(nTopic) sendNotification(title, nBody, event, nTopic);
+        if(eTopic) sendNotification(title, eBody, event, eTopic);
         reminders+=2;
     });
 
@@ -207,8 +207,8 @@ export default async function reminders() {
         let nBody = `Neste ${ukedag} kl. ${time}! ` + fetchEmoji(event);
         let eBody = `Next ${weekday} at ${hour + ampm}! ` + fetchEmoji(event);
 
-        if(nTopic) sendNotification(title, nBody, nTopic);
-        if(eTopic) sendNotification(title, eBody, eTopic);
+        if(nTopic) sendNotification(title, nBody, event, nTopic);
+        if(eTopic) sendNotification(title, eBody, event, eTopic);
         reminders+=2;
     });
 

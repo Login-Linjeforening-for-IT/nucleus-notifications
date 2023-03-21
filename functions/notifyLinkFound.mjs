@@ -20,8 +20,8 @@ export default async function notifyLinkFound(event) {
     let nBody = "Påmelding er ute! " + fetchEmoji(event);
     let eBody = "Registration available! " + fetchEmoji(event);
 
-    if(nTopic)      sendNotification(title, nBody, nTopic);
-    if(eTopic)      sendNotification(title, eBody, eTopic);
+    if(nTopic)      sendNotification(title, nBody, event, nTopic);
+    if(eTopic)      sendNotification(title, eBody, event, eTopic);
 
     console.log(`Scheduled notifyLinkFound notification for event ${event.eventID}`);
 }

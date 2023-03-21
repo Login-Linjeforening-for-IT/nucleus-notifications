@@ -7,7 +7,7 @@ import fetch from "node-fetch";
  * @param {string} body  Notification body
  * @param {string} topic Notification topic
  */
-export default function sendNotification(title, body, topic) {
+export default function sendNotification(title, body, data, topic,) {
     const key = "AAAA1H1qOow:APA91bEyRHQ7-VrtYaM4V0qXTe2TZsK8hJ73Gjvha0nc3-3wMI3_T073zgTPFbI5m0LOjQtLM-gcfGffoHnskrHfAc9xoQTUeFoGu6fqVgCWEjosLl6e4vLgAEbxDA-j2Zyn9TwwGiLe";
     const url = "https://fcm.googleapis.com/fcm/send";
 
@@ -17,6 +17,7 @@ export default function sendNotification(title, body, topic) {
     const notification = {
         title: title,
         body: body,
+        data: data,
     };
     
     const message = {

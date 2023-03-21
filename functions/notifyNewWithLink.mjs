@@ -22,8 +22,8 @@ export default async function notifyNewWithLink(event) {
     let nBody = "Påmelding er allerede ute, trykk her for å lese mer! " + fetchEmoji(event);
     let eBody = "Registration already available, click here to read more! " + fetchEmoji(event);
 
-    if(nTopic)      sendNotification(title, nBody, nTopic);        
-    if(eTopic)      sendNotification(title, eBody, eTopic);
+    if(nTopic)      sendNotification(title, nBody, event, nTopic);        
+    if(eTopic)      sendNotification(title, eBody, event, eTopic);
 
     console.log(`Scheduled notifyNewWithLink notification for event ${event.eventID}`);
 }
