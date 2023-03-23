@@ -25,5 +25,5 @@ export default function timeToEvent (event) {
     const dt2 = new Date(event.startt);                                                                     // Converting from string to date old and correct version
     const seconds = (dt2.getTime() - dt1.getTime()) / 1000;                                                 // Subtracting and dividing from milliseconds to seconds
     console.log(`${seconds} seconds till event ${event.eventID}.`)
-    return seconds;                                                                                         // Returning seconds
+    return seconds-3600;                                                                                         // Returning seconds
 } 

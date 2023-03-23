@@ -5,9 +5,9 @@ import detailedEvents from "./functions/detailedEvents.mjs";
 import sortNotified from "./functions/sortNotified.mjs";
 import fetchEvents from "./functions/fetchEvents.mjs";
 import currentTime from "./functions/currentTime.mjs";
+import handleError from "./functions/handleError.mjs";
 import sortEvents from "./functions/sortEvents.mjs";
 import reminders from "./functions/reminders.mjs";
-import handleError from "./functions/handleError.mjs";
 
 /**
  * **Automated event notifications**
@@ -37,17 +37,17 @@ export default async function automatedNotifications() {
     }
 
     await reminders();  // Schedules reminders
-
     // Terminates early if there are no events in database
 
     // Fetches api and txt files
     let events = await detailedEvents();
     let notified = await fetchNotifiedEvents();
     let slow = await fetchSlowEvents();
-    if(events == undefined || newNotified == undefined || slow == undefined) return handleError("automatedNotification.mjs", `${events == undefined? "events":''} ${newNotified == undefined? "newNotified":''} ${slow == undefined? "slow":''} is undefined`);
+
+    if(events == undefined || notified == undefined || slow == undefined) return handleError("automatedNotification.mjs", `${events == undefined? "events":''} ${notified == undefined? "notified":''} ${slow == undefined? "slow":''} is undefined`);
 
     // Logs amount of events of each type
-    console.log("events:", events.length, "notified:", notified.length ? notified.length:0, "slowmonitored:", slow.length ? slow.length:0);
+    console.log("events:", events.length, "notified:", notified ? notified.length:0, "slowmonitored:", slow ? slow.length:0);
 
     // Finds new events
     let newEvents = (notified.length > 0 || slow.length > 0) ? events.filter(event => {
