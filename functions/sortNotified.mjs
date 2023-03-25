@@ -18,5 +18,8 @@ export default function sortNotified(events, notify) {
             } else console.log(`Event ${event.eventID} does not satisfy. The joinlink is ${joinlink(event)}`)
         });
         return slow;
-    } else console.log("No new links found.");
+    } else {
+        console.log("No new links found.");
+        return -1;
+    }
 }

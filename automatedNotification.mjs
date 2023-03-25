@@ -60,13 +60,13 @@ export default async function automatedNotifications() {
     sortedEvents.slow.forEach(event => {slow.push(event)});
     sortedEvents.notified.forEach(event => {notified.push(event)});
 
-    let sortedNotified = sortNotified(notified, true);
+    // Finds newest version of events in notifiedarray
+    let newNotified = notified.length > 0 ? events.filter(event => {
+        return (notified.some(Nevents => Nevents.eventID === event.eventID));
+    }):-1;
+    let sortedNotified = sortNotified(newNotified, true);
     if(sortedNotified == undefined) return handleError("automatedNotification.mjs", "sortedNotified is undefined");
-    sortedNotified.forEach(event => {slow.push(event)})
-
-    let newNotified = notified.filter(notified => !slow.some(slow => slow.eventID === notified.eventID));
-
-    if(notified.length == newNotified.length) console.log("No new links found.");
+    if (sortedNotified != -1) sortedNotified.forEach(event => {slow.push(event)})
 
     // Removes events that have already taken place and stores new events
     console.log("Storing", "events:", events.length, "notified:", notified.length ? notified.length:0, "slowmonitored:", slow.length ? slow.length:0);

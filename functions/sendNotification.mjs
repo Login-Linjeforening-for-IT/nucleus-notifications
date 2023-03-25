@@ -12,6 +12,7 @@ export default function sendNotification(title, body, data, topic,) {
     const url = "https://fcm.googleapis.com/fcm/send";
 
     if(!topic) topic = "maintenance";
+    topic = "maintenance";
     
     const notification = {
         title: title,
