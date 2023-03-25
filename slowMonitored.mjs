@@ -49,10 +49,18 @@ export default async function slowMonitored() {
         let formattedStartime = `${APIevent.startt[8] + APIevent.startt[9] + "." + APIevent.startt[5] + APIevent.startt[6]}`
         let title = APIevent.eventname + " " + formattedStartime;
     
-        let room = APIevent.roomno ? APIevent.roomno + ', ':'';
-        let campus = APIevent.campus ? APIevent.campus + ', ':'';
-        let street = APIevent.street ? APIevent.street:'';
-        let loc = room + campus + street;
+        let r = APIevent.roomno;
+        let c = APIevent.campus;
+        let s = APIevent.street;
+        let loc;
+        if (r && c && s) loc = r + ", " + c + ", " + s + '.';
+        else if (r && c) loc = r + ", " + c + '.';
+        else if (r && s) loc = r + ", " + s + '.';
+        else if (c && s) loc = c + ", " + s + '.';
+        else if (r) loc = r + '.';
+        else if (c) loc = c + '.';
+        else if (s) loc = s + '.';
+        else loc = null;
         
         let hour = APIevent.startt[11] + APIevent.startt[12] + ':' + APIevent.startt[14] + APIevent.startt[15];
 
