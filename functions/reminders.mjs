@@ -20,7 +20,7 @@ export default async function reminders() {
     let reminders = 0;
 
     // Fetches details for all events unfiltered.
-    let events = await detailedEvents(1); 
+    let events = await detailedEvents(1);
     if(!events) return handleError("reminders.mjs", "events is undefined");
 
     // Fetches events in each interval
@@ -71,7 +71,7 @@ export default async function reminders() {
 
         let nBody = "Begynner om 30 minutter! " + fetchEmoji(event);
         let eBody = "Starts in 30 minutes! " + fetchEmoji(event);
-        
+
         if(nTopic) sendNotification(title, nBody, event, nTopic);
         if(eTopic) sendNotification(title, eBody, event, eTopic);
         reminders+=2;
@@ -223,7 +223,6 @@ export default async function reminders() {
     let new2d = [];
     let new1w = [];
 
-    
     // Filters events to appropriate interval
     events.forEach(event => {
         if(timeToEvent(event) > 604800) new1w.push(event);

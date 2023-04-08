@@ -28,23 +28,25 @@ import reminders from "./functions/reminders.mjs";
  * @see removePassedEvents()    Removes events that have already taken place
  */
 export default async function automatedNotifications() {
-
     console.log("Interval started at", currentTime());
 
+    // Terminates early if there are no events in database
     if(!(await fetchEvents()).length) {
         console.log("Found no events in database.");
         return null;
     }
 
     await reminders();  // Schedules reminders
-    // Terminates early if there are no events in database
 
     // Fetches api and txt files
     let events = await detailedEvents();
     let notified = await fetchNotifiedEvents();
     let slow = await fetchSlowEvents();
 
-    if(events == undefined || notified == undefined || slow == undefined) return handleError("automatedNotification.mjs", `${events == undefined? "events":''} ${notified == undefined? "notified":''} ${slow == undefined? "slow":''} is undefined`);
+    // Returns if any variable is undefined
+    if (events == undefined)    return handleError("automatedNotifications.mjs", "events are initially undefined");
+    if (notified == undefined)  return handleError("automatedNotifications.mjs", "notified are initially undefined");
+    if (slow == undefined)      return handleError("automatedNotifications.mjs", "slow are initially undefined");
 
     // Logs amount of events of each type
     console.log("events:", events.length, "notified:", notified ? notified.length:0, "slowmonitored:", slow ? slow.length:0);
@@ -63,15 +65,18 @@ export default async function automatedNotifications() {
     // Finds newest version of events in notifiedarray
     let newNotified = notified.length > 0 ? events.filter(event => {
         return (notified.some(Nevents => Nevents.eventID === event.eventID));
-    }):-1;
+    }):[];
+
     let sortedNotified = sortNotified(newNotified, true);
     if(sortedNotified == undefined) return handleError("automatedNotification.mjs", "sortedNotified is undefined");
-    if (sortedNotified != -1) sortedNotified.forEach(event => {slow.push(event)})
+    if (sortedNotified.length) sortedNotified.forEach(event => {slow.push(event)})
 
+    // Returns if any variable to be stored is undefined
+    if (events == undefined)        return handleError("automatedNotifications.mjs", "events is undefined when storing");
+    if (newNotified == undefined)   return handleError("automatedNotifications.mjs", "newNotified is undefined when storing");
+    if (slow == undefined)          return handleError("automatedNotifications.mjs", "slow is undefined when storing");
+    
     // Removes events that have already taken place and stores new events
-    console.log("Storing", "events:", events.length, "notified:", notified.length ? notified.length:0, "slowmonitored:", slow.length ? slow.length:0);
-
-    if(events == undefined || newNotified == undefined || slow == undefined) return handleError("automatedNotification.mjs", `${events == undefined? "events":''} ${newNotified == undefined? "newNotified":''} ${slow == undefined? "slow":''} is undefined`);
     await storeNewAndRemoveOldEvents(events, newNotified, slow);
 
     console.log("Interval complete at", currentTime());

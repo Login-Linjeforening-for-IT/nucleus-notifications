@@ -5,5 +5,4 @@ RUN npm install node-cron node-fetch fs
 
 COPY . .
 
-
 CMD ["node", "index.mjs"]

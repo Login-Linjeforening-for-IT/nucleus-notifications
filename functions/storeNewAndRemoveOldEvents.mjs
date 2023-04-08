@@ -18,9 +18,6 @@ export default async function storeNewAndRemoveOldEvents(events, notified, slow)
     let newNotifiedEvents = notified.filter(event => events.some(APIevent => APIevent.eventID === event.eventID));
     let newSlowEvents = slow.filter(slow => events.some(APIevent => APIevent.eventID === slow.eventID));
 
-    console.log("newNotifiedEvents", newNotifiedEvents.length)
-    console.log("newSlowEvents", newSlowEvents.length)
-
     await storeNotified(newNotifiedEvents);
     await storeSlowMonitored(newSlowEvents);
 

@@ -36,7 +36,7 @@ export default function sendNotification(title, body, data, topic,) {
 
     fetch(url, options)
     .then(response => {
-        if(!response.ok) throw new Error("Network response error while connecting to FCM.");
+        if(!response.ok) console.log("Network response failed for ", title);
         console.log(`Successfully sent notification to topic ${topic} at ${currentTime()}`);
     }).catch(e => {console.error("Error sending notification:", e)});
 }
