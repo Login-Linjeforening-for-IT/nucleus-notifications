@@ -26,10 +26,9 @@ export default function timeToEvent (event) {
     const dt1 = new Date(currentTime);                                                                      // Converting from string to date
     const dt2 = new Date(event.startt);                                                                     // Converting from string to date old and correct version
     let seconds = (dt2.getTime() - dt1.getTime()) / 1000;                                                   // Subtracting and dividing from milliseconds to seconds
-    console.log(`${seconds} seconds till event ${event.eventID}.`);
 
-    if (summertime()) return seconds-7200;                                                                  // Checks for and subtracts two hours during summertime
-    else              return seconds-3600;                                                                  // Otherwise subtracts one hour during wintertime
+    if (summertime()) return seconds-9800;                                                                  // Checks for and subtracts two hours during summertime
+    else              return seconds-7200;                                                                  // Otherwise subtracts one hour during wintertime
 } 
 
 /**

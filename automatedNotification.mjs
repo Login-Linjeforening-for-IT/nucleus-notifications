@@ -8,6 +8,7 @@ import currentTime from "./functions/currentTime.mjs";
 import handleError from "./functions/handleError.mjs";
 import sortEvents from "./functions/sortEvents.mjs";
 import reminders from "./functions/reminders.mjs";
+import sendNotification from "./functions/sendNotification.mjs";
 
 /**
  * **Automated event notifications**
@@ -26,8 +27,16 @@ import reminders from "./functions/reminders.mjs";
  * @see notifyNewEntry()        Schedules a notification for a new event without a joinlink
  * @see notifyLinkFound()       Schedules a notification for an event where the link has just been posted
  * @see removePassedEvents()    Removes events that have already taken place
+ * @see sendNotification()      Schedule notifications instantly
  */
 export default async function automatedNotifications() {
+    // Use this template to instantly send notification:
+    // norwegian + capitalizedCategory
+    // english + capitalizedCategory
+    // sendNotification(title, body, data, topic)
+    // sendNotification("CTF med EY 19.04", "Nytt rom: S411!", 0, "norwegianCTF")
+    // sendNotification("CTF with EY 19.04", "New room: S411!", 0, "englishCTF")
+    // return 0;
     console.log("Interval started at", currentTime());
 
     // Terminates early if there are no events in database
