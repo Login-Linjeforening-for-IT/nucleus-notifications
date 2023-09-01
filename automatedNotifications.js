@@ -15,10 +15,9 @@ import { readFile } from "./functions/file.js";
  * 
  * @see fetchEvents()               Fetches API
  * @see detailedEvents(...)         Returns all information about all events
- * @see joinlink(...)               Fetches the joinlink of an event
- * @see removePassedEvents(...)     Removes events that have already taken place
- * @see sendNotification(...)       Schedule notifications instantly
  * @see readFile(...)               Reads content from given file
+ * @see sortEvents(...)             Sorts events in different categories
+ * @see sortNotified(...)           Filters out events not meant for notified
  * @see reminders()                 Schedules reminders for every event
  */
 export default async function automatedNotifications() {
