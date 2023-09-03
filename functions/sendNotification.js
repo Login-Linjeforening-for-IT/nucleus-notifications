@@ -4,12 +4,12 @@ import fetch from "node-fetch";
 
 /**
  * Posts notification to FCM.
- * @param {string} title Notification title
- * @param {string} body  Notification body
- * @param {string} data  Notification data
- * @param {string} topic Notification topic
+ * @param {string} title    Notification title
+ * @param {string} body     Notification body
+ * @param {string} screen   Event to navigate to in the app, give the full object.
+ * @param {string} topic    Notification topic
  */
-export default function sendNotification(title, body, data, topic) {
+export default function sendNotification(title, body, screen, topic) {
     const key = secret["api-key"];
     const url = secret["api-url"];
 
@@ -22,8 +22,8 @@ export default function sendNotification(title, body, data, topic) {
         notification: {
             title: title,
             body: body,
-            data: data,
-        }
+        },
+        data: screen
     };
     
     // Defines the fetch request to be sent with all info attached
@@ -41,11 +41,12 @@ export default function sendNotification(title, body, data, topic) {
     .then(response => {
         if(!response.ok) console.log("Network response failed for ", title);
         console.log(`Successfully sent notification to topic ${topic} at ${new Date().toISOString()}`);
+        console.log(response)
     }).catch(error => {console.error("Error sending notification:", error)});
 }
 
 // Examples of direct notifications that can be sent by node sendNotifications.js
 
-// sendNotification("Tittel", "Norwegian description", undefined, "norwegianTOPIC")
+// sendNotification("Tittel", "Beskrivelse", event, "norwegianTOPIC")
 // sendNotification("Title", "English description", undefined, "englishTOPIC")
 // sendNotification("Test", "Kontakt tekkom om du mottok denne.")
