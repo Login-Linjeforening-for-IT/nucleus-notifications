@@ -14,8 +14,8 @@ export default function sendNotification(title, body, screen, topic) {
     const url = secret["api-url"];
 
     // Sets the topic to maintenance if the topic is not available
-    if(!topic || !isStable()) topic = "maintenance";
-    
+    if(!topic || !isStable()) topic = "maintenance"
+
     // Defines the message to be sent
     const message = {
         to: `/topics/${topic}`,
@@ -41,12 +41,11 @@ export default function sendNotification(title, body, screen, topic) {
     .then(response => {
         if(!response.ok) console.log("Network response failed for ", title);
         console.log(`Successfully sent notification to topic ${topic} at ${new Date().toISOString()}`);
-        console.log(response)
     }).catch(error => {console.error("Error sending notification:", error)});
 }
 
 // Examples of direct notifications that can be sent by node sendNotifications.js
 
-// sendNotification("Tittel", "Beskrivelse", event, "norwegianTOPIC")
+sendNotification("Tittel", "Beskrivelse", null, "norwegianTOPIC")
 // sendNotification("Title", "English description", undefined, "englishTOPIC")
 // sendNotification("Test", "Kontakt tekkom om du mottok denne.")

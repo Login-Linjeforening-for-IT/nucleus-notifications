@@ -149,5 +149,3 @@ export function isStable() {
     // Otherwise returns false
     else return false
 }
-
-isStable()
