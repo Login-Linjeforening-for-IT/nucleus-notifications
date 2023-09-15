@@ -48,8 +48,8 @@ export async function writeFile(fileName, content) {
     fs.writeFile(File, content ? stringifiedContent:"[]", (error) => {
 
         // Returns and handles any errors while writing
-        if (error) return handleError("writeFile", error);
-
+        // if (error) return handleError("writeFile", error);
+        if (error) console.log(error)
         // Logs success
         console.log(`Overwrote ${fileName}. Content: ${content ? true:false}.`);
     });

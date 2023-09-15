@@ -1,6 +1,7 @@
 import automatedNotifications from "./automatedNotifications.js";
 import slowMonitored from "./slowMonitored.js";
 import { writeFile } from "./functions/file.js";
+import { summertime } from "./functions/fetch.js";
 
 /**
  * Test function for the repository. Will run for 5 minutes then put the
@@ -15,7 +16,11 @@ export async function test() {
     let testCount = 0
 
     // Writes start time to file
-    await writeFile("info", { startTime: new Date().toISOString() })
+    let time = new Date()
+    const hoursToUTC = summertime() ? 2 : 1
+    time.setHours(time.getHours()+hoursToUTC)
+
+    await writeFile("info", { startTime: time.toISOString() })
 
     // Runs the two entry points of the application 5 times to ensure stability
     do {

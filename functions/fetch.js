@@ -127,7 +127,7 @@ export function timeToEvent (event) {
  * 
  * @returns {boolean} True if summertime otherwise false
  */
-function summertime() {
+export function summertime() {
     const date = new Date('2023-03-01');                // Date object for March 1st
     const offset = date.getTimezoneOffset();            // Time zone offset in minutes
 
@@ -140,12 +140,11 @@ function summertime() {
  * if true, otherwise the error causing an ustable state will terminate the 
  * program.
  * 
- * @returns {boolean} true if more than one hour has elapsed, otherwise false
+ * @returns {boolean} true if more than five minutes has elapsed, otherwise false
  */
 export function isStable() {
-    // Returns true if more than one hour has elapsed since program start
-    if ((new Date() - new Date(info.startTime)) / 3600000 > 1) return true
-    
+    // Returns true if more than five minutes has elapsed since program start
+    if ((new Date() - new Date(info.startTime)) / 300000 > 1) return true
     // Otherwise returns false
     else return false
 }
