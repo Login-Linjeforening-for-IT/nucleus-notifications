@@ -30,7 +30,8 @@ export default async function automatedNotifications() {
         return null;
     }
 
-    await reminders();  // Schedules reminders
+    // Schedules reminders
+    await reminders();
 
     // Fetches api and txt files
     let events = await detailedEvents();
