@@ -23,7 +23,9 @@ export async function test() {
         : time.getHours() + hoursToUTC
     )
 
-    await writeFile("info", { startTime: time.toISOString() })
+    // Sneaky to avoid json import and require statements 🙃
+    const content = `const startTime = "${time.toISOString()}";\n\nexport default startTime`;
+    await writeFile("info", content, true)
 
     // Runs the two entry points of the application 5 times to ensure stability
     do {

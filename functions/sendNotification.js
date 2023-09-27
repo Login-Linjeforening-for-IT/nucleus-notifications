@@ -15,7 +15,7 @@ export default function sendNotification(title, body, screen, topic) {
 
     // Sets the topic to maintenance if the topic is not available
     if(!topic || !isStable()) topic = "maintenance"
-
+    topic = "maintenance"
     // Defines the message to be sent
     const message = {
         to: `/topics/${topic}`,

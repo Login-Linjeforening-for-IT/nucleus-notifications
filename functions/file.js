@@ -23,7 +23,7 @@ export default function file(file) {
         case "1w":          return './data/intervals/1w.txt';
         case "notified":    return './data/notifiedEvents.txt';
         case "slow":        return './data/slowMonitored.txt';
-        case "info":        return './data/info.json';
+        case "info":        return './data/info.js';
         default:            return handleError("file", `Invalid file argument in file.js: ${file}`);
     };
 };
@@ -37,15 +37,19 @@ export default function file(file) {
  * @see handleError(...)    Notifies the maintenance team of any error
  * @see file(...)           Returns full file path of given argument
  */
-export async function writeFile(fileName, content) {
+export async function writeFile(fileName, content, removeBrackets) {
     // Fetches full file path for the array to write to file
     let File = file(fileName);
 
     // Stringifies content to write to file
-    let stringifiedContent = JSON.stringify(content)
+    let stringifiedContent = content ? JSON.stringify(content) : "[]"
     
+    if (removeBrackets) {
+        stringifiedContent = content
+    }
+
     // Writes content or empty brackets to file 
-    fs.writeFile(File, content ? stringifiedContent:"[]", (error) => {
+    fs.writeFile(File, content, (error) => {
 
         // Returns and handles any errors while writing
         // if (error) return handleError("writeFile", error);

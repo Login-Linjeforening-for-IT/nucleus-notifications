@@ -1,4 +1,4 @@
-import info from '../data/info.json' assert { "type": "json" }
+import startTime from '../data/info.js';
 import { filterEvents } from "./sort.js";
 import handleError from "./error.js";
 import fetch from "node-fetch";
@@ -144,7 +144,7 @@ export function summertime() {
  */
 export function isStable() {
     // Returns true if more than five minutes has elapsed since program start
-    if ((new Date() - new Date(info.startTime)) / 300000 > 1) return true
+    if ((new Date() - new Date(startTime)) / 300000 > 1) return true
     // Otherwise returns false
     else return false
 }
