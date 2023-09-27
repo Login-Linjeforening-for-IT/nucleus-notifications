@@ -1,8 +1,13 @@
-import notifyNewEntry, { notifyLinkFound, notifyNewWithLink } from "./notify.js";
-import fetchEvents, { timeToEvent } from "./fetch.js";
-import joinlink from "./joinlink.js";
-import handleError from "./error.js";
-import { readFile } from "./file.js";
+import notifyNewEntry, { notifyLinkFound, notifyNewWithLink } from "./notify.ts"
+import fetchEvents, { timeToEvent } from "./fetch.ts"
+import joinlink from "./joinlink.ts"
+import handleError from "./error.ts"
+import { readFile } from "./file.ts"
+
+type sortEventsProps = {
+    events: DetailedEventProps[]
+    notify?: boolean
+}
 
 /**
  * Function for sorting events from API into their seperate categories
@@ -16,12 +21,12 @@ import { readFile } from "./file.js";
  * 
  * @returns Events and slowevents as objects
  */
-export default function sortEvents(events, notify) {
+export default function sortEvents({events, notify}: sortEventsProps) {
     // Defines empty arrays
-    let slow = [], notified = [];
+    let slow: EventProps[] = [], notified: EventProps[] = []
 
     // Returns if there are no events to sort
-    if (!events || !events.length) return console.log("Nothing to sort.");
+    if (!events || !events.length) return console.log("Nothing to sort.")
 
     // Goes through each event
     events.forEach(event => {
@@ -29,10 +34,10 @@ export default function sortEvents(events, notify) {
         if (joinlink(event)) {
 
             // If the user should be notified, notifies the user
-            if (notify) notifyNewWithLink(event); 
+            if (notify) notifyNewWithLink(event) 
 
             // Pushes the event to the slowmonitored array
-            slow.push(event);
+            slow.push(event)
         
         // If the event does not contain a joinlink, pushes it to the notified array
         } else {
@@ -41,12 +46,12 @@ export default function sortEvents(events, notify) {
             if (timeToEvent(event) > 1209600) return console.log(event.eventID, "will not be added till another", timeToEvent(event)-1209600, "seconds have passed.")
             
             // If the user should be notified, notifies the user
-            if (notify) notifyNewEntry(event);
+            if (notify) notifyNewEntry(event)
 
             // Pushes the event to the notified array
-            notified.push(event);
+            notified.push(event)
         }
-    });
+    })
 
     // Returns the sorted object
     return { slow: slow, notified: notified }
@@ -63,9 +68,9 @@ export default function sortEvents(events, notify) {
  * 
  * @returns Events that need to go to slowMonitored.txt
  */
-export function sortNotified(events, notify) {
+export function sortNotified({events, notify}: sortEventsProps) {
     // Defines array for events to be slowmonitored
-    let slow = [];
+    let slow: DetailedEventProps[] = []
 
     // Returns a empty array if there are no events to sort
     if (!events || !events.length) return []
@@ -76,11 +81,11 @@ export function sortNotified(events, notify) {
         if (!joinlink(event)) return console.log(`Event ${event.eventID} does not satisfy. The joinlink is ${joinlink(event)}`)
 
         // If the user should be notified, notifies the user
-        if (notify) notifyLinkFound(event);
+        if (notify) notifyLinkFound(event)
 
         // Pushes the event to the notified array
-        slow.push(event);
-    });
+        slow.push(event)
+    })
 
     // Returns the array
     return slow
@@ -95,23 +100,31 @@ export function sortNotified(events, notify) {
  * 
  * @returns                 Filtered object
  */
-export async function filterEvents() {
+export async function filterEvents(): Promise<EventProps[]> {
     try {
         // Fetches events
-        let events = await fetchEvents();
+        let events = await fetchEvents()
 
         // Fetches slow monitored events (events where changes are unlikely)
-        let slowEvents = await readFile("slow")
+        let slowEvents: EventProps[] = await readFile("slow")
         
         // Filters events to avoid multiples of the same event 
-        let filteredEvents = slowEvents.length ? await events.filter(event => !slowEvents.some(slowevents => slowevents.eventID === event.eventID)):events;
+        let filteredEvents = slowEvents.length ? events.filter(event => !slowEvents.some(slowevents => slowevents.eventID === event.eventID)):events
 
         // Handles error where the filtered events are undefined
-        if(!filteredEvents) return handleError("filterEvents", "filteredEvents is undefined");
-
+        if(!filteredEvents) {
+            handleError({
+                file: "filterEvents", 
+                error: "filteredEvents is undefined"
+            })
+            return []
+        }
         // returns filtered events
-        return filteredEvents;   
+        return filteredEvents
     
     // Catches and handles any unknown errors
-    } catch (error) {return handleError("filterEvents", error)};
+    } catch (error) {
+        handleError({file: "filterEvents", error: JSON.stringify(error)})
+        return []
+    }
 }

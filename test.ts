@@ -1,6 +1,6 @@
-import automatedNotifications from "./automatedNotifications.js";
-import slowMonitored from "./slowMonitored.js";
-import { writeFile } from "./functions/file.js";
+import automatedNotifications from "./automatedNotifications.ts"
+import slowMonitored from "./slowMonitored.ts"
+import { writeFile } from "./functions/file.ts"
 
 /**
  * Test function for the repository. Will run for 5 minutes then put the
@@ -23,9 +23,9 @@ export async function test() {
         : time.getHours() + hoursToUTC
     )
 
-    // Sneaky to avoid json import and require statements 🙃
-    const content = `const startTime = "${time.toISOString()}";\n\nexport default startTime`;
-    await writeFile("info", content, true)
+    // Sneaky to avoid json import and require statements
+    const content = `const startTime = "${time.toISOString()}"\n\nexport default startTime`
+    writeFile({fileName: "info", content, removeBrackets: true})
 
     // Runs the two entry points of the application 5 times to ensure stability
     do {
@@ -37,7 +37,7 @@ export async function test() {
         testCount++
     
         // Times out for 1 minute between each run to ensure stability
-        await new Promise(resolve => setTimeout(resolve, 60000));
+        await new Promise(resolve => setTimeout(resolve, 60000))
 
     // Runs 5 times before continuing
     } while (testCount < 5)

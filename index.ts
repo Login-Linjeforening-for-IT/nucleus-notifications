@@ -5,16 +5,16 @@
  * to use and maintain.
  */
 
-import automatedNotifications from "./automatedNotifications.js";
-import slowMonitored from "./slowMonitored.js";
-import { test } from "./test.js";
-import cron from "node-cron";
+import automatedNotifications from "./automatedNotifications.ts"
+import slowMonitored from "./slowMonitored.ts"
+import { test } from "./test.ts"
+import cron from "node-cron"
 
 // Tests the application before putting it in automated production
-await test()
+test()
 
 // Schedules automatedNotifications to run every minute
-cron.schedule("* * * * *", automatedNotifications);
+cron.schedule("* * * * *", automatedNotifications)
 
 // Schedules slowMonitored to run every 30 minutes
-cron.schedule("*/30 * * * *", slowMonitored);
+cron.schedule("*/30 * * * *", slowMonitored)

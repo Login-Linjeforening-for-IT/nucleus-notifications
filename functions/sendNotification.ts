@@ -1,6 +1,13 @@
 import secret from '../.secrets.json' assert {"type": "json"}
-import { isStable } from './fetch.js';
-import fetch from "node-fetch";
+import { isStable } from './fetch.ts'
+import fetch from "node-fetch"
+
+type sendNotificationProps = {
+    title: string
+    body: string
+    screen?: string | object
+    topic?: string
+}
 
 /**
  * Posts notification to FCM.
@@ -9,9 +16,9 @@ import fetch from "node-fetch";
  * @param {string} screen   Event to navigate to in the app, give the full object.
  * @param {string} topic    Notification topic
  */
-export default function sendNotification(title, body, screen, topic) {
-    const key = secret["api-key"];
-    const url = secret["api-url"];
+export default function sendNotification({title, body, screen, topic}: sendNotificationProps): void {
+    const key = secret["api-key"]
+    const url = secret["api-url"]
 
     // Sets the topic to maintenance if the topic is not available
     if(!topic || !isStable()) topic = "maintenance"
@@ -24,7 +31,7 @@ export default function sendNotification(title, body, screen, topic) {
             body: body,
         },
         data: screen
-    };
+    }
     
     // Defines the fetch request to be sent with all info attached
     const options = {
@@ -34,18 +41,18 @@ export default function sendNotification(title, body, screen, topic) {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(message)
-    };
+    }
 
     // Sends the notification and waits for response
     fetch(url, options)
     .then(response => {
-        if(!response.ok) console.log("Network response failed for ", title);
-        console.log(`Successfully sent notification to topic ${topic} at ${new Date().toISOString()}`);
-    }).catch(error => {console.error("Error sending notification:", error)});
+        if(!response.ok) console.log("Network response failed for ", title)
+        console.log(`Successfully sent notification to topic ${topic} at ${new Date().toISOString()}`)
+    }).catch(error => {console.error("Error sending notification:", error)})
 }
 
-// Examples of direct notifications that can be sent by node sendNotifications.js
+// Examples of direct notifications that can be sent by node sendNotifications.ts
 
-sendNotification("Tittel", "Beskrivelse", null, "norwegianTOPIC")
+sendNotification({title: "Tittel", body: "Beskrivelse", screen: undefined, topic: "norwegianTOPIC"})
 // sendNotification("Title", "English description", undefined, "englishTOPIC")
 // sendNotification("Test", "Kontakt tekkom om du mottok denne.")
