@@ -1,8 +1,9 @@
-import sendNotification from "./sendNotification.ts"
-import { readFile, writeFile } from "./file.ts"
-import { detailedEvents, timeToEvent } from "./fetch.ts"
-import handleError from "./error.ts"
-import { fetchEmoji } from "./fetch.ts"
+import sendNotification from "./sendNotification.js"
+import { readFile, writeFile } from "./file.js"
+import { detailedEvents, timeToEvent } from "./fetch.js"
+import handleError from "./error.js"
+import { fetchEmoji } from "./fetch.js"
+import { EventProps, DetailedEventProps } from "../../types"
 
 /**
  * Schedules a notification to FCM if a new event with a join link already available has been found and updates slowMonitored.txt
@@ -24,15 +25,15 @@ export default async function reminders() {
     })
 
     // Fetches events in each interval
-    let stored10m = await readFile("10m")
-    let stored30m = await readFile("30m")
-    let stored1h  = await readFile("1h")
-    let stored2h  = await readFile("2h")
-    let stored3h  = await readFile("3h")
-    let stored6h  = await readFile("6h")
-    let stored1d  = await readFile("1d")
-    let stored2d  = await readFile("2d")
-    let stored1w  = await readFile("1w")
+    let stored10m = await readFile("10m") as DetailedEventProps[]
+    let stored30m = await readFile("30m") as DetailedEventProps[]
+    let stored1h  = await readFile("1h") as DetailedEventProps[]
+    let stored2h  = await readFile("2h") as DetailedEventProps[]
+    let stored3h  = await readFile("3h") as DetailedEventProps[]
+    let stored6h  = await readFile("6h") as DetailedEventProps[]
+    let stored1d  = await readFile("1d") as DetailedEventProps[]
+    let stored2d  = await readFile("2d") as DetailedEventProps[]
+    let stored1w  = await readFile("1w") as DetailedEventProps[]
 
     // Filters out events that are ready to be notified about
     let notify10m = stored10m.filter((event: EventProps) => timeToEvent(event) <= 600)

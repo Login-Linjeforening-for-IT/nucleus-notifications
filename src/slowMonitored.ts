@@ -1,9 +1,9 @@
-import { storeSlowMonitored } from "./functions/store.ts"
-import sendNotification from "./functions/sendNotification.ts"
-import { detailedEvents } from "./functions/fetch.ts"
-import joinlink from "./functions/joinlink.ts"
-import { readFile } from "./functions/file.ts"
-
+import { storeSlowMonitored } from "./functions/store.js"
+import sendNotification from "./functions/sendNotification.js"
+import { detailedEvents } from "./functions/fetch.js"
+import joinlink from "./functions/joinlink.js"
+import { readFile } from "./functions/file.js"
+import { EventProps, DetailedEventProps } from "../types"
 /**
  * **Slow monitored event notifications**
  * 
@@ -25,7 +25,7 @@ export default async function slowMonitored() {
 
     // Fetches events from file and API
     let APIevents = await detailedEvents(true) 
-    let slowEvents = await readFile("slow")
+    let slowEvents = await readFile("slow") as DetailedEventProps[]
 
     // Checks all events with earlier version for potential changes
     for (const APIevent of APIevents) {

@@ -1,12 +1,18 @@
-import notifyNewEntry, { notifyLinkFound, notifyNewWithLink } from "./notify.ts"
-import fetchEvents, { timeToEvent } from "./fetch.ts"
-import joinlink from "./joinlink.ts"
-import handleError from "./error.ts"
-import { readFile } from "./file.ts"
+import notifyNewEntry, {notifyLinkFound, notifyNewWithLink} from "./notify.js"
+import { EventProps, DetailedEventProps } from "../../types"
+import fetchEvents, {timeToEvent} from "./fetch.js"
+import joinlink from "./joinlink.js"
+import handleError from "./error.js"
+import {readFile} from "./file.js"
 
 type sortEventsProps = {
     events: DetailedEventProps[]
     notify?: boolean
+}
+
+type SortedObject = {
+    slow: DetailedEventProps[], 
+    notified: DetailedEventProps[]
 }
 
 /**
@@ -21,12 +27,15 @@ type sortEventsProps = {
  * 
  * @returns Events and slowevents as objects
  */
-export default function sortEvents({events, notify}: sortEventsProps) {
+export default function sortEvents({events, notify}: sortEventsProps): SortedObject {
     // Defines empty arrays
-    let slow: EventProps[] = [], notified: EventProps[] = []
+    let slow: DetailedEventProps[] = [], notified: DetailedEventProps[] = []
 
     // Returns if there are no events to sort
-    if (!events || !events.length) return console.log("Nothing to sort.")
+    if (!events || !events.length) {
+        console.log("Nothing to sort.")
+        return { slow: [], notified: [] }
+    }
 
     // Goes through each event
     events.forEach(event => {
@@ -106,7 +115,7 @@ export async function filterEvents(): Promise<EventProps[]> {
         let events = await fetchEvents()
 
         // Fetches slow monitored events (events where changes are unlikely)
-        let slowEvents: EventProps[] = await readFile("slow")
+        let slowEvents = await readFile("slow") as DetailedEventProps[]
         
         // Filters events to avoid multiples of the same event 
         let filteredEvents = slowEvents.length ? events.filter(event => !slowEvents.some(slowevents => slowevents.eventID === event.eventID)):events

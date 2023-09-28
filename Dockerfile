@@ -5,4 +5,4 @@ RUN npm install node-cron node-fetch fs
 
 COPY . .
 
-CMD ["node", "index.ts"]
+CMD ["tsc && node dist/index.js"]

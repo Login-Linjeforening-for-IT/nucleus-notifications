@@ -1,18 +1,19 @@
-import file, { readFile, writeFile } from './file.ts'
+import { readFile, writeFile } from './file.js'
+import { EventProps, DetailedEventProps } from '../../types'
 
 type storeNewAndRemoveOldEventsProps = {
     events: EventProps[]
-    notified: EventProps[]
-    slow: EventProps[]
+    notified: DetailedEventProps[]
+    slow: DetailedEventProps[]
 }
 
 type storeNotifiedProps = {
-    events: EventProps[]
+    events: DetailedEventProps[]
 }
 
 type storeSlowMonitoredProps = {
-    events: EventProps[]
-    overwrite: boolean
+    events: DetailedEventProps[]
+    overwrite?: boolean
 }
 
 /**
@@ -35,8 +36,8 @@ export default function storeNewAndRemoveOldEvents({events, notified, slow}: sto
     let newSlowEvents = slow.filter(slow => events.some(APIevent => APIevent.eventID === slow.eventID))
 
     // Stores each event in its appropriate file
-    storeNotified(newNotifiedEvents)
-    storeSlowMonitored(newSlowEvents)
+    storeNotified({events: newNotifiedEvents})
+    storeSlowMonitored({events: newSlowEvents})
 }
 
 /**
@@ -68,13 +69,13 @@ export async function storeNotified({events}: storeNotifiedProps) {
  * @see writeFile(...)          Writes given content to given file
  * @see readFile(...)           Reads content of given file
  */
-export function storeSlowMonitored({events, overwrite}: storeSlowMonitoredProps): void {
+export async function storeSlowMonitored({events, overwrite}: storeSlowMonitoredProps): Promise<void> {
     // Writes events to file
     if(overwrite) return writeFile({fileName: "slow", content: events})
     
     // Adds new events to array of slowmonitored events
-    let slowEvents = readFile("slow")
-    let allevents = slowEvents.length > 0 ? slowEvents.concat(events):events
+    let slowEvents = await readFile("slow") as DetailedEventProps[]
+    let allevents = slowEvents.length > 0 ? slowEvents.concat(events) : events
 
     // Removes duplicates
     let filteredEvents = allevents.filter((event: EventProps, index: number) => {

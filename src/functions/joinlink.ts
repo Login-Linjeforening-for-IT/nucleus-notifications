@@ -1,3 +1,5 @@
+import { DetailedEventProps } from "../../types"
+
 /**
  * Fetches the joinlink of an event, null if no joinlink was found
  * 

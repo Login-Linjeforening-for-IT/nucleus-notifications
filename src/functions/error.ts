@@ -1,7 +1,8 @@
-import { detailedEvents, isStable, timeToEvent } from "./fetch.ts"
-import sendNotification from "./sendNotification.ts"
-import { readFile, writeFile } from "./file.ts"
-import sortEvents from "./sort.ts"
+import { detailedEvents, isStable, timeToEvent } from "./fetch.js"
+import sendNotification from "./sendNotification.js"
+import { readFile, writeFile } from "./file.js"
+import sortEvents from "./sort.js"
+import { EventProps } from "../../types"
 
 type handleErrorProps = {
     file: string
@@ -122,13 +123,13 @@ export async function heal(arg: string) {
                     })
 
                     // Sorts out events that should not be in slow.txt
-                    let obj = sortEvents(events)
+                    let obj = sortEvents({events})
 
                     // Pushes all slow events to the slow array
                     obj.slow.forEach(event => {slow.push(event)})
                     
                     // Writes slow array to file
-                    writeFile(arg, slow)
+                    writeFile({fileName: arg, content: slow})
 
                     // Defines the fix variable equal to if the file was written successfully
                     let fix = await readFile("slow")

@@ -1,8 +1,8 @@
-import startTime from '../data/info.ts'
-import { filterEvents } from "./sort.ts"
-import handleError from "./error.ts"
+import { EventProps, DetailedEventProps } from '../../types'
+import { filterEvents } from "./sort.js"
+import handleError from "./error.js"
+import startTime from '../data/info.js'
 import fetch from "node-fetch"
-
 /**
  * Fetches api and returns events
  * 
@@ -13,10 +13,10 @@ import fetch from "node-fetch"
 export default async function fetchEvents(): Promise<EventProps[]> {
     try {
         // Fetches events
-        let response = await fetch("https://api.login.no/events")
+        const response = await fetch("https://api.login.no/events")
 
         // Turns the text response into a JSON object
-        let events = await response.json()
+        const events = await response.json() as EventProps[]
 
         // Handles case where the response is recieved, but undefined.
         if (!events) {
@@ -45,7 +45,7 @@ export default async function fetchEvents(): Promise<EventProps[]> {
  */
 export async function fetchEventDetails(event: EventProps) {
     const response = await fetch(`https://api.login.no/events/${event.eventID}`)
-    const eventDetails = await response.json()
+    const eventDetails = await response.json() as DetailedEventProps
 
     // Handles error where details are not available
     if (!eventDetails) return handleError({
@@ -56,7 +56,7 @@ export async function fetchEventDetails(event: EventProps) {
     console.log(`Fetching details for event ${event.eventID}.`)
     
     // Returns the event as an object, with details attached
-    return{...event, ...eventDetails}
+    return {...event, ...eventDetails}
 }
 
 /**
@@ -71,12 +71,12 @@ export async function fetchEventDetails(event: EventProps) {
  * 
  * @returns All events with all details
  */
-export async function detailedEvents(unfiltered: boolean): Promise<DetailedEventProps[]> {
+export async function detailedEvents(unfiltered?: boolean): Promise<DetailedEventProps[]> {
 
     // Option to return unfiltered events
     if (unfiltered) {
         let events = await fetchEvents()
-        let detailedEvents = await Promise.all(events.map(fetchEventDetails))
+        let detailedEvents = await Promise.all(events.map(fetchEventDetails)) as DetailedEventProps[]
         
         if (!detailedEvents) {
             handleError({file: "detailedEvents", error: "detailedEvents is undefined"})
@@ -88,7 +88,7 @@ export async function detailedEvents(unfiltered: boolean): Promise<DetailedEvent
     }
 
     let events = await filterEvents()
-    let detailedEvents = await Promise.all(events.map(fetchEventDetails))
+    let detailedEvents = await Promise.all(events.map(fetchEventDetails)) as DetailedEventProps[]
    
     if (!detailedEvents) {
         handleError({file: "detailedEvents", error: "detailedEvents is undefined"})

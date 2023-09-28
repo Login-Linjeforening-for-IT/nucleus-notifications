@@ -1,4 +1,4 @@
-import handleError, { heal } from "./error.ts"
+import handleError, {heal} from "./error.js"
 import * as fs from 'fs'
 
 type writeFileProps = {
@@ -78,7 +78,7 @@ export function writeFile({fileName, content, removeBrackets}: writeFileProps) {
  * 
  * @returns                 Contents of given file
  */
-export async function readFile(arg: string): Promise<any> {
+export async function readFile(arg: string): Promise<unknown> {
     // Defines file to read from
     let File = file(arg)
     

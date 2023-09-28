@@ -1,6 +1,6 @@
-import automatedNotifications from "./automatedNotifications.ts"
-import slowMonitored from "./slowMonitored.ts"
-import { writeFile } from "./functions/file.ts"
+import automatedNotifications from "./automatedNotifications.js"
+import slowMonitored from "./slowMonitored.js"
+import { writeFile } from "./functions/file.js"
 
 /**
  * Test function for the repository. Will run for 5 minutes then put the
@@ -10,7 +10,7 @@ import { writeFile } from "./functions/file.ts"
  * @see slowMonitored()             Entry point for events that does not need to be checked often
  * @see writeFile()                 Writes given content to given file
  */
-export async function test() {
+export default async function test() {
     // Defines test count
     let testCount = 0
 
@@ -24,7 +24,7 @@ export async function test() {
     )
 
     // Sneaky to avoid json import and require statements
-    const content = `const startTime = "${time.toISOString()}"\n\nexport default startTime`
+    const content = `const startTime = "${time.toISOString()}"\n\nexport default startTime\n`
     writeFile({fileName: "info", content, removeBrackets: true})
 
     // Runs the two entry points of the application 5 times to ensure stability

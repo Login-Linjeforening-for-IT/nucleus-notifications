@@ -6,6 +6,11 @@
     "author": "Login - Linjeforeningen for IT",
     "license": "ISC",
     "type": "module",
+    "scripts": {
+        "test": "npx tsc src/test.ts",
+        "start": "tsc && node dist/index.js",
+        "clean": "node src/functions/clean.mjs"
+    },
     "dependencies": {
         "fs": "^0.0.1-security",
         "node-cron": "^3.0.2",
@@ -13,6 +18,7 @@
     },
     "devDependencies": {
         "@types/node": "^20.7.0",
-        "@types/node-cron": "^3.0.9"
+        "@types/node-cron": "^3.0.9",
+        "typescript": "^5.2.2"
     }
 }

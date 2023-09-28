@@ -1,5 +1,6 @@
-import sendNotification from "./sendNotification.ts"
-import { fetchEmoji } from "./fetch.ts"
+import { EventProps, DetailedEventProps } from "../../types"
+import sendNotification from "./sendNotification.js"
+import { fetchEmoji } from "./fetch.js"
 
 /**
  * Schedules a notification to FCM if a new event has been found

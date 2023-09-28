@@ -1,5 +1,5 @@
-import secret from '../.secrets.json' assert {"type": "json"}
-import { isStable } from './fetch.ts'
+import { api_key,api_url } from "../../.secrets.js"
+import { isStable } from './fetch.js'
 import fetch from "node-fetch"
 
 type sendNotificationProps = {
@@ -17,9 +17,6 @@ type sendNotificationProps = {
  * @param {string} topic    Notification topic
  */
 export default function sendNotification({title, body, screen, topic}: sendNotificationProps): void {
-    const key = secret["api-key"]
-    const url = secret["api-url"]
-
     // Sets the topic to maintenance if the topic is not available
     if(!topic || !isStable()) topic = "maintenance"
     topic = "maintenance"
@@ -37,14 +34,14 @@ export default function sendNotification({title, body, screen, topic}: sendNotif
     const options = {
         method: "POST",
         headers: {
-            "Authorization": `key=${key}`,
+            "Authorization": `key=${api_key}`,
             "Content-Type": "application/json"
         },
         body: JSON.stringify(message)
     }
 
     // Sends the notification and waits for response
-    fetch(url, options)
+    fetch(api_url, options)
     .then(response => {
         if(!response.ok) console.log("Network response failed for ", title)
         console.log(`Successfully sent notification to topic ${topic} at ${new Date().toISOString()}`)
