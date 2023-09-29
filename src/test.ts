@@ -23,7 +23,7 @@ export default async function test() {
         : time.getHours() + hoursToUTC
     )
 
-    // Sneaky to avoid json import and require statements
+    // Writes startTime to file
     const content = `const startTime = "${time.toISOString()}"\n\nexport default startTime\n`
     writeFile({fileName: "info", content, removeBrackets: true})
 

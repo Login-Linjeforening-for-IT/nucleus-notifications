@@ -11,10 +11,10 @@ type sendNotificationProps = {
 
 /**
  * Posts notification to FCM.
- * @param {string} title    Notification title
- * @param {string} body     Notification body
- * @param {string} screen   Event to navigate to in the app, give the full object.
- * @param {string} topic    Notification topic
+ * @param title    Notification title
+ * @param body     Notification body
+ * @param screen   Event to navigate to in the app, give the full object.
+ * @param topic    Notification topic
  */
 export default function sendNotification({title, body, screen, topic}: sendNotificationProps): void {
     // Sets the topic to maintenance if the topic is not available

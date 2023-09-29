@@ -9,7 +9,8 @@
     "scripts": {
         "test": "npx tsc src/test.ts",
         "start": "tsc && node dist/index.js",
-        "clean": "node src/functions/clean.mjs"
+        "clean": "node src/functions/clean.mjs",
+        "notify": "tsc node dist/src/functions/sendNotification.js"
     },
     "dependencies": {
         "fs": "^0.0.1-security",

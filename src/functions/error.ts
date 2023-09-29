@@ -149,7 +149,7 @@ export async function heal(arg: string) {
 
             case "info": {
                 try {
-                    // Sneaky to avoid json import and require statements 🙃
+                    // Writes startTime to file
                     const content = `const startTime = "${new Date().toISOString()}"\n\nexport default startTime`
                     writeFile({fileName: "info", content, removeBrackets: true})
                 } catch (error) {
