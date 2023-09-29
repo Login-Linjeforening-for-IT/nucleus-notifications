@@ -10,7 +10,7 @@
         "test": "tsc && node dist/src/test.js",
         "start": "tsc && node dist/index.js",
         "clean": "tsc && node dist/src/functions/clean.js",
-        "notify": "tsc node dist/src/functions/sendNotification.js"
+        "notify": "tsc && node dist/src/functions/sendNotification.js"
     },
     "dependencies": {
         "fs": "^0.0.1-security",

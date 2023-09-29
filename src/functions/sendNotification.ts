@@ -52,7 +52,8 @@ export default function sendNotification({title, body, screen, topic}: sendNotif
 }
 
 // Examples of direct notifications that can be sent by node sendNotifications.ts
+// Topics: norwegianTOPIC, englishTOPIC, ...
 
-sendNotification({title: "Tittel", body: "Beskrivelse", topic: "norwegianTOPIC"})
-// sendNotification("Title", "English description", "", "englishTOPIC")
+sendNotification({title: "Tittel", body: "Beskrivelse", topic: "maintenance"})
+// sendNotification("Title", "English description", "", "maintenace")
 // sendNotification("Test", "Kontakt tekkom om du mottok denne.")
