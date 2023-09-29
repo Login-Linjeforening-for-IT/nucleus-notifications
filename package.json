@@ -7,7 +7,7 @@
     "license": "ISC",
     "type": "module",
     "scripts": {
-        "test": "npx tsc src/test.ts",
+        "test": "tsc && node dist/src/test.js",
         "start": "tsc && node dist/index.js",
         "clean": "tsc && node dist/src/functions/clean.js",
         "notify": "tsc node dist/src/functions/sendNotification.js"

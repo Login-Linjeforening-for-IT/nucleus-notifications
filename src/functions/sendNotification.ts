@@ -30,7 +30,6 @@ export default function sendNotification({title, body, screen, topic}: sendNotif
         data: screen
     }
     
-    console.log("key: ", api_key)
     // Defines the fetch request to be sent with all info attached
     const options = {
         method: "POST",
@@ -54,6 +53,6 @@ export default function sendNotification({title, body, screen, topic}: sendNotif
 
 // Examples of direct notifications that can be sent by node sendNotifications.ts
 
-sendNotification({title: "Tittel", body: "Beskrivelse", screen: "", topic: "norwegianTOPIC"})
-// sendNotification("Title", "English description", undefined, "englishTOPIC")
+sendNotification({title: "Tittel", body: "Beskrivelse", topic: "norwegianTOPIC"})
+// sendNotification("Title", "English description", "", "englishTOPIC")
 // sendNotification("Test", "Kontakt tekkom om du mottok denne.")
