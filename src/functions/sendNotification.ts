@@ -1,6 +1,6 @@
-import { api_key,api_url } from "../../.secrets.js"
-import { isStable } from './fetch.js'
+import { api_key, api_url } from "../../.secrets.js"
 import fetch from "node-fetch"
+import { stable } from "../data/info.js"
 
 type sendNotificationProps = {
     title: string
@@ -18,7 +18,7 @@ type sendNotificationProps = {
  */
 export default function sendNotification({title, body, screen, topic}: sendNotificationProps): void {
     // Sets the topic to maintenance if the topic is not available
-    if(!topic || !isStable()) topic = "maintenance"
+    if (!topic || !stable) topic = "maintenance"
     topic = "maintenance"
     // Defines the message to be sent
     const message = {
@@ -30,6 +30,7 @@ export default function sendNotification({title, body, screen, topic}: sendNotif
         data: screen
     }
     
+    console.log("key: ", api_key)
     // Defines the fetch request to be sent with all info attached
     const options = {
         method: "POST",
@@ -43,13 +44,16 @@ export default function sendNotification({title, body, screen, topic}: sendNotif
     // Sends the notification and waits for response
     fetch(api_url, options)
     .then(response => {
-        if(!response.ok) console.log("Network response failed for ", title)
-        console.log(`Successfully sent notification to topic ${topic} at ${new Date().toISOString()}`)
+        if (!response.ok) {
+            console.log("Network response failed for ", title, "Response: ", response)
+        } else {
+            console.log(`Successfully sent notification to topic ${topic} at ${new Date().toISOString()}`)
+        }
     }).catch(error => {console.error("Error sending notification:", error)})
 }
 
 // Examples of direct notifications that can be sent by node sendNotifications.ts
 
-sendNotification({title: "Tittel", body: "Beskrivelse", screen: undefined, topic: "norwegianTOPIC"})
+sendNotification({title: "Tittel", body: "Beskrivelse", screen: "", topic: "norwegianTOPIC"})
 // sendNotification("Title", "English description", undefined, "englishTOPIC")
 // sendNotification("Test", "Kontakt tekkom om du mottok denne.")

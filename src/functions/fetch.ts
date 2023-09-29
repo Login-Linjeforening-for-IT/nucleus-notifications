@@ -1,8 +1,9 @@
 import { EventProps, DetailedEventProps } from '../../types'
 import { filterEvents } from "./sort.js"
 import handleError from "./error.js"
-import startTime from '../data/info.js'
+import { startTime } from '../data/info'
 import fetch from "node-fetch"
+
 /**
  * Fetches api and returns events
  * 
@@ -52,8 +53,6 @@ export async function fetchEventDetails(event: EventProps) {
         file: "fetchEventDetails", 
         error: `Event ${event} has undefined details`
     })
-
-    console.log(`Fetching details for event ${event.eventID}.`)
     
     // Returns the event as an object, with details attached
     return {...event, ...eventDetails}
@@ -162,18 +161,4 @@ export function summertime(): boolean {
 
     // False if wintertime
     else            return false
-}
-
-/**
- * Boolean for if the repository is stable. Allows notifications 
- * if true, otherwise the error causing an ustable state will terminate the 
- * program.
- * 
- * @returns {boolean} true if more than five minutes has elapsed, otherwise false
- */
-export function isStable(): boolean {
-    // Returns true if more than five minutes has elapsed since program start
-    if ((new Date().getMilliseconds() - new Date(startTime).getMilliseconds()) / 300000 > 1) return true
-    // Otherwise returns false
-    else return false
 }

@@ -1,6 +1,7 @@
 import automatedNotifications from "./automatedNotifications.js"
 import slowMonitored from "./slowMonitored.js"
 import { writeFile } from "./functions/file.js"
+import { startTime } from "./data/info.js"
 
 /**
  * Test function for the repository. Will run for 5 minutes then put the
@@ -24,7 +25,7 @@ export default async function test() {
     )
 
     // Writes startTime to file
-    const content = `const startTime = "${time.toISOString()}"\n\nexport default startTime\n`
+    const content = `let startTime = "${time.toISOString()}"\n\nlet stable = false\n\nexport { startTime, stable }\n`
     writeFile({fileName: "info", content, removeBrackets: true})
 
     // Runs the two entry points of the application 5 times to ensure stability
@@ -41,6 +42,10 @@ export default async function test() {
 
     // Runs 5 times before continuing
     } while (testCount < 5)
+
+    // Sets stable as true as it has run both functions 5 times without issues.
+    const stableContent = `let startTime = "${startTime}"\nlet stable = true\nexport { startTime, stable }\n`
+    writeFile({fileName: "info", content: stableContent, removeBrackets: true})
 
     // Logs success
     console.log("No errors found. Putting repository into production.")

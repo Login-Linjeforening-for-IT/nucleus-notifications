@@ -29,8 +29,8 @@ export default async function notifyNewEntry(event: EventProps) {
     let englishBody = `Click here to read more. ${fetchEmoji(event)}`
 
     // Sends the notification
-    if(norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
-    if(englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
+    if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
+    if (englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
 
     // Logs success
     console.log(`Scheduled notifyNewEntry notification for event ${event.eventID}`)
@@ -63,8 +63,8 @@ export async function notifyLinkFound(event: DetailedEventProps) {
     let englishBody = `Registration available! ${fetchEmoji(event)}`
 
     // Sends the notification
-    if(norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
-    if(englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
+    if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
+    if (englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
 
     // Logs success
     console.log(`Scheduled notifyLinkFound notification for event ${event.eventID}`)
@@ -97,8 +97,8 @@ export async function notifyNewWithLink(event: EventProps) {
     let englishBody = `Registration already available, click here to read more! ${fetchEmoji(event)}`
 
     // Sends the notification
-    if(norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})        
-    if(englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
+    if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})        
+    if (englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
 
     // Logs success
     console.log(`Scheduled notifyNewWithLink notification for event ${event.eventID}`)

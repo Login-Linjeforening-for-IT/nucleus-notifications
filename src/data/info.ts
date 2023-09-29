@@ -1,3 +1,4 @@
-const startTime = "2023-09-27T05:13:21.231Z"
+let startTime = "2023-09-29T17:39:55.566Z"
+let stable = false
 
-export default startTime
+export { startTime, stable }

@@ -71,7 +71,7 @@ export async function storeNotified({events}: storeNotifiedProps) {
  */
 export async function storeSlowMonitored({events, overwrite}: storeSlowMonitoredProps): Promise<void> {
     // Writes events to file
-    if(overwrite) return writeFile({fileName: "slow", content: events})
+    if (overwrite) return writeFile({fileName: "slow", content: events})
     
     // Adds new events to array of slowmonitored events
     let slowEvents = await readFile("slow") as DetailedEventProps[]

@@ -30,6 +30,6 @@ function removeJsFiles(dir: string) {
 }
 
 // Specify the root directory from where you want to start the cleanup
-const rootDir = '/Users/eirikhanasand/Desktop/Login/automatednotifications/src/'
+const rootDir = './'
 removeJsFiles(rootDir)
 console.log('Cleanup complete.')

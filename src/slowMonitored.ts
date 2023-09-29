@@ -24,7 +24,7 @@ export default async function slowMonitored() {
     console.log("Slow monitoring every 30 minutes")
 
     // Fetches events from file and API
-    let APIevents = await detailedEvents(true) 
+    let APIevents = await detailedEvents(true)
     let slowEvents = await readFile("slow") as DetailedEventProps[]
 
     // Checks all events with earlier version for potential changes
@@ -44,16 +44,16 @@ export default async function slowMonitored() {
         let hour = `${APIevent.startt[11]}${APIevent.startt[12]}:${APIevent.startt[14]}${APIevent.startt[15]}` // Formats hour of the event
 
         // Updates time of the event
-        if(slow && slow.startt !== APIevent.startt)             time = true
-        if(slow && joinlink(slow) !== joinlink(APIevent))       link = true
+        if (slow && slow.startt !== APIevent.startt)             time = true
+        if (slow && joinlink(slow) !== joinlink(APIevent))       link = true
 
         // Updates event location variables
-        if(slow && slow.roomno !== APIevent.roomno)         location = true
-        if(slow && slow.campus !== APIevent.campus)         location = true
-        if(slow && slow.street !== APIevent.street)         location = true
+        if (slow && slow.roomno !== APIevent.roomno)         location = true
+        if (slow && slow.campus !== APIevent.campus)         location = true
+        if (slow && slow.street !== APIevent.street)         location = true
 
         // Updates link of the event
-        if(!joinlink(APIevent)) link = false
+        if (!joinlink(APIevent)) link = false
 
         // Updates full location of the event
         if (room && campus && street) loc = `${room}, ${campus}, ${street}.`
@@ -66,54 +66,54 @@ export default async function slowMonitored() {
         else loc = null
 
         // Sends the relevant notification to the relevant topics with the relevant information
-        if(time && link && location) {
+        if (time && link && location) {
             let norwegianBody = `Arrangementet har blitt endret. Ny tid: ${hour} den ${formattedStarttime}. Nytt sted: ${loc}. Trykk her for alle detaljene.`
             let englishBody = `Event has changed. New time: ${hour} on ${formattedStarttime}. New location: ${loc}. Tap here for details.`
 
-            if(norwegianTopic)  sendNotification({title, body: norwegianBody, screen: APIevent, topic: norwegianTopic})
-            if(englishTopic)    sendNotification({title, body: englishBody, screen: APIevent, topic: englishTopic})
+            if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: APIevent, topic: norwegianTopic})
+            if (englishTopic)    sendNotification({title, body: englishBody, screen: APIevent, topic: englishTopic})
 
-        }else if(time && link){
+        }else if (time && link){
             let norwegianBody = `Tid endret til kl: ${hour} den ${formattedStarttime}. Påmeldingslinken er også endret. Trykk her for flere detaljer.`
             let englishBody = `Time changed to: ${hour} on ${formattedStarttime}. Registration link has also changed. Tap here for details.`
 
-            if(norwegianTopic)  sendNotification({title, body: norwegianBody, screen: APIevent, topic: norwegianTopic})
-            if(englishTopic)    sendNotification({title, body: englishBody, screen: APIevent, topic: englishTopic})
+            if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: APIevent, topic: norwegianTopic})
+            if (englishTopic)    sendNotification({title, body: englishBody, screen: APIevent, topic: englishTopic})
            
-        }else if(time && location) {
+        }else if (time && location) {
             let norwegianBody = `Tid og sted endret. Ny tid: ${hour} den ${formattedStarttime}. Nytt sted: ${loc}. Trykk her for å se den oppdaterte informasjonen.`
             let englishBody = `Time and location changed. New time: ${hour} on ${formattedStarttime}. New location: ${loc}. Tap here for details.`
 
-            if(norwegianTopic)  sendNotification({title, body: norwegianBody, screen: APIevent, topic: norwegianTopic})
-            if(englishTopic)    sendNotification({title, body: englishBody, screen: APIevent, topic: englishTopic})
+            if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: APIevent, topic: norwegianTopic})
+            if (englishTopic)    sendNotification({title, body: englishBody, screen: APIevent, topic: englishTopic})
           
-        }else if(link && location) {
+        }else if (link && location) {
             let norwegianBody = `Nytt sted: ${loc}. Påmeldingslink har også blitt endret. Trykk her for mer informasjon.`
             let englishBody = `New location: ${loc}. Registration link has also changed. Click here for more information.`
 
-            if(norwegianTopic)  sendNotification({title, body: norwegianBody, screen: APIevent, topic: norwegianTopic})
-            if(englishTopic)    sendNotification({title, body: englishBody, screen: APIevent, topic: englishTopic})
+            if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: APIevent, topic: norwegianTopic})
+            if (englishTopic)    sendNotification({title, body: englishBody, screen: APIevent, topic: englishTopic})
         
-        }else if(time) {
+        }else if (time) {
             let norwegianBody = `Tidspunkt endret til kl ${hour} den ${formattedStarttime}.`
             let englishBody = `Time changed to ${hour} on ${formattedStarttime}.`
 
-            if(norwegianTopic)  sendNotification({title, body: norwegianBody, screen: APIevent, topic: norwegianTopic})
-            if(englishTopic)    sendNotification({title, body: englishBody, screen: APIevent, topic: englishTopic})
+            if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: APIevent, topic: norwegianTopic})
+            if (englishTopic)    sendNotification({title, body: englishBody, screen: APIevent, topic: englishTopic})
            
-        }else if(location) {
+        }else if (location) {
             let norwegianBody = `Sted endret til ${loc}`
             let englishBody = `Location changed to ${loc}`
 
-            if(norwegianTopic)  sendNotification({title, body: norwegianBody, screen: APIevent, topic: norwegianTopic})
-            if(englishTopic)    sendNotification({title, body: englishBody, screen: APIevent, topic: englishTopic})
+            if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: APIevent, topic: norwegianTopic})
+            if (englishTopic)    sendNotification({title, body: englishBody, screen: APIevent, topic: englishTopic})
 
-        }else if(link) {
+        }else if (link) {
             let norwegianBody = `Ny påmeldingslink lagt ut!`
             let englishBody = `New registration link available!`
 
-            if(norwegianTopic)  sendNotification({title, body: norwegianBody, screen: APIevent, topic: norwegianTopic})
-            if(englishTopic)    sendNotification({title, body: englishBody, screen: APIevent, topic: englishTopic})
+            if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: APIevent, topic: norwegianTopic})
+            if (englishTopic)    sendNotification({title, body: englishBody, screen: APIevent, topic: englishTopic})
 
         }
     }
@@ -126,7 +126,7 @@ export default async function slowMonitored() {
     console.log("newslow", newSlow.length)
     
     // Overwrites slowMonitored.txt after checking for changes.
-    if(newSlow.length > 0) storeSlowMonitored({events: newSlow, overwrite: true})
+    if (newSlow.length > 0) storeSlowMonitored({events: newSlow, overwrite: true})
     // Otherwise logs that there are no events in api.
     else console.log("Found nothing new.")
 

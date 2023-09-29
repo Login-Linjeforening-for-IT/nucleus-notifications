@@ -26,7 +26,7 @@ export default async function automatedNotifications() {
     console.log("Interval started at", new Date().toISOString())
 
     // Terminates early if there are no events in database
-    if(!(await fetchEvents()).length) {
+    if (!(await fetchEvents()).length) {
         console.log("Found no events in database.")
         return null
     }
@@ -51,11 +51,11 @@ export default async function automatedNotifications() {
     let newEvents = (notified.length > 0 || slow.length > 0) ? events.filter(event => {
         return (!slow.some(slowEvent => slowEvent.eventID === event.eventID) && !notified.some(notifiedEvent => notifiedEvent.eventID === event.eventID))
     }):events
-    if(newEvents == undefined) return handleError({file: "automatedNotifications", error: "newEvents is undefined"})
+    if (newEvents == undefined) return handleError({file: "automatedNotifications", error: "newEvents is undefined"})
 
     // Sorts events and pushes them to appropriate arrays
     let sortedEvents = sortEvents({events: newEvents, notify: true})
-    if(sortedEvents == undefined) return handleError({file: "automatedNotifications", error: "sortedEvents is undefined"})
+    if (sortedEvents == undefined) return handleError({file: "automatedNotifications", error: "sortedEvents is undefined"})
     sortedEvents.slow.forEach(event => {slow.push(event)})
     sortedEvents.notified.forEach(event => {notified.push(event)})
 
@@ -66,7 +66,7 @@ export default async function automatedNotifications() {
 
     // Handles notified events, potentially pushing them to slow if a link is found
     let sortedNotified = sortNotified({events: newNotified, notify: true})
-    if(sortedNotified == undefined) return handleError({file: "automatedNotifications", error: "sortedNotified is undefined"})
+    if (sortedNotified == undefined) return handleError({file: "automatedNotifications", error: "sortedNotified is undefined"})
     if (sortedNotified.length) sortedNotified.forEach(event => {slow.push(event)})
 
     // Returns if any variable to be stored is undefined

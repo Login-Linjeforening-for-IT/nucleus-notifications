@@ -1,9 +1,9 @@
-import notifyNewEntry, {notifyLinkFound, notifyNewWithLink} from "./notify.js"
+import notifyNewEntry, { notifyLinkFound, notifyNewWithLink } from "./notify.js"
 import { EventProps, DetailedEventProps } from "../../types"
-import fetchEvents, {timeToEvent} from "./fetch.js"
+import fetchEvents, { timeToEvent } from "./fetch.js"
 import joinlink from "./joinlink.js"
 import handleError from "./error.js"
-import {readFile} from "./file.js"
+import { readFile } from "./file.js"
 
 type sortEventsProps = {
     events: DetailedEventProps[]
@@ -18,8 +18,8 @@ type SortedObject = {
 /**
  * Function for sorting events from API into their seperate categories
  * 
- * @param {array} events Events to sort
- * @param {boolean} notify Option to notify end user
+ * @param events Events to sort
+ * @param notify Option to notify end user
  * 
  * @see notifyNewWithLink(...)  Notifies the end user of a new event with a joinlink available
  * @see notifyNewEntry(...)     Notifies the end user of a new event
@@ -69,8 +69,8 @@ export default function sortEvents({events, notify}: sortEventsProps): SortedObj
 /**
  * Function for checking notifiedEvents for joinlink and if so move them to slowMonitored.txt
  * 
- * @param {array} events Events to check
- * @param {boolean} notify Option to notify the user that the joinlink is found
+ * @param events Events to check
+ * @param notify Option to notify the user that the joinlink is found
  * 
  * @see notifyLinkFound(...)    Notifies the user that a link has been found for an already existing event
  * @see joinlink(...)           Fetches the joinlink for an event
@@ -86,9 +86,6 @@ export function sortNotified({events, notify}: sortEventsProps) {
 
     // Goes through each event
     events.forEach(event => {
-        // If there is a joinlink, logs that the event does not satisfy the requirements, and returns
-        if (!joinlink(event)) return console.log(`Event ${event.eventID} does not satisfy. The joinlink is ${joinlink(event)}`)
-
         // If the user should be notified, notifies the user
         if (notify) notifyLinkFound(event)
 
@@ -121,7 +118,7 @@ export async function filterEvents(): Promise<EventProps[]> {
         let filteredEvents = slowEvents.length ? events.filter(event => !slowEvents.some(slowevents => slowevents.eventID === event.eventID)):events
 
         // Handles error where the filtered events are undefined
-        if(!filteredEvents) {
+        if (!filteredEvents) {
             handleError({
                 file: "filterEvents", 
                 error: "filteredEvents is undefined"

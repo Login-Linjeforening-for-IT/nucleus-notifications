@@ -19,7 +19,7 @@ export default async function reminders() {
 
     // Fetches details for all events unfiltered.
     let events = await detailedEvents(true)
-    if(!events) return handleError({
+    if (!events) return handleError({
         file: "reminders",
         error: "events is undefined"
     })
@@ -60,8 +60,8 @@ export default async function reminders() {
         let englishBody = `Starts in 10 minutes! ${fetchEmoji(event)}`
         
         // Sends notifications
-        if(norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
-        if(englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
+        if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
+        if (englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
 
         // Increases reminders sent
         reminders+=2
@@ -81,8 +81,8 @@ export default async function reminders() {
         let englishBody = `Starts in 30 minutes! ${fetchEmoji(event)}`
 
         // Sends notifications
-        if(norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
-        if(englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
+        if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
+        if (englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
 
         // Increases reminders sent
         reminders+=2
@@ -99,8 +99,8 @@ export default async function reminders() {
         let norwegianBody = `Begynner om 1 time! ${fetchEmoji(event)}`
         let englishBody = `Starts in 1 hour! ${fetchEmoji(event)}`
         
-        if(norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
-        if(englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
+        if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
+        if (englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
         reminders+=2
     })
 
@@ -115,8 +115,8 @@ export default async function reminders() {
         let norwegianBody = `Begynner om 2 timer! ${fetchEmoji(event)}`
         let englishBody = `Starts in 2 hours! ${fetchEmoji(event)}`
 
-        if(norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
-        if(englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
+        if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
+        if (englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
         reminders+=2
     })
 
@@ -131,8 +131,8 @@ export default async function reminders() {
         let norwegianBody = `Begynner om 3 timer! ${fetchEmoji(event)}`
         let englishBody = `Starts in 3 hours! ${fetchEmoji(event)}`
         
-        if(norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
-        if(englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
+        if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
+        if (englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
         reminders+=2
     })
 
@@ -147,8 +147,8 @@ export default async function reminders() {
         let norwegianBody = `Begynner om 6 timer! ${fetchEmoji(event)}`
         let englishBody = `Starts in 6 hours! ${fetchEmoji(event)}`
         
-        if(norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
-        if(englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
+        if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
+        if (englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
         reminders+=2
     })
 
@@ -167,8 +167,8 @@ export default async function reminders() {
         let norwegianBody = `I morgen klokken ${time}! ${fetchEmoji(event)}`
         let englishBody = `Tomorrow at ${hour}${ampm}! ${fetchEmoji(event)}`
         
-        if(norwegianTopic) sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
-        if(englishTopic) sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
+        if (norwegianTopic) sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
+        if (englishTopic) sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
         reminders+=2
     })
 
@@ -187,8 +187,8 @@ export default async function reminders() {
         let norwegianBody = `Overimorgen ${time}! ${fetchEmoji(event)}`
         let englishBody = `In 2 days at ${hour + ampm}! ${fetchEmoji(event)}`
         
-        if(norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
-        if(englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
+        if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
+        if (englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
         reminders+=2
     })
 
@@ -219,8 +219,8 @@ export default async function reminders() {
         let norwegianBody = `Neste ${ukedag} kl. ${time}! ${fetchEmoji(event)}`
         let englishBody = `Next ${weekday} at ${hour}${ampm}! ${fetchEmoji(event)}`
 
-        if(norwegianTopic) sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
-        if(englishTopic) sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
+        if (norwegianTopic) sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
+        if (englishTopic) sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
         reminders+=2
     })
 
@@ -238,7 +238,7 @@ export default async function reminders() {
     // Filters events to appropriate interval
     events.forEach(event => {
         const time = timeToEvent(event)
-        if(time > 604800) new1w.push(event)
+        if (time > 604800) new1w.push(event)
         else if (time <= 604800 && time > 172800) new2d.push(event)
         else if (time <= 172800 && time > 86400) new1d.push(event)
         else if (time <= 86400 && time > 21600) new6h.push(event)
@@ -261,6 +261,6 @@ export default async function reminders() {
     writeFile({fileName: "10m", content: new10m})
 
     // Logs the status for easy monitoring of the logs
-    if(reminders)   console.log(`Scheduled ${reminders} reminders at ${new Date().toISOString()}`)
-    else            console.log(`No reminders to be sent at this time ${new Date().toISOString()}`)
+    if (reminders)   console.log(`Scheduled ${reminders} reminders at ${new Date().toISOString()}`)
+    else             console.log(`No reminders to be sent at this time ${new Date().toISOString()}`)
 }

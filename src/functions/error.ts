@@ -1,8 +1,9 @@
-import { detailedEvents, isStable, timeToEvent } from "./fetch.js"
+import { detailedEvents, timeToEvent } from "./fetch.js"
 import sendNotification from "./sendNotification.js"
 import { readFile, writeFile } from "./file.js"
 import sortEvents from "./sort.js"
 import { EventProps } from "../../types"
+import { stable } from "../data/info.js"
 
 type handleErrorProps = {
     file: string
@@ -13,9 +14,9 @@ type handleErrorProps = {
 /**
  * Function for handling errors and notifying maintenance crew.
  * 
- * @param {string} file File the error occured in
- * @param {string} error Error that occured
- * @param {string} topic Possibility to schedule to multiple topics in the future
+ * @param file File the error occured in
+ * @param error Error that occured
+ * @param topic Possibility to schedule to multiple topics in the future
  * 
  * @see sendNotification(...) Schedule notifications instantly
  * 
@@ -27,7 +28,7 @@ export default function handleError({file, error, topic}: handleErrorProps): und
     sendNotification({title: `Error in ${file}`, body: error, topic: topic ? topic:"maintenance"})
 
     // Terminates the program if it is not stable
-    if (!isStable()) {
+    if (stable) {
         console.log(`Terminated due to error in file: ${file}, ${error}`)
         process.exit(1)
     }
@@ -71,7 +72,7 @@ export async function heal(arg: string) {
     // Defines the fix loop
     do {
         // 1 minute timeout after each time the function has run
-        if(minutesElapsed) await new Promise(resolve => setTimeout(resolve, 60000))
+        if (minutesElapsed) await new Promise(resolve => setTimeout(resolve, 60000))
     
         // Checks which file needs to be healed, as each file is healed in a
         // different way, tailored to the needs of that file.    
@@ -84,7 +85,7 @@ export async function heal(arg: string) {
 
                 // Notifies maintenance team that there is an error in heal.ts,
                 // saying that events are undefined in slow.txt
-                if(!events) handleError({file: "heal", error: `Unable to heal ${arg}, events is undefined`})
+                if (!events) handleError({file: "heal", error: `Unable to heal ${arg}, events is undefined`})
 
                 // Sorts out events that should not be in notified.txt
                 let obj = sortEvents({events})
@@ -117,7 +118,7 @@ export async function heal(arg: string) {
                     
                     // Notifies maintenance team that there is an error in 
                     // heal.mjs, saying that events are undefined in slow.txt
-                    if(!events) handleError({
+                    if (!events) handleError({
                         file: "heal", 
                         error: `Unable to heal ${arg}, events is undefined`
                     })
@@ -165,7 +166,7 @@ export async function heal(arg: string) {
                 let events = await detailedEvents(true)
 
                 // Notifies maintenance team that interval files are unable to be healed
-                if(!events) handleError({
+                if (!events) handleError({
                     file: "heal", 
                     error: `Unable to heal interval files, events is undefined`
                 })
@@ -187,7 +188,7 @@ export async function heal(arg: string) {
                     const time = timeToEvent(event)
 
                     // Adds each event to the appropriate array
-                    if(time > 604800) new1w.push(event)
+                    if (time > 604800) new1w.push(event)
                     else if (time <= 604800 && time > 172800) new2d.push(event)
                     else if (time <= 172800 && time > 86400) new1d.push(event)
                     else if (time <= 21600 && time > 10800) new3h.push(event)

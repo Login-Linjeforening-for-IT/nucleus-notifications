@@ -9,7 +9,7 @@
     "scripts": {
         "test": "npx tsc src/test.ts",
         "start": "tsc && node dist/index.js",
-        "clean": "node src/functions/clean.mjs",
+        "clean": "tsc && node dist/src/functions/clean.js",
         "notify": "tsc node dist/src/functions/sendNotification.js"
     },
     "dependencies": {

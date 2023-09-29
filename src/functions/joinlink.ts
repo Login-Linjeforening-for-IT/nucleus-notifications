@@ -11,7 +11,7 @@ export default function joinlink(event: DetailedEventProps): string | null {
 
     let description = event.description
 
-    if(description) {
+    if (description) {
         
         // Catches google and microsoft form links
         let formStart = description.lastIndexOf('https://forms')
@@ -31,9 +31,9 @@ export default function joinlink(event: DetailedEventProps): string | null {
         let netLink = description.slice(netStart, netEnd)
 
         // Trims and returns link if they are found
-        if(formLink)    return formLink.trim()
-        if(tikkioLink)  return tikkioLink.trim()
-        if(netLink)     return netLink.trim()
+        if (formLink)    return formLink.trim()
+        if (tikkioLink)  return tikkioLink.trim()
+        if (netLink)     return netLink.trim()
 
         // Returns null if no link was found
         return null
