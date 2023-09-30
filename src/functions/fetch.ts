@@ -135,7 +135,7 @@ export function timeToEvent (event: EventProps): number {
     const eventTime = new Date(event.startt)
 
     // Subtracting and dividing from milliseconds to seconds
-    let seconds = (eventTime.getMilliseconds() - currentTime.getMilliseconds()) / 1000
+    let seconds = (eventTime.getTime() - currentTime.getTime()) / 1000
 
     // Checks for and subtracts two hours during summertime
     if (summertime()) return seconds-9800

@@ -40,11 +40,11 @@ export default function file(file: string): string {
 /**
  * Writes content to file
  * 
- * @param fileName Filename to write to
- * @param content   Content to write to file
+ * @param fileName       Filename to write to
+ * @param content        Content to write to file
  * 
- * @see handleError(...)    Notifies the maintenance team of any error
- * @see file(...)           Returns full file path of given argument
+ * @see handleError(...) Notifies the maintenance team of any error
+ * @see file(...)        Returns full file path of given argument
  */
 export function writeFile({fileName, content, removeBrackets}: writeFileProps) {
     // Fetches full file path for the array to write to file
@@ -60,7 +60,9 @@ export function writeFile({fileName, content, removeBrackets}: writeFileProps) {
     // Writes content or empty brackets to file 
     fs.writeFile(File, stringifiedContent, (error) => {
         // Returns and handles any errors while writing
-        if (error) return handleError({file: "writeFile", error: JSON.stringify(error)})
+        if (error) {
+            return handleError({file: "writeFile", error: JSON.stringify(error)})
+        }
 
         // Logs success
         console.log(`Overwrote ${fileName}. Content: ${content ? true : false}.`)

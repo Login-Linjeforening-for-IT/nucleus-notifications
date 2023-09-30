@@ -19,6 +19,7 @@ export default async function reminders() {
 
     // Fetches details for all events unfiltered.
     let events = await detailedEvents(true)
+
     if (!events) return handleError({
         file: "reminders",
         error: "events is undefined"
@@ -238,6 +239,7 @@ export default async function reminders() {
     // Filters events to appropriate interval
     events.forEach(event => {
         const time = timeToEvent(event)
+
         if (time > 604800) new1w.push(event)
         else if (time <= 604800 && time > 172800) new2d.push(event)
         else if (time <= 172800 && time > 86400) new1d.push(event)
@@ -248,7 +250,7 @@ export default async function reminders() {
         else if (time <= 3600 && time > 1800) new30m.push(event)
         else if (time <= 1800 && time > 600) new10m.push(event)
     })
-    
+
     // Stores events
     writeFile({fileName: "1w", content: new1w})
     writeFile({fileName: "2d", content: new2d})

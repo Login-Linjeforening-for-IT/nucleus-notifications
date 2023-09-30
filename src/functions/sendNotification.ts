@@ -19,7 +19,7 @@ type sendNotificationProps = {
 export default function sendNotification({title, body, screen, topic}: sendNotificationProps): void {
     // Sets the topic to maintenance if the topic is not available
     if (!topic || !stable) topic = "maintenance"
-    topic = "maintenance"
+
     // Defines the message to be sent
     const message = {
         to: `/topics/${topic}`,
@@ -54,6 +54,6 @@ export default function sendNotification({title, body, screen, topic}: sendNotif
 // Examples of direct notifications that can be sent by node sendNotifications.ts
 // Topics: norwegianTOPIC, englishTOPIC, ...
 
-sendNotification({title: "Tittel", body: "Beskrivelse", topic: "maintenance"})
+// sendNotification({title: "Tittel", body: "Beskrivelse", topic: "maintenance"})
 // sendNotification("Title", "English description", "", "maintenace")
 // sendNotification("Test", "Kontakt tekkom om du mottok denne.")

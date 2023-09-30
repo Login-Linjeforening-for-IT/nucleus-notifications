@@ -52,7 +52,7 @@ export default function sortEvents({events, notify}: sortEventsProps): SortedObj
         } else {
 
             // Event is far away, console log when it will be added and return
-            if (timeToEvent(event) > 1209600) return console.log(event.eventID, "will not be added till another", timeToEvent(event)-1209600, "seconds have passed.")
+            if (timeToEvent(event) > 1209600) return console.log("Event", event.eventID, "will be added in", Number((timeToEvent(event)-1209600).toFixed(0)), "seconds.")
             
             // If the user should be notified, notifies the user
             if (notify) notifyNewEntry(event)
