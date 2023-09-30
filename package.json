@@ -2,13 +2,24 @@
     "name": "automatednotifications",
     "version": "1.0.0",
     "description": "Automated notifications for the Login app",
-    "main": "index.js",
+    "main": "index.ts",
     "author": "Login - Linjeforeningen for IT",
     "license": "ISC",
     "type": "module",
+    "scripts": {
+        "test": "tsc && node dist/src/test.js",
+        "start": "tsc && node dist/index.js",
+        "clean": "tsc && node dist/src/functions/clean.js",
+        "notify": "tsc && node dist/src/functions/sendNotification.js"
+    },
     "dependencies": {
         "fs": "^0.0.1-security",
         "node-cron": "^3.0.2",
         "node-fetch": "^3.3.2"
+    },
+    "devDependencies": {
+        "@types/node": "^20.7.0",
+        "@types/node-cron": "^3.0.9",
+        "typescript": "^5.2.2"
     }
 }
