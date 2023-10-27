@@ -16,7 +16,7 @@ export default async function test() {
     let testCount = 0
 
     // Writes start time to file
-    let time = new Date()
+    const time = new Date()
     const hoursToUTC = time.getTimezoneOffset() / 60
 
     time.setHours(hoursToUTC < 0 
@@ -25,7 +25,7 @@ export default async function test() {
     )
 
     // Writes startTime to file
-    const content = `let startTime = "${time.toISOString()}"\n\nlet stable = false\n\nexport { startTime, stable }\n`
+    const content = `const startTime = "${time.toISOString()}"\n\nconst stable = false\n\nexport { startTime, stable }\n`
     writeFile({fileName: "info", content, removeBrackets: true})
 
     // Runs the two entry points of the application 5 times to ensure stability
@@ -44,7 +44,7 @@ export default async function test() {
     } while (testCount < 5)
 
     // Sets stable as true as it has run both functions 5 times without issues.
-    const stableContent = `let startTime = "${startTime}"\nlet stable = true\nexport { startTime, stable }\n`
+    const stableContent = `const startTime = "${startTime}"\nconst stable = true\nexport { startTime, stable }\n`
     writeFile({fileName: "info", content: stableContent, removeBrackets: true})
 
     // Logs success

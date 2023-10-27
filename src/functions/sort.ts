@@ -1,5 +1,4 @@
 import notifyNewEntry, { notifyLinkFound, notifyNewWithLink } from "./notify.js"
-import { EventProps, DetailedEventProps } from "../../types"
 import fetchEvents, { timeToEvent } from "./fetch.js"
 import joinlink from "./joinlink.js"
 import handleError from "./error.js"
@@ -29,7 +28,7 @@ type SortedObject = {
  */
 export default function sortEvents({events, notify}: sortEventsProps): SortedObject {
     // Defines empty arrays
-    let slow: DetailedEventProps[] = [], notified: DetailedEventProps[] = []
+    const slow: DetailedEventProps[] = [], notified: DetailedEventProps[] = []
 
     // Returns if there are no events to sort
     if (!events || !events.length) {
@@ -79,7 +78,7 @@ export default function sortEvents({events, notify}: sortEventsProps): SortedObj
  */
 export function sortNotified({events, notify}: sortEventsProps) {
     // Defines array for events to be slowmonitored
-    let slow: DetailedEventProps[] = []
+    const slow: DetailedEventProps[] = []
 
     // Returns a empty array if there are no events to sort
     if (!events || !events.length) return []
@@ -109,13 +108,13 @@ export function sortNotified({events, notify}: sortEventsProps) {
 export async function filterEvents(): Promise<EventProps[]> {
     try {
         // Fetches events
-        let events = await fetchEvents()
+        const events = await fetchEvents()
 
         // Fetches slow monitored events (events where changes are unlikely)
-        let slowEvents = await readFile("slow") as DetailedEventProps[]
+        const slowEvents = await readFile("slow") as DetailedEventProps[]
         
         // Filters events to avoid multiples of the same event 
-        let filteredEvents = slowEvents.length ? events.filter(event => !slowEvents.some(slowevents => slowevents.eventID === event.eventID)):events
+        const filteredEvents = slowEvents.length ? events.filter(event => !slowEvents.some(slowevents => slowevents.eventID === event.eventID)):events
 
         // Handles error where the filtered events are undefined
         if (!filteredEvents) {

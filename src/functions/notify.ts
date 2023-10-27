@@ -1,4 +1,3 @@
-import { EventProps, DetailedEventProps } from "../../types"
 import sendNotification from "./sendNotification.js"
 import { fetchEmoji } from "./fetch.js"
 
@@ -12,21 +11,21 @@ import { fetchEmoji } from "./fetch.js"
  */
 export default async function notifyNewEntry(event: EventProps) {
     // Event category
-    let category = event.category.toUpperCase()
+    const category = event.category.toUpperCase()
 
     // Norwegian and english notification topics
-    let norwegianTopic = `norwegian${category}`
-    let englishTopic = `english${category}`
+    const norwegianTopic = `norwegian${category}`
+    const englishTopic = `english${category}`
 
     // Formats start time
-    let formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
+    const formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
 
     // Formats title
-    let title = `${event.eventname} ${formattedStarttime}`
+    const title = `${event.eventname} ${formattedStarttime}`
 
     // Defines body
-    let norwegianBody = `Trykk her for å lese mer. ${fetchEmoji(event)}`
-    let englishBody = `Click here to read more. ${fetchEmoji(event)}`
+    const norwegianBody = `Trykk her for å lese mer. ${fetchEmoji(event)}`
+    const englishBody = `Click here to read more. ${fetchEmoji(event)}`
 
     // Sends the notification
     if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
@@ -46,21 +45,21 @@ export default async function notifyNewEntry(event: EventProps) {
  */
 export async function notifyLinkFound(event: DetailedEventProps) {
     // Event category
-    let category = event.category.toUpperCase()
+    const category = event.category.toUpperCase()
 
     // Norwegian and english notification topics
-    let norwegianTopic = `norwegian${category}`
-    let englishTopic = `english${category}`
+    const norwegianTopic = `norwegian${category}`
+    const englishTopic = `english${category}`
 
     // Formats start time
-    let formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
+    const formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
     
     // Formats title
-    let title = `${event.eventname} ${formattedStarttime}`
+    const title = `${event.eventname} ${formattedStarttime}`
     
     // Defines body
-    let norwegianBody = `Påmelding er ute! ${fetchEmoji(event)}`
-    let englishBody = `Registration available! ${fetchEmoji(event)}`
+    const norwegianBody = `Påmelding er ute! ${fetchEmoji(event)}`
+    const englishBody = `Registration available! ${fetchEmoji(event)}`
 
     // Sends the notification
     if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
@@ -80,21 +79,21 @@ export async function notifyLinkFound(event: DetailedEventProps) {
  */
 export async function notifyNewWithLink(event: EventProps) {
     // Event category
-    let category = event.category.toUpperCase()
+    const category = event.category.toUpperCase()
 
     // Norwegian and english notification topics
-    let norwegianTopic = `norwegian${category}`
-    let englishTopic = `english${category}`
+    const norwegianTopic = `norwegian${category}`
+    const englishTopic = `english${category}`
 
     // Formats start time
-    let formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
+    const formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
 
     // Formats title
-    let title = `${event.eventname} ${formattedStarttime}`
+    const title = `${event.eventname} ${formattedStarttime}`
 
     // Defines body
-    let norwegianBody = `Påmelding er allerede ute, trykk her for å lese mer! ${fetchEmoji(event)}`
-    let englishBody = `Registration already available, click here to read more! ${fetchEmoji(event)}`
+    const norwegianBody = `Påmelding er allerede ute, trykk her for å lese mer! ${fetchEmoji(event)}`
+    const englishBody = `Registration already available, click here to read more! ${fetchEmoji(event)}`
 
     // Sends the notification
     if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})        

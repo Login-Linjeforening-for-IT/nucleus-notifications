@@ -2,7 +2,6 @@ import { detailedEvents, timeToEvent } from "./fetch.js"
 import sendNotification from "./sendNotification.js"
 import { readFile, writeFile } from "./file.js"
 import sortEvents from "./sort.js"
-import { EventProps } from "../../types"
 import { stable } from "../data/info.js"
 
 type handleErrorProps = {
@@ -27,15 +26,12 @@ export default function handleError({file, error, topic}: handleErrorProps): und
     // maintenance topic enabled.
     sendNotification({title: `Error in ${file}`, body: error, topic: topic ? topic:"maintenance"})
 
-    // Terminates the program if it is not stable
-    if (stable) {
-        console.log(`Terminated due to error in file: ${file}, ${error}`)
-        process.exit(1)
-    }
+    // Continues with undefined to try executing the rest of the file
+    if (stable) return undefined
 
-    // Otherwise returns undefined for the function that called handleError so
-    // that it can continue succesfully.
-    else return undefined
+    // Terminates the program if it is not stable
+    console.log(`Terminated due to error in file: ${file}, ${error}`)
+    process.exit(1)
 }
 
 /**
@@ -80,15 +76,15 @@ export async function heal(arg: string) {
             // Heals notified.txt
             case "notified": {
                 // Defines notified events, and full list of events
-                let notified: EventProps[] = []
-                let events = await detailedEvents(true)
+                const notified: EventProps[] = []
+                const events = await detailedEvents(true)
 
                 // Notifies maintenance team that there is an error in heal.ts,
                 // saying that events are undefined in slow.txt
                 if (!events) handleError({file: "heal", error: `Unable to heal ${arg}, events is undefined`})
 
                 // Sorts out events that should not be in notified.txt
-                let obj = sortEvents({events})
+                const obj = sortEvents({events})
 
                 // Pushes all notified events to the notified array
                 obj.notified.forEach((event: EventProps) => {notified.push(event)})
@@ -97,7 +93,7 @@ export async function heal(arg: string) {
                 writeFile({fileName: arg, content: notified})
 
                 // Defines the fix variable equal to if the file was read successfully
-                let fix = await readFile("notified")
+                const fix = await readFile("notified")
 
                 // If the file was read successfully the issue is likely resolved
                 if (fix) issueFixed = true
@@ -113,8 +109,8 @@ export async function heal(arg: string) {
             case "slow": {
                 try {
                     // Defines slow events, and full list of events
-                    let slow: EventProps[] = []
-                    let events = await detailedEvents(true)
+                    const slow: EventProps[] = []
+                    const events = await detailedEvents(true)
                     
                     // Notifies maintenance team that there is an error in 
                     // heal.mjs, saying that events are undefined in slow.txt
@@ -124,7 +120,7 @@ export async function heal(arg: string) {
                     })
 
                     // Sorts out events that should not be in slow.txt
-                    let obj = sortEvents({events})
+                    const obj = sortEvents({events})
 
                     // Pushes all slow events to the slow array
                     obj.slow.forEach(event => {slow.push(event)})
@@ -133,7 +129,7 @@ export async function heal(arg: string) {
                     writeFile({fileName: arg, content: slow})
 
                     // Defines the fix variable equal to if the file was written successfully
-                    let fix = await readFile("slow")
+                    const fix = await readFile("slow")
 
                     // If the file was read successfully the issue is likely resolved
                     if (fix) issueFixed = true
@@ -163,7 +159,7 @@ export async function heal(arg: string) {
             // Heals all interval files by default
             default: {
                 // Fetches events
-                let events = await detailedEvents(true)
+                const events = await detailedEvents(true)
 
                 // Notifies maintenance team that interval files are unable to be healed
                 if (!events) handleError({
@@ -172,15 +168,15 @@ export async function heal(arg: string) {
                 })
 
                 // Declaring new intervals
-                let new10m: EventProps[] = []
-                let new30m: EventProps[] = []
-                let new1h: EventProps[] = []
-                let new2h: EventProps[] = []
-                let new3h: EventProps[] = []
-                let new6h: EventProps[] = []
-                let new1d: EventProps[] = []
-                let new2d: EventProps[] = []
-                let new1w: EventProps[] = []
+                const new10m: EventProps[] = []
+                const new30m: EventProps[] = []
+                const new1h: EventProps[] = []
+                const new2h: EventProps[] = []
+                const new3h: EventProps[] = []
+                const new6h: EventProps[] = []
+                const new1d: EventProps[] = []
+                const new2d: EventProps[] = []
+                const new1w: EventProps[] = []
 
                 // Filters events to appropriate interval
                 events.forEach(event => {
@@ -218,7 +214,7 @@ export async function heal(arg: string) {
                  * events to run successfully, only trying to heal the broken
                  * ones when necesarry.
                  */
-                let fix = await readFile(arg)
+                const fix = await readFile(arg)
                 if (fix) issueFixed = true
 
                 // Otherwise notifies maintenance team that the file is still unreadable

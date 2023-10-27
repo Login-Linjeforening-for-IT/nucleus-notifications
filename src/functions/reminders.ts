@@ -3,7 +3,6 @@ import { readFile, writeFile } from "./file.js"
 import { detailedEvents, timeToEvent } from "./fetch.js"
 import handleError from "./error.js"
 import { fetchEmoji } from "./fetch.js"
-import { EventProps, DetailedEventProps } from "../../types"
 
 /**
  * Schedules a notification to FCM if a new event with a join link already available has been found and updates slowMonitored.txt
@@ -18,7 +17,7 @@ export default async function reminders() {
     let reminders = 0
 
     // Fetches details for all events unfiltered.
-    let events = await detailedEvents(true)
+    const events = await detailedEvents(true)
 
     if (!events) return handleError({
         file: "reminders",
@@ -26,39 +25,39 @@ export default async function reminders() {
     })
 
     // Fetches events in each interval
-    let stored10m = await readFile("10m") as DetailedEventProps[]
-    let stored30m = await readFile("30m") as DetailedEventProps[]
-    let stored1h  = await readFile("1h") as DetailedEventProps[]
-    let stored2h  = await readFile("2h") as DetailedEventProps[]
-    let stored3h  = await readFile("3h") as DetailedEventProps[]
-    let stored6h  = await readFile("6h") as DetailedEventProps[]
-    let stored1d  = await readFile("1d") as DetailedEventProps[]
-    let stored2d  = await readFile("2d") as DetailedEventProps[]
-    let stored1w  = await readFile("1w") as DetailedEventProps[]
+    const stored10m = await readFile("10m") as DetailedEventProps[]
+    const stored30m = await readFile("30m") as DetailedEventProps[]
+    const stored1h  = await readFile("1h") as DetailedEventProps[]
+    const stored2h  = await readFile("2h") as DetailedEventProps[]
+    const stored3h  = await readFile("3h") as DetailedEventProps[]
+    const stored6h  = await readFile("6h") as DetailedEventProps[]
+    const stored1d  = await readFile("1d") as DetailedEventProps[]
+    const stored2d  = await readFile("2d") as DetailedEventProps[]
+    const stored1w  = await readFile("1w") as DetailedEventProps[]
 
     // Filters out events that are ready to be notified about
-    let notify10m = stored10m.filter((event: EventProps) => timeToEvent(event) <= 600)
-    let notify30m = stored30m.filter((event: EventProps) => timeToEvent(event) <= 1800)
-    let notify1h = stored1h.filter((event: EventProps) => timeToEvent(event) <= 3600)
-    let notify2h = stored2h.filter((event: EventProps) => timeToEvent(event) <= 7200)
-    let notify3h = stored3h.filter((event: EventProps) => timeToEvent(event) <= 10800)
-    let notify6h = stored6h.filter((event: EventProps) => timeToEvent(event) <= 21600)
-    let notify1d = stored1d.filter((event: EventProps) => timeToEvent(event) <= 86400)
-    let notify2d = stored2d.filter((event: EventProps) => timeToEvent(event) <= 172800)
-    let notify1w = stored1w.filter((event: EventProps) => timeToEvent(event) <= 604800)
+    const notify10m = stored10m.filter((event: EventProps) => timeToEvent(event) <= 600)
+    const notify30m = stored30m.filter((event: EventProps) => timeToEvent(event) <= 1800)
+    const notify1h = stored1h.filter((event: EventProps) => timeToEvent(event) <= 3600)
+    const notify2h = stored2h.filter((event: EventProps) => timeToEvent(event) <= 7200)
+    const notify3h = stored3h.filter((event: EventProps) => timeToEvent(event) <= 10800)
+    const notify6h = stored6h.filter((event: EventProps) => timeToEvent(event) <= 21600)
+    const notify1d = stored1d.filter((event: EventProps) => timeToEvent(event) <= 86400)
+    const notify2d = stored2d.filter((event: EventProps) => timeToEvent(event) <= 172800)
+    const notify1w = stored1w.filter((event: EventProps) => timeToEvent(event) <= 604800)
 
     // Schedules notifications for events 10 minutes away
     notify10m.forEach((event: EventProps) => {
-        let formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
-        let title = `${event.eventname} ${formattedStarttime}`
+        const formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
+        const title = `${event.eventname} ${formattedStarttime}`
         
         // Notification topic
-        let norwegianTopic = `norwegian${event.eventID}${(event.category).toLowerCase()}10m`
-        let englishTopic = `english${event.eventID}${(event.category).toLowerCase()}10m`
+        const norwegianTopic = `norwegian${event.eventID}${(event.category).toLowerCase()}10m`
+        const englishTopic = `english${event.eventID}${(event.category).toLowerCase()}10m`
 
         // Notification body
-        let norwegianBody = `Begynner om 10 minutter! ${fetchEmoji(event)}`
-        let englishBody = `Starts in 10 minutes! ${fetchEmoji(event)}`
+        const norwegianBody = `Begynner om 10 minutter! ${fetchEmoji(event)}`
+        const englishBody = `Starts in 10 minutes! ${fetchEmoji(event)}`
         
         // Sends notifications
         if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
@@ -70,16 +69,16 @@ export default async function reminders() {
 
     // Schedules notifications for events 30 minutes away
     notify30m.forEach((event: EventProps) => {
-        let formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
-        let title = `${event.eventname} ${formattedStarttime}`
+        const formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
+        const title = `${event.eventname} ${formattedStarttime}`
 
         // Notification topic
-        let norwegianTopic = `norwegian${event.eventID}${(event.category).toLowerCase()}30m`
-        let englishTopic = `english${event.eventID}${(event.category).toLowerCase()}30m`
+        const norwegianTopic = `norwegian${event.eventID}${(event.category).toLowerCase()}30m`
+        const englishTopic = `english${event.eventID}${(event.category).toLowerCase()}30m`
 
         // Notification body
-        let norwegianBody = `Begynner om 30 minutter! ${fetchEmoji(event)}`
-        let englishBody = `Starts in 30 minutes! ${fetchEmoji(event)}`
+        const norwegianBody = `Begynner om 30 minutter! ${fetchEmoji(event)}`
+        const englishBody = `Starts in 30 minutes! ${fetchEmoji(event)}`
 
         // Sends notifications
         if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
@@ -91,14 +90,14 @@ export default async function reminders() {
 
     // Schedules notifications for events 1 hour away
     notify1h.forEach((event: EventProps) => {
-        let formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
-        let title = `${event.eventname} ${formattedStarttime}`
+        const formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
+        const title = `${event.eventname} ${formattedStarttime}`
 
-        let norwegianTopic = `norwegian${event.eventID}${(event.category).toLowerCase()}1h`
-        let englishTopic = `english${event.eventID}${(event.category).toLowerCase()}1h`
+        const norwegianTopic = `norwegian${event.eventID}${(event.category).toLowerCase()}1h`
+        const englishTopic = `english${event.eventID}${(event.category).toLowerCase()}1h`
 
-        let norwegianBody = `Begynner om 1 time! ${fetchEmoji(event)}`
-        let englishBody = `Starts in 1 hour! ${fetchEmoji(event)}`
+        const norwegianBody = `Begynner om 1 time! ${fetchEmoji(event)}`
+        const englishBody = `Starts in 1 hour! ${fetchEmoji(event)}`
         
         if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
         if (englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
@@ -107,14 +106,14 @@ export default async function reminders() {
 
     // Schedules notifications for events 2 hours away
     notify2h.forEach((event: EventProps) => {
-        let formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
-        let title = `${event.eventname} ${formattedStarttime}`
+        const formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
+        const title = `${event.eventname} ${formattedStarttime}`
         
-        let norwegianTopic = `norwegian${event.eventID}${(event.category).toLowerCase()}2h`
-        let englishTopic = `english${event.eventID}${(event.category).toLowerCase()}2h`
+        const norwegianTopic = `norwegian${event.eventID}${(event.category).toLowerCase()}2h`
+        const englishTopic = `english${event.eventID}${(event.category).toLowerCase()}2h`
 
-        let norwegianBody = `Begynner om 2 timer! ${fetchEmoji(event)}`
-        let englishBody = `Starts in 2 hours! ${fetchEmoji(event)}`
+        const norwegianBody = `Begynner om 2 timer! ${fetchEmoji(event)}`
+        const englishBody = `Starts in 2 hours! ${fetchEmoji(event)}`
 
         if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
         if (englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
@@ -123,14 +122,14 @@ export default async function reminders() {
 
     // Schedules notifications for events 3 hours away
     notify3h.forEach((event: EventProps) => {
-        let formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
-        let title = `${event.eventname} ${formattedStarttime}`
+        const formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
+        const title = `${event.eventname} ${formattedStarttime}`
 
-        let norwegianTopic = `norwegian${event.eventID}${(event.category).toLowerCase()}3h`
-        let englishTopic = `english${event.eventID}${(event.category).toLowerCase()}3h`
+        const norwegianTopic = `norwegian${event.eventID}${(event.category).toLowerCase()}3h`
+        const englishTopic = `english${event.eventID}${(event.category).toLowerCase()}3h`
 
-        let norwegianBody = `Begynner om 3 timer! ${fetchEmoji(event)}`
-        let englishBody = `Starts in 3 hours! ${fetchEmoji(event)}`
+        const norwegianBody = `Begynner om 3 timer! ${fetchEmoji(event)}`
+        const englishBody = `Starts in 3 hours! ${fetchEmoji(event)}`
         
         if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
         if (englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
@@ -139,14 +138,14 @@ export default async function reminders() {
 
     // Schedules notifications for events 6 hours away
     notify6h.forEach((event: EventProps) => {
-        let formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
-        let title = `${event.eventname} ${formattedStarttime}`
+        const formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
+        const title = `${event.eventname} ${formattedStarttime}`
 
-        let norwegianTopic = `norwegian${event.eventID}${(event.category).toLowerCase()}6h`
-        let englishTopic = `english${event.eventID}${(event.category).toLowerCase()}6h`
+        const norwegianTopic = `norwegian${event.eventID}${(event.category).toLowerCase()}6h`
+        const englishTopic = `english${event.eventID}${(event.category).toLowerCase()}6h`
 
-        let norwegianBody = `Begynner om 6 timer! ${fetchEmoji(event)}`
-        let englishBody = `Starts in 6 hours! ${fetchEmoji(event)}`
+        const norwegianBody = `Begynner om 6 timer! ${fetchEmoji(event)}`
+        const englishBody = `Starts in 6 hours! ${fetchEmoji(event)}`
         
         if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
         if (englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
@@ -155,18 +154,18 @@ export default async function reminders() {
 
     // Schedules notifications for events 1 day away.
     notify1d.forEach((event: EventProps) => {
-        let formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
-        let time = `${event.startt[11]}${event.startt[12]}:${event.startt[14]}${event.startt[15]}`
-        let hour = Number(event.startt[11]+event.startt[12])
-        let ampm = (hour > 0 && hour <= 12) ? "am":"pm"
+        const formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
+        const time = `${event.startt[11]}${event.startt[12]}:${event.startt[14]}${event.startt[15]}`
+        const hour = Number(event.startt[11]+event.startt[12])
+        const ampm = (hour > 0 && hour <= 12) ? "am":"pm"
 
-        let title = `${event.eventname} ${formattedStarttime}`
+        const title = `${event.eventname} ${formattedStarttime}`
 
-        let norwegianTopic = `norwegian${event.eventID}${(event.category).toLowerCase()}1d`
-        let englishTopic = `english${event.eventID}${(event.category).toLowerCase()}1d`
+        const norwegianTopic = `norwegian${event.eventID}${(event.category).toLowerCase()}1d`
+        const englishTopic = `english${event.eventID}${(event.category).toLowerCase()}1d`
 
-        let norwegianBody = `I morgen klokken ${time}! ${fetchEmoji(event)}`
-        let englishBody = `Tomorrow at ${hour}${ampm}! ${fetchEmoji(event)}`
+        const norwegianBody = `I morgen klokken ${time}! ${fetchEmoji(event)}`
+        const englishBody = `Tomorrow at ${hour}${ampm}! ${fetchEmoji(event)}`
         
         if (norwegianTopic) sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
         if (englishTopic) sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
@@ -175,18 +174,18 @@ export default async function reminders() {
 
     // Schedules notifications for events 2 days away.
     notify2d.forEach((event: EventProps) => {
-        let formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
-        let time = `${event.startt[11]}${event.startt[12]}:${event.startt[14]}${event.startt[15]}`
-        let hour = Number(event.startt[11]+event.startt[12])
-        let ampm = (hour > 0 && hour <= 12) ? "am":"pm"
+        const formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
+        const time = `${event.startt[11]}${event.startt[12]}:${event.startt[14]}${event.startt[15]}`
+        const hour = Number(event.startt[11]+event.startt[12])
+        const ampm = (hour > 0 && hour <= 12) ? "am":"pm"
 
-        let title = `${event.eventname} ${formattedStarttime}`
+        const title = `${event.eventname} ${formattedStarttime}`
 
-        let norwegianTopic = `norwegian${event.eventID}${(event.category).toLowerCase()}2d`
-        let englishTopic = `english${event.eventID}${(event.category).toLowerCase()}2d`
+        const norwegianTopic = `norwegian${event.eventID}${(event.category).toLowerCase()}2d`
+        const englishTopic = `english${event.eventID}${(event.category).toLowerCase()}2d`
 
-        let norwegianBody = `Overimorgen ${time}! ${fetchEmoji(event)}`
-        let englishBody = `In 2 days at ${hour + ampm}! ${fetchEmoji(event)}`
+        const norwegianBody = `Overimorgen ${time}! ${fetchEmoji(event)}`
+        const englishBody = `In 2 days at ${hour + ampm}! ${fetchEmoji(event)}`
         
         if (norwegianTopic)  sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
         if (englishTopic)    sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
@@ -195,30 +194,30 @@ export default async function reminders() {
 
     // Schedules notifications for events 1 week away.
     notify1w.forEach((event: EventProps) => {
-        let formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
+        const formattedStarttime = `${event.startt[8]}${event.startt[9]}.${event.startt[5]}${event.startt[6]}`
 
-        let weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-        let ukedager = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag']
+        const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        const ukedager = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag']
 
-        let year = event.startt[0] + event.startt[1] + event.startt[2] + event.startt[3]
-        let month = event.startt[5] + event.startt[6]
-        let day = event.startt[8] + event.startt[9]
-        let time = `${event.startt[11]}${event.startt[12]}:${event.startt[14]}${event.startt[15]}`
+        const year = event.startt[0] + event.startt[1] + event.startt[2] + event.startt[3]
+        const month = event.startt[5] + event.startt[6]
+        const day = event.startt[8] + event.startt[9]
+        const time = `${event.startt[11]}${event.startt[12]}:${event.startt[14]}${event.startt[15]}`
 
-        let hour = Number(event.startt[11]+event.startt[12])
-        let ampm = (hour > 0 && hour <= 12) ? "am":"pm"
+        const hour = Number(event.startt[11]+event.startt[12])
+        const ampm = (hour > 0 && hour <= 12) ? "am":"pm"
         
-        let date = new Date(`${year}-${month}-${day}`)
-        let ukedag = ukedager[date.getDay()]
-        let weekday = weekdays[date.getDay()]
+        const date = new Date(`${year}-${month}-${day}`)
+        const ukedag = ukedager[date.getDay()]
+        const weekday = weekdays[date.getDay()]
         
-        let title = `${event.eventname} ${formattedStarttime}`
+        const title = `${event.eventname} ${formattedStarttime}`
         
-        let norwegianTopic = `norwegian${event.eventID}${(event.category).toLowerCase()}1w`
-        let englishTopic = `english${event.eventID}${(event.category).toLowerCase()}1w`
+        const norwegianTopic = `norwegian${event.eventID}${(event.category).toLowerCase()}1w`
+        const englishTopic = `english${event.eventID}${(event.category).toLowerCase()}1w`
         
-        let norwegianBody = `Neste ${ukedag} kl. ${time}! ${fetchEmoji(event)}`
-        let englishBody = `Next ${weekday} at ${hour}${ampm}! ${fetchEmoji(event)}`
+        const norwegianBody = `Neste ${ukedag} kl. ${time}! ${fetchEmoji(event)}`
+        const englishBody = `Next ${weekday} at ${hour}${ampm}! ${fetchEmoji(event)}`
 
         if (norwegianTopic) sendNotification({title, body: norwegianBody, screen: event, topic: norwegianTopic})
         if (englishTopic) sendNotification({title, body: englishBody, screen: event, topic: englishTopic})
@@ -226,15 +225,15 @@ export default async function reminders() {
     })
 
     // Declaring new intervals
-    let new10m: EventProps[] = []
-    let new30m: EventProps[] = []
-    let new1h: EventProps[] = []
-    let new2h: EventProps[] = []
-    let new3h: EventProps[] = []
-    let new6h: EventProps[] = []
-    let new1d: EventProps[] = []
-    let new2d: EventProps[] = []
-    let new1w: EventProps[] = []
+    const new10m: EventProps[] = []
+    const new30m: EventProps[] = []
+    const new1h: EventProps[] = []
+    const new2h: EventProps[] = []
+    const new3h: EventProps[] = []
+    const new6h: EventProps[] = []
+    const new1d: EventProps[] = []
+    const new2d: EventProps[] = []
+    const new1w: EventProps[] = []
 
     // Filters events to appropriate interval
     events.forEach(event => {

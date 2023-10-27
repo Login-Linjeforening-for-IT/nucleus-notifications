@@ -4,7 +4,6 @@ import fetchEvents, { detailedEvents } from "./functions/fetch.js"
 import reminders from "./functions/reminders.js"
 import handleError from "./functions/error.js"
 import { readFile } from "./functions/file.js"
-import { DetailedEventProps } from "../types"
 
 /**
  * **Automated event notifications**
@@ -35,9 +34,9 @@ export default async function automatedNotifications() {
     await reminders()
 
     // Fetches api and txt files
-    let events = await detailedEvents() as DetailedEventProps[]
-    let notified = await readFile("notified") as DetailedEventProps[]
-    let slow = await readFile("slow") as DetailedEventProps[]
+    const events = await detailedEvents() as DetailedEventProps[]
+    const notified = await readFile("notified") as DetailedEventProps[]
+    const slow = await readFile("slow") as DetailedEventProps[]
 
     // Returns if any variable is undefined
     if (events == undefined)    return handleError({file: "automatedNotifications", error: "events are initially undefined"})
@@ -48,24 +47,24 @@ export default async function automatedNotifications() {
     console.log("events:", events.length, "notified:", notified ? notified.length : 0, "slowmonitored:", slow ? slow.length : 0)
 
     // Finds new events
-    let newEvents = (notified.length > 0 || slow.length > 0) ? events.filter(event => {
+    const newEvents = (notified.length > 0 || slow.length > 0) ? events.filter(event => {
         return (!slow.some(slowEvent => slowEvent.eventID === event.eventID) && !notified.some(notifiedEvent => notifiedEvent.eventID === event.eventID))
     }):events
     if (newEvents == undefined) return handleError({file: "automatedNotifications", error: "newEvents is undefined"})
 
     // Sorts events and pushes them to appropriate arrays
-    let sortedEvents = sortEvents({events: newEvents, notify: true})
+    const sortedEvents = sortEvents({events: newEvents, notify: true})
     if (sortedEvents == undefined) return handleError({file: "automatedNotifications", error: "sortedEvents is undefined"})
     sortedEvents.slow.forEach(event => {slow.push(event)})
     sortedEvents.notified.forEach(event => {notified.push(event)})
 
     // Finds newest version of events in notifiedarray
-    let newNotified = notified.length > 0 ? events.filter(event => {
+    const newNotified = notified.length > 0 ? events.filter(event => {
         return (notified.some(Nevents => Nevents.eventID === event.eventID))
     }):[]
 
     // Handles notified events, potentially pushing them to slow if a link is found
-    let sortedNotified = sortNotified({events: newNotified, notify: true})
+    const sortedNotified = sortNotified({events: newNotified, notify: true})
     if (sortedNotified == undefined) return handleError({file: "automatedNotifications", error: "sortedNotified is undefined"})
     if (sortedNotified.length) sortedNotified.forEach(event => {slow.push(event)})
 

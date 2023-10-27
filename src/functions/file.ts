@@ -48,7 +48,7 @@ export default function file(file: string): string {
  */
 export function writeFile({fileName, content, removeBrackets}: writeFileProps) {
     // Fetches full file path for the array to write to file
-    let File = file(fileName)
+    const File = file(fileName)
 
     // Stringifies content to write to file
     let stringifiedContent = content ? JSON.stringify(content) : "[]"
@@ -81,7 +81,7 @@ export function writeFile({fileName, content, removeBrackets}: writeFileProps) {
  */
 export async function readFile(arg: string, stop?: boolean): Promise<unknown> {
     // Defines file to read from
-    let File = file(arg)
+    const File = file(arg)
 
     // Returns a promise
     return new Promise((res) => {
