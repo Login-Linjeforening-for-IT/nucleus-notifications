@@ -5,9 +5,9 @@
  * 
  * @returns string or null
  */
-export default function joinlink(event: DetailedEventProps): string | null {
+export default function joinlink(event: DetailedEvent): string | null {
 
-    const description = event.description
+    const description = event.description_no + event.description_en
 
     if (!description) return null
         

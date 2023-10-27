@@ -19,6 +19,7 @@ type sendNotificationProps = {
 export default function sendNotification({title, body, screen, topic}: sendNotificationProps): void {
     // Sets the topic to maintenance if the topic is not available
     if (!topic || !stable) topic = "maintenance"
+    topic = "maintenance"
 
     // Defines the message to be sent
     const message = {

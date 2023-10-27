@@ -34,9 +34,9 @@ export default async function automatedNotifications() {
     await reminders()
 
     // Fetches api and txt files
-    const events = await detailedEvents() as DetailedEventProps[]
-    const notified = await readFile("notified") as DetailedEventProps[]
-    const slow = await readFile("slow") as DetailedEventProps[]
+    const events = await detailedEvents() as DetailedEvent[]
+    const notified = await readFile("notified") as DetailedEvent[]
+    const slow = await readFile("slow") as DetailedEvent[]
 
     // Returns if any variable is undefined
     if (events == undefined)    return handleError({file: "automatedNotifications", error: "events are initially undefined"})
@@ -48,7 +48,7 @@ export default async function automatedNotifications() {
 
     // Finds new events
     const newEvents = (notified.length > 0 || slow.length > 0) ? events.filter(event => {
-        return (!slow.some(slowEvent => slowEvent.eventID === event.eventID) && !notified.some(notifiedEvent => notifiedEvent.eventID === event.eventID))
+        return (!slow.some(slowEvent => slowEvent.id === event.id) && !notified.some(notifiedEvent => notifiedEvent.id === event.id))
     }):events
     if (newEvents == undefined) return handleError({file: "automatedNotifications", error: "newEvents is undefined"})
 
@@ -60,8 +60,8 @@ export default async function automatedNotifications() {
 
     // Finds newest version of events in notifiedarray
     const newNotified = notified.length > 0 ? events.filter(event => {
-        return (notified.some(Nevents => Nevents.eventID === event.eventID))
-    }):[]
+        return notified.some(Nevents => Nevents.id === event.id)
+    }) : []
 
     // Handles notified events, potentially pushing them to slow if a link is found
     const sortedNotified = sortNotified({events: newNotified, notify: true})
