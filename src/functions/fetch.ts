@@ -1,7 +1,6 @@
 import { EventProps, DetailedEventProps } from '../../types'
 import { filterEvents } from "./sort.js"
 import handleError from "./error.js"
-import { startTime } from '../data/info'
 import fetch from "node-fetch"
 
 /**
@@ -14,7 +13,10 @@ import fetch from "node-fetch"
 export default async function fetchEvents(): Promise<EventProps[]> {
     try {
         // Fetches events
-        const response = await fetch("https://api.login.no/events")
+        // const response = await fetch("https://api.login.no/events")
+
+        // Test API
+        const response = await fetch("http://10.212.174.46/api/events/")
 
         // Turns the text response into a JSON object
         const events = await response.json() as EventProps[]
