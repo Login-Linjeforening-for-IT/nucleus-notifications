@@ -14,6 +14,7 @@ type EventProps = {
     location_name_en: string
     category_color: string
     category_name_no: string
+    category_name_en: string
 }
 
 type DetailedEventResponse = {
@@ -156,6 +157,8 @@ type DetailedEvent = {
     updated_at: string
     created_at: string
     deleted_at: string
+    category_name_no: string
+    category_name_en: string
 }
 
 type ExtraEventProps = {

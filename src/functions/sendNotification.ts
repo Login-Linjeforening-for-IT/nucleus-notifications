@@ -1,5 +1,5 @@
-import { api_key, api_url } from "../../.secrets.js"
 import fetch from "node-fetch"
+import { api_key, api_url } from "../../.secrets.js"
 import { stable } from "../data/info.js"
 
 type sendNotificationProps = {
@@ -44,11 +44,12 @@ export default function sendNotification({title, body, screen, topic}: sendNotif
     // Sends the notification and waits for response
     fetch(api_url, options)
     .then(response => {
+
         if (!response.ok) {
-            console.log("Network response failed for ", title, "Response: ", response)
-        } else {
-            console.log(`Successfully sent notification to topic ${topic} at ${new Date().toISOString()}`)
+            return console.log("Network response failed for ", title, "Response: ", response)
         }
+
+        console.log(`Successfully sent notification to topic ${topic} at ${new Date().toISOString()}`)
     }).catch(error => {console.error("Error sending notification:", error)})
 }
 

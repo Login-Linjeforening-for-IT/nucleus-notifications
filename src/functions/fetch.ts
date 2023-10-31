@@ -82,7 +82,7 @@ export async function fetchAds(): Promise<AdProps[]> {
  * 
  * @returns All details for passed event
  */
-export async function fetchEventDetails(event: DetailedEvent) {
+export async function fetchEventDetails(event: EventProps): Promise<DetailedEvent | undefined> {
     // Prod API
     // const response = await fetch(`${api}events/${event.id}`)
 
@@ -97,7 +97,12 @@ export async function fetchEventDetails(event: DetailedEvent) {
     })
     
     // Returns the event as an object, with details attached
-    return {...event, ...eventDetails}
+    return {
+        ...event,
+        ...eventDetails.event, 
+        category_name_no: eventDetails.category.name_no,
+        category_name_en: eventDetails.category.name_en
+    }
 }
 
 /**
@@ -175,16 +180,27 @@ export async function detailedEvents(unfiltered?: boolean): Promise<DetailedEven
  * @returns {string} Emoji
  */
 export function fetchEmoji(event: EventProps | DetailedEvent): string {
-    switch ((event.category).toLowerCase()) {
-      case 'tekkom':        return '🍕'
-      case 'karrieredag':   return '👩‍🎓'
-      case 'cft':           return '🧑‍💻'
-      case 'fadderuka':     return '🍹'
-      case 'social':        return '🥳'
-      case 'bedpres':       return '👩‍💼'
-      case 'login':         return '🚨'
-      default:              return '💻'
+    switch ((event.category_name_no).toLowerCase()) {
+        case 'tekkom':        return '🍕'
+        case 'karrieredag':   return '👩‍🎓'
+        case 'ctf':           return '🧑‍💻'
+        case 'fadderuka':     return '🍹'
+        case 'social':        return '🥳'
+        case 'bedpres':       return '👩‍💼'
+        case 'login':         return '🚨'
     }
+
+    switch ((event.category_name_en).toLowerCase()) {
+        case 'tekkom':        return '🍕'
+        case 'career_day':    return '👩‍🎓'
+        case 'ctf':           return '🧑‍💻'
+        case 'fadderuka':     return '🍹'
+        case 'social':        return '🥳'
+        case 'bedpres':       return '👩‍💼'
+        case 'login':         return '🚨'
+    }
+
+    return '💻'
 }
 
 /**

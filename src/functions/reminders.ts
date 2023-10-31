@@ -154,8 +154,11 @@ export default async function reminders() {
     writeFile({fileName: "10m", content: new10m})
 
     // Logs the status for easy monitoring of the logs
-    if (reminders) console.log(`Scheduled ${reminders} reminders at ${new Date().toISOString()}`)
-    else           console.log(`No reminders to be sent at this time ${new Date().toISOString()}`)
+    if (!reminders) {
+        return console.log(`No reminders to be sent at this time ${new Date().toISOString()}`)
+    }
+
+    console.log(`Scheduled ${reminders} reminders at ${new Date().toISOString()}`)
 }
 
 function schedule({event, counter, textNO, textEN, suffix}: ScheduleProps) {
@@ -164,8 +167,8 @@ function schedule({event, counter, textNO, textEN, suffix}: ScheduleProps) {
     const name_en = `${event.name_en} ${formattedStarttime}`
     
     // Notification topic
-    const norwegianTopic = `norwegian${event.id}${(event.category).toLowerCase()}${suffix}`
-    const englishTopic = `english${event.id}${(event.category).toLowerCase()}${suffix}`
+    const norwegianTopic = `norwegian${event.id}${(event.category_name_no).toLowerCase()}${suffix}`
+    const englishTopic = `english${event.id}${(event.category_name_en).toLowerCase()}${suffix}`
 
     // Notification body
     const norwegianBody = `${textNO} ${fetchEmoji(event)}`

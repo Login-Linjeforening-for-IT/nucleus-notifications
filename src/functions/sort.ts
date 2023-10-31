@@ -37,27 +37,37 @@ export default function sortEvents({events, notify}: sortEventsProps): SortedObj
 
     // Goes through each event
     events.forEach(event => {
-        // Checks if event contains a joinlink
-        if (joinlink(event)) {
-
-            // If the user should be notified, notifies the user
-            if (notify) schedule({event, textNO: "Påmelding er allerede ute, trykk her for å lese mer!", textEN: "Registration already available, click here to read more!", actionName: "notifyNewWithLink"})
-
-            // Pushes the event to the slowmonitored array
-            slow.push(event)
-        
-        // If the event does not contain a joinlink, pushes it to the notified array
-        } else {
-
+        if (!joinlink(event)) {
             // Event is far away, console log when it will be added and return
-            if (timeToEvent(event) > 1209600) return console.log("Event", event.id, "will be added in", Number((timeToEvent(event) - 1209600).toFixed(0)), "seconds.")
+            if (timeToEvent(event) > 1209600) {
+                return console.log("Event", event.id, "will be added in", Number((timeToEvent(event) - 1209600).toFixed(0)), "seconds.")
+            }
             
             // If the user should be notified, notifies the user
-            if (notify) schedule({event, textNO: "Trykk her for å lese mer.", textEN: "Click here to read more.", actionName: "notifyNewEntry"})
+            if (notify) {
+                schedule({
+                    event, 
+                    textNO: "Trykk her for å lese mer.", 
+                    textEN: "Click here to read more.", 
+                    actionName: "notifyNewEntry"
+                })
+            }
 
             // Pushes the event to the notified array
             notified.push(event)
         }
+        
+        if (notify) {
+            schedule({
+                event, 
+                textNO: "Påmelding er allerede ute, trykk her for å lese mer!", 
+                textEN: "Registration already available, click here to read more!", 
+                actionName: "notifyNewWithLink"
+            })
+        }
+
+        // Pushes the event to the slowmonitored array
+        slow.push(event)
     })
 
     // Returns the sorted object
@@ -85,7 +95,14 @@ export function sortNotified({events, notify}: sortEventsProps) {
     // Goes through each event
     events.forEach(event => {
         // If the user should be notified, notifies the user
-        if (notify) schedule({event, textNO: "Påmelding er ute!", textEN: "Registration available!", actionName: "notifyLinkFound"})
+        if (notify) {
+            schedule({
+                event, 
+                textNO: "Påmelding er ute!", 
+                textEN: "Registration available!",
+                actionName: "notifyLinkFound"
+            })
+        }
 
         // Pushes the event to the notified array
         slow.push(event)

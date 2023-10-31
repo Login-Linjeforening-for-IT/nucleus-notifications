@@ -18,11 +18,12 @@ type ScheduleProps = {
  */
 export default function schedule({event, textNO, textEN, actionName}: ScheduleProps) {
     // Event category
-    const category = event.category.toUpperCase()
+    const category_name_no = event.category_name_no.toUpperCase()
+    const category_name_en = event.category_name_en.toUpperCase()
 
     // Norwegian and english notification topics
-    const norwegianTopic = `norwegian${category}`
-    const englishTopic = `english${category}`
+    const norwegianTopic = `norwegian${category_name_no}`
+    const englishTopic = `english${category_name_en}`
 
     // Formats start time
     const formattedStarttime = `${event.time_start[8]}${event.time_start[9]}.${event.time_start[5]}${event.time_start[6]}`

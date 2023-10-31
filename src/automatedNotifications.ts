@@ -39,9 +39,9 @@ export default async function automatedNotifications() {
     const slow = await readFile("slow") as DetailedEvent[]
 
     // Returns if any variable is undefined
-    if (events == undefined)    return handleError({file: "automatedNotifications", error: "events are initially undefined"})
-    if (notified == undefined)  return handleError({file: "automatedNotifications", error: "notified are initially undefined"})
-    if (slow == undefined)      return handleError({file: "automatedNotifications", error: "slow are initially undefined"})
+    if (!isDefined(events, "events is initally undefined")) return
+    if (!isDefined(notified, "notiifed is initally undefined")) return
+    if (!isDefined(slow, "slow is initally undefined")) return
 
     // Logs amount of events of each type
     console.log("events:", events.length, "notified:", notified ? notified.length : 0, "slowmonitored:", slow ? slow.length : 0)
@@ -50,11 +50,11 @@ export default async function automatedNotifications() {
     const newEvents = (notified.length > 0 || slow.length > 0) ? events.filter(event => {
         return (!slow.some(slowEvent => slowEvent.id === event.id) && !notified.some(notifiedEvent => notifiedEvent.id === event.id))
     }):events
-    if (newEvents == undefined) return handleError({file: "automatedNotifications", error: "newEvents is undefined"})
+    if (!isDefined(newEvents, "newEvents is undefined")) return
 
     // Sorts events and pushes them to appropriate arrays
     const sortedEvents = sortEvents({events: newEvents, notify: true})
-    if (sortedEvents == undefined) return handleError({file: "automatedNotifications", error: "sortedEvents is undefined"})
+    if (!isDefined(sortedEvents, "sortedEvents is undefined")) return
     sortedEvents.slow.forEach(event => {slow.push(event)})
     sortedEvents.notified.forEach(event => {notified.push(event)})
 
@@ -65,17 +65,36 @@ export default async function automatedNotifications() {
 
     // Handles notified events, potentially pushing them to slow if a link is found
     const sortedNotified = sortNotified({events: newNotified, notify: true})
-    if (sortedNotified == undefined) return handleError({file: "automatedNotifications", error: "sortedNotified is undefined"})
-    if (sortedNotified.length) sortedNotified.forEach(event => {slow.push(event)})
+    if (!isDefined(sortedNotified, "sortedNotified is undefined")) return
+    if (sortedNotified.length) {
+        sortedNotified.forEach(event => {
+            slow.push(event)
+        })
+    }
 
     // Returns if any variable to be stored is undefined
-    if (events == undefined)        return handleError({file: "automatedNotifications", error: "events is undefined when storing"})
-    if (newNotified == undefined)   return handleError({file: "automatedNotifications", error: "newNotified is undefined when storing"})
-    if (slow == undefined)          return handleError({file: "automatedNotifications", error: "slow is undefined when storing"})
+    if (!isDefined(events, "events is undefined when storing")) return
+    if (!isDefined(newNotified, "newNotified is undefined when storing")) return
+    if (!isDefined(slow, "slow is undefined when storing")) return
     
     // Removes events that have already taken place and stores new events
     storeNewAndRemoveOldEvents({events, notified: newNotified, slow})
 
     // Logs interval end time
     console.log("Interval complete at", new Date().toISOString())
+}
+
+/**
+ * Checks if the passed array is defined, true if defined, otherwise false
+ * @param array Array to check
+ * @param name Name of the array for the error message
+ * @returns true | false
+ */
+function isDefined(item: any, error: string) {
+    if (item == undefined) {
+        handleError({file: "automatedNotifications", error})
+        return false
+    }
+    
+    return true
 }
