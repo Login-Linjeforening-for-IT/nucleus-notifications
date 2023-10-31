@@ -161,8 +161,3 @@ type DetailedEvent = {
     category_name_en: string
 }
 
-type ExtraEventProps = {
-    category: string
-}
-
-type FullEvent = DetailedEvent & ExtraEventProps
