@@ -76,7 +76,7 @@ export async function heal(arg: string) {
             // Heals notified.txt
             case "notified": {
                 // Defines notified events, and full list of events
-                const notified: EventProps[] = []
+                const notified: DetailedEvent[] = []
                 const events = await detailedEvents(true)
 
                 // Notifies maintenance team that there is an error in heal.ts,
@@ -87,7 +87,7 @@ export async function heal(arg: string) {
                 const obj = sortEvents({events})
 
                 // Pushes all notified events to the notified array
-                obj.notified.forEach((event: EventProps) => {notified.push(event)})
+                obj.notified.forEach((event: DetailedEvent) => {notified.push(event)})
 
                 // Writes notified array to file
                 writeFile({fileName: arg, content: notified})
@@ -109,7 +109,7 @@ export async function heal(arg: string) {
             case "slow": {
                 try {
                     // Defines slow events, and full list of events
-                    const slow: EventProps[] = []
+                    const slow: DetailedEvent[] = []
                     const events = await detailedEvents(true)
                     
                     // Notifies maintenance team that there is an error in 
@@ -168,15 +168,15 @@ export async function heal(arg: string) {
                 })
 
                 // Declaring new intervals
-                const new10m: EventProps[] = []
-                const new30m: EventProps[] = []
-                const new1h: EventProps[] = []
-                const new2h: EventProps[] = []
-                const new3h: EventProps[] = []
-                const new6h: EventProps[] = []
-                const new1d: EventProps[] = []
-                const new2d: EventProps[] = []
-                const new1w: EventProps[] = []
+                const new10m: DetailedEvent[] = []
+                const new30m: DetailedEvent[] = []
+                const new1h: DetailedEvent[] = []
+                const new2h: DetailedEvent[] = []
+                const new3h: DetailedEvent[] = []
+                const new6h: DetailedEvent[] = []
+                const new1d: DetailedEvent[] = []
+                const new2d: DetailedEvent[] = []
+                const new1w: DetailedEvent[] = []
 
                 // Filters events to appropriate interval
                 events.forEach(event => {

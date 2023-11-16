@@ -82,13 +82,13 @@ export async function fetchAds(): Promise<AdProps[]> {
  * 
  * @returns All details for passed event
  */
-export async function fetchEventDetails(event: EventProps) {
+export async function fetchEventDetails(event: EventProps): Promise<DetailedEvent | undefined> {
     // Prod API
-    // const response = await fetch(`${api}events/${event.eventID}`)
+    // const response = await fetch(`${api}events/${event.id}`)
 
     // Test API
-    const response = await fetch(`${testapi}events/${event.eventID}`)
-    const eventDetails = await response.json() as DetailedEventProps
+    const response = await fetch(`${testapi}events/${event.id}`)
+    const eventDetails = await response.json() as DetailedEventResponse
 
     // Handles error where details are not available
     if (!eventDetails) return handleError({
@@ -97,7 +97,12 @@ export async function fetchEventDetails(event: EventProps) {
     })
     
     // Returns the event as an object, with details attached
-    return {...event, ...eventDetails}
+    return {
+        ...event,
+        ...eventDetails.event, 
+        category_name_no: eventDetails.category.name_no,
+        category_name_en: eventDetails.category.name_en
+    }
 }
 
 /**
@@ -111,7 +116,7 @@ export async function fetchEventDetails(event: EventProps) {
  */
 export async function fetchAdDetails(ad: AdProps) {
     // Prod API
-    // const response = await fetch(`${api}jobs/${event.eventID}`)
+    // const response = await fetch(`${api}jobs/${event.id}`)
 
     // Test API
     const response = await fetch(`${testapi}jobs/${ad.id}`)
@@ -119,8 +124,8 @@ export async function fetchAdDetails(ad: AdProps) {
 
     // Handles error where details are not available
     if (!adDetails) return handleError({
-        file: "fetchEventDetails", 
-        error: `Event ${event} has undefined details`
+        file: "fetchAdDetails", 
+        error: `Ad ${ad} has undefined details`
     })
     
     // Returns the event as an object, with details attached
@@ -139,12 +144,12 @@ export async function fetchAdDetails(ad: AdProps) {
  * 
  * @returns All events with all details
  */
-export async function detailedEvents(unfiltered?: boolean): Promise<DetailedEventProps[]> {
+export async function detailedEvents(unfiltered?: boolean): Promise<DetailedEvent[]> {
 
     // Option to return unfiltered events
     if (unfiltered) {
         const events = await fetchEvents()
-        const detailedEvents = await Promise.all(events.map(fetchEventDetails)) as DetailedEventProps[]
+        const detailedEvents = await Promise.all(events.map(fetchEventDetails)) as DetailedEvent[]
         
         if (!detailedEvents) {
             handleError({file: "detailedEvents", error: "detailedEvents is undefined"})
@@ -156,7 +161,7 @@ export async function detailedEvents(unfiltered?: boolean): Promise<DetailedEven
     }
 
     const events = await filterEvents()
-    const detailedEvents = await Promise.all(events.map(fetchEventDetails)) as DetailedEventProps[]
+    const detailedEvents = await Promise.all(events.map(fetchEventDetails)) as DetailedEvent[]
    
     if (!detailedEvents) {
         handleError({file: "detailedEvents", error: "detailedEvents is undefined"})
@@ -174,17 +179,28 @@ export async function detailedEvents(unfiltered?: boolean): Promise<DetailedEven
  * 
  * @returns {string} Emoji
  */
-export function fetchEmoji(event: EventProps): string {
-    switch ((event.category).toLowerCase()) {
-      case 'tekkom':        return '🍕'
-      case 'karrieredag':   return '👩‍🎓'
-      case 'cft':           return '🧑‍💻'
-      case 'fadderuka':     return '🍹'
-      case 'social':        return '🥳'
-      case 'bedpres':       return '👩‍💼'
-      case 'login':         return '🚨'
-      default:              return '💻'
+export function fetchEmoji(event: EventProps | DetailedEvent): string {
+    switch ((event.category_name_no).toLowerCase()) {
+        case 'tekkom':        return '🍕'
+        case 'karrieredag':   return '👩‍🎓'
+        case 'ctf':           return '🧑‍💻'
+        case 'fadderuka':     return '🍹'
+        case 'social':        return '🥳'
+        case 'bedpres':       return '👩‍💼'
+        case 'login':         return '🚨'
     }
+
+    switch ((event.category_name_en).toLowerCase()) {
+        case 'tekkom':        return '🍕'
+        case 'career_day':    return '👩‍🎓'
+        case 'ctf':           return '🧑‍💻'
+        case 'fadderuka':     return '🍹'
+        case 'social':        return '🥳'
+        case 'bedpres':       return '👩‍💼'
+        case 'login':         return '🚨'
+    }
+
+    return '💻'
 }
 
 /**
@@ -196,12 +212,12 @@ export function fetchEmoji(event: EventProps): string {
  * 
  * @returns {number} Seconds till event
  */
-export function timeToEvent (event: EventProps): number {
+export function timeToEvent (event: DetailedEvent): number {
     // Current full date
     const currentTime = new Date()
 
     // Converting from string to date old and correct version
-    const eventTime = new Date(event.startt)
+    const eventTime = new Date(event.time_start)
 
     // Subtracting and dividing from milliseconds to seconds
     const seconds = (eventTime.getTime() - currentTime.getTime()) / 1000

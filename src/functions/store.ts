@@ -1,17 +1,17 @@
 import { readFile, writeFile } from './file.js'
 
 type storeNewAndRemoveOldEventsProps = {
-    events: EventProps[]
-    notified: DetailedEventProps[]
-    slow: DetailedEventProps[]
+    events: DetailedEvent[]
+    notified: DetailedEvent[]
+    slow: DetailedEvent[]
 }
 
 type storeNotifiedProps = {
-    events: DetailedEventProps[]
+    events: DetailedEvent[]
 }
 
 type storeSlowMonitoredProps = {
-    events: DetailedEventProps[]
+    events: DetailedEvent[]
     overwrite?: boolean
 }
 
@@ -31,8 +31,8 @@ export default function storeNewAndRemoveOldEvents({events, notified, slow}: sto
     console.log(`events ${events.length} notified ${notified.length}, slowmonitored ${slow.length}`)
     
     // Defines the events to be added to each file
-    const newNotifiedEvents = notified.filter(event => events.some(APIevent => APIevent.eventID === event.eventID))
-    const newSlowEvents = slow.filter(slow => events.some(APIevent => APIevent.eventID === slow.eventID))
+    const newNotifiedEvents = notified.filter(event => events.some(APIevent => APIevent.id === event.id))
+    const newSlowEvents = slow.filter(slow => events.some(APIevent => APIevent.id === slow.id))
 
     // Stores each event in its appropriate file
     storeNotified({events: newNotifiedEvents})
@@ -51,7 +51,7 @@ export default function storeNewAndRemoveOldEvents({events, notified, slow}: sto
 export async function storeNotified({events}: storeNotifiedProps) {
     // Removes duplicates
     const unique = events.filter((event, index) => {
-        return events.findIndex(obj => obj.eventID === event.eventID) === index
+        return events.findIndex(obj => obj.id === event.id) === index
     })
 
     // Writes events to file
@@ -73,12 +73,12 @@ export async function storeSlowMonitored({events, overwrite}: storeSlowMonitored
     if (overwrite) return writeFile({fileName: "slow", content: events})
     
     // Adds new events to array of slowmonitored events
-    const slowEvents = await readFile("slow") as DetailedEventProps[]
+    const slowEvents = await readFile("slow") as DetailedEvent[]
     const allevents = slowEvents.length > 0 ? slowEvents.concat(events) : events
 
     // Removes duplicates
-    const filteredEvents = allevents.filter((event: EventProps, index: number) => {
-        return allevents.findIndex((obj: EventProps) => obj.eventID === event.eventID) === index
+    const filteredEvents = allevents.filter((event: DetailedEvent, index: number) => {
+        return allevents.findIndex((obj: DetailedEvent) => obj.id === event.id) === index
     })
     
     // Returns if there is nothing to store
