@@ -76,7 +76,7 @@ export default async function automatedNotifications() {
     if (!isDefined(events, "events is undefined when storing")) return
     if (!isDefined(newNotified, "newNotified is undefined when storing")) return
     if (!isDefined(slow, "slow is undefined when storing")) return
-    
+
     // Removes events that have already taken place and stores new events
     storeNewAndRemoveOldEvents({events, notified: newNotified, slow})
 

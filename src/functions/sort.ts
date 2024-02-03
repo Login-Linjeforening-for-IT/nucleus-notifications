@@ -42,7 +42,7 @@ export default function sortEvents({events, notify}: sortEventsProps): SortedObj
             if (timeToEvent(event) > 1209600) {
                 return console.log("Event", event.id, "will be added in", Number((timeToEvent(event) - 1209600).toFixed(0)), "seconds.")
             }
-            
+
             // If the user should be notified, notifies the user
             if (notify) {
                 schedule({
@@ -56,7 +56,7 @@ export default function sortEvents({events, notify}: sortEventsProps): SortedObj
             // Pushes the event to the notified array
             notified.push(event)
         }
-        
+
         if (notify) {
             schedule({
                 event, 

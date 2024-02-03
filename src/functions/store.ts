@@ -80,7 +80,7 @@ export async function storeSlowMonitored({events, overwrite}: storeSlowMonitored
     const filteredEvents = allevents.filter((event: DetailedEvent, index: number) => {
         return allevents.findIndex((obj: DetailedEvent) => obj.id === event.id) === index
     })
-    
+
     // Returns if there is nothing to store
     if (!filteredEvents || !filteredEvents.length) return console.log(`Nothing new to store in slowMonitored.txt. Total: ${allevents.length} events.`)
 
