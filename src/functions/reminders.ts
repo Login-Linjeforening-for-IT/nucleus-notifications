@@ -4,7 +4,7 @@ import { detailedEvents, timeToEvent } from "./fetch.js"
 import handleError from "./error.js"
 import { fetchEmoji } from "./fetch.js"
 
-type ScheduleProps = {
+type ReminderProps = {
     event: DetailedEvent
     counter: number
     textNO: string
@@ -161,7 +161,7 @@ export default async function reminders() {
     console.log(`Scheduled ${reminders} reminders at ${new Date().toISOString()}`)
 }
 
-function schedule({event, counter, textNO, textEN, suffix}: ScheduleProps) {
+function schedule({event, counter, textNO, textEN, suffix}: ReminderProps) {
     const formattedStarttime = `${event.time_start[8]}${event.time_start[9]}.${event.time_start[5]}${event.time_start[6]}`
     const name_no = `${event.name_no} ${formattedStarttime}`
     const name_en = `${event.name_en} ${formattedStarttime}`
