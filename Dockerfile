@@ -12,7 +12,7 @@ ENV GOOGLE_APPLICATION_CREDENTIALS /usr/src/app/.secrets.json
 WORKDIR /usr/src/app
 
 # Install required dependencies
-RUN npm install node-cron node-fetch fs discord.js git node-pty typescript
+RUN npm install node-cron node-fetch fs discord.js git node-pty typescript firebase-admin
 
 # Copy contents
 COPY . .
