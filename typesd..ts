@@ -125,7 +125,7 @@ type Category = {
 }
 
 type DetailedEvent = {
-    id: number
+    id: number | string
     visible: boolean
     name_no: string
     name_en: string
