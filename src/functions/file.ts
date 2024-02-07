@@ -18,18 +18,18 @@ type writeFileProps = {
  */
 export default function file(file: string): string {
     switch (file) {
-        case "10m":         return 'dist/dist/src/data/intervals/10m.txt'
-        case "30m":         return 'dist/dist/src/data/intervals/30m.txt'
-        case "1h":          return 'dist/dist/src/data/intervals/1h.txt'
-        case "2h":          return 'dist/dist/src/data/intervals/2h.txt'
-        case "3h":          return 'dist/dist/src/data/intervals/3h.txt'
-        case "6h":          return 'dist/dist/src/data/intervals/6h.txt'
-        case "1d":          return 'dist/dist/src/data/intervals/1d.txt'
-        case "2d":          return 'dist/dist/src/data/intervals/2d.txt'
-        case "1w":          return 'dist/dist/src/data/intervals/1w.txt'
-        case "notified":    return 'dist/dist/src/data/notifiedEvents.txt'
-        case "slow":        return 'dist/dist/src/data/slowMonitored.txt'
-        case "info":        return 'dist/dist/src/data/info.js'
+        case "10m":         return 'dist/src/data/intervals/10m.txt'
+        case "30m":         return 'dist/src/data/intervals/30m.txt'
+        case "1h":          return 'dist/src/data/intervals/1h.txt'
+        case "2h":          return 'dist/src/data/intervals/2h.txt'
+        case "3h":          return 'dist/src/data/intervals/3h.txt'
+        case "6h":          return 'dist/src/data/intervals/6h.txt'
+        case "1d":          return 'dist/src/data/intervals/1d.txt'
+        case "2d":          return 'dist/src/data/intervals/2d.txt'
+        case "1w":          return 'dist/src/data/intervals/1w.txt'
+        case "notified":    return 'dist/src/data/notifiedEvents.txt'
+        case "slow":        return 'dist/src/data/slowMonitored.txt'
+        case "info":        return 'dist/src/data/info.js'
         default: {
             handleError({file: "file", error: `Invalid file argument in file.ts: ${file}`})
             return ""
