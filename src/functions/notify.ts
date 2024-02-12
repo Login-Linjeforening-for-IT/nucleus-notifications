@@ -22,8 +22,8 @@ export default function schedule({event, textNO, textEN, actionName}: SchedulePr
     const category_name_en = event.category_name_en.toUpperCase()
 
     // Norwegian and english notification topics
-    const norwegianTopic = `norwegian${category_name_no}`
-    const englishTopic = `english${category_name_en}`
+    const norwegianTopic = `n${category_name_no}`
+    const englishTopic = `e${category_name_en}`
 
     // Formats start time
     const formattedStarttime = `${event.time_start[8]}${event.time_start[9]}.${event.time_start[5]}${event.time_start[6]}`

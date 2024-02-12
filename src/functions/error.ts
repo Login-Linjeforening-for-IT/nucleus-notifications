@@ -24,7 +24,7 @@ type handleErrorProps = {
 export default function handleError({file, error, topic}: handleErrorProps): undefined {
     // Sends a notification in the app containing the error to users with the
     // maintenance topic enabled.
-    sendNotification({title: `Error in ${file}`, body: error, topic: topic ? topic:"maintenance"})
+    sendNotification({title: `Error in ${file}`, body: error, topic: topic ? topic : "maintenance"})
 
     // Continues with undefined to try executing the rest of the file
     if (stable) return undefined

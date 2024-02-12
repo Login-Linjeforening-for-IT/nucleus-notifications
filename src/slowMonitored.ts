@@ -31,9 +31,9 @@ export default async function slowMonitored() {
     for (const APIevent of APIevents) {
         const slow = slowEvents.find((event: DetailedEvent) => event.id === APIevent.id)
         // Defines norwegian topic
-        const norwegianTopic = `norwegian${APIevent.id}`
+        const norwegianTopic = `n${APIevent.id}`
         // Defines english topic
-        const englishTopic = `english${APIevent.id}`
+        const englishTopic = `e${APIevent.id}`
         // Boolean for if the event has a time
         const time = slow && slow.time_start !== APIevent.time_start ? true : false
         // Boolean for if the event has a link
