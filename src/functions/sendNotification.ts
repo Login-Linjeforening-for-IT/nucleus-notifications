@@ -9,15 +9,6 @@ type sendNotificationProps = {
     topic?: string
 }
 
-// A new type that is the same as DetailedEvent, but with id as a string
-interface DetailedEventStr extends Omit<DetailedEvent, "id"> {
-    id: string
-}
-
-// Data in the message cannot be undefined so it is defined as an empty object or a DetailedEventStr
-type Data = {} | DetailedEventStr
-
-
 const app = initializeApp({
     credential: applicationDefault()
 })
@@ -38,7 +29,14 @@ export default function sendNotification({title, body, screen, topic}: sendNotif
         screen.id = screen.id.toString()
     }
 
-    const data: Data = screen || {}
+    const data: any = screen || {}
+
+    for (const key in data) {
+        if (data[key] === null) data[key] = 'null'
+        if (typeof data[key] === 'number' || typeof data[key] === 'boolean') {
+            data[key] = data[key].toString();
+        }
+    }
 
     // Defines the message to be sent
     const message: Message = {

@@ -2,8 +2,8 @@ import { filterEvents } from "./sort.js"
 import handleError from "./error.js"
 import fetch from "node-fetch"
 
-const api = "http://10.212.174.46/api/"
-const testapi = "http://10.212.174.46/api/"
+const api = "https://workerbee.login.no/api/"
+const testapi = "https://testapi.login.no/api/"
 
 /**
  * Fetches api and returns events
@@ -15,10 +15,10 @@ const testapi = "http://10.212.174.46/api/"
 export default async function fetchEvents(): Promise<EventProps[]> {
     try {
         // Fetches events
-        // const response = await fetch(`${api}events`)
+        const response = await fetch(`${api}events`)
 
         // Test API
-        const response = await fetch(`${testapi}events`)
+        // const response = await fetch(`${testapi}events`)
 
         // Turns the text response into a JSON object
         const events = await response.json() as EventProps[]
@@ -48,11 +48,11 @@ export default async function fetchEvents(): Promise<EventProps[]> {
  */
 export async function fetchAds(): Promise<AdProps[]> {
     try {
-        // Fetches events
-        // const response = await fetch(`${api}jobs`)
+        // Prod
+        const response = await fetch(`${api}jobs/`)
 
-        // Test API
-        const response = await fetch(`${testapi}jobs`)
+        // Dev
+        // const response = await fetch(`${testapi}jobs/`)
 
         // Turns the text response into a JSON object
         const ads = await response.json() as AdProps[]
@@ -84,10 +84,10 @@ export async function fetchAds(): Promise<AdProps[]> {
  */
 export async function fetchEventDetails(event: EventProps): Promise<DetailedEvent | undefined> {
     // Prod API
-    // const response = await fetch(`${api}events/${event.id}`)
+    const response = await fetch(`${api}events/${event.id}`)
 
     // Test API
-    const response = await fetch(`${testapi}events/${event.id}`)
+    // const response = await fetch(`${testapi}events/${event.id}`)
     const eventDetails = await response.json() as DetailedEventResponse
 
     // Handles error where details are not available
@@ -116,10 +116,10 @@ export async function fetchEventDetails(event: EventProps): Promise<DetailedEven
  */
 export async function fetchAdDetails(ad: AdProps) {
     // Prod API
-    // const response = await fetch(`${api}jobs/${event.id}`)
+    const response = await fetch(`${api}jobs/${ad.id}`)
 
     // Test API
-    const response = await fetch(`${testapi}jobs/${ad.id}`)
+    // const response = await fetch(`${testapi}jobs/${ad.id}`)
     const adDetails = await response.json() as DetailedAd
 
     // Handles error where details are not available

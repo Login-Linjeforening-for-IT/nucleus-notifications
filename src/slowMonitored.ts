@@ -1,8 +1,9 @@
 import { storeSlowMonitored } from "./functions/store.js"
 import sendNotification from "./functions/sendNotification.js"
-import { detailedEvents } from "./functions/fetch.js"
+import { detailedEvents, fetchAdDetails, fetchAds } from "./functions/fetch.js"
 import joinlink from "./functions/joinlink.js"
 import { readFile } from "./functions/file.js"
+import handleAds from "./functions/ads.js"
 
 /**
  * **Slow monitored event notifications**
@@ -26,6 +27,9 @@ export default async function slowMonitored() {
     // Fetches events from file and API
     const APIevents = await detailedEvents(true)
     const slowEvents = await readFile("slow") as DetailedEvent[]
+
+    // Handles all ad functionality
+    await handleAds()
 
     // Checks all events with earlier version for potential changes
     for (const APIevent of APIevents) {
@@ -53,17 +57,17 @@ export default async function slowMonitored() {
 
         // Sends the relevant notification to the relevant topics with the relevant information
         if (time && link && newLocation) {
-            norwegianBody = `Arrangementet har blitt endret. Ny tid: ${hour} den ${formattedStarttime}. Nytt sted: ${location}. Trykk her for alle detaljene.`
-            englishBody = `Event has changed. New time: ${hour} on ${formattedStarttime}. New location: ${location}. Tap here for details.`
+            norwegianBody = `Arrangementet har blitt endret. Ny tid: ${hour} den ${formattedStarttime}. Nytt sted: ${newLocation}. Trykk her for alle detaljene.`
+            englishBody = `Event has changed. New time: ${hour} on ${formattedStarttime}. New location: ${newLocation}. Tap here for details.`
         }else if (time && link){
             norwegianBody = `Tid endret til kl: ${hour} den ${formattedStarttime}. Påmeldingslinken er også endret. Trykk her for flere detaljer.`
             englishBody = `Time changed to: ${hour} on ${formattedStarttime}. Registration link has also changed. Tap here for details.`           
         }else if (time && newLocation) {
-            norwegianBody = `Tid og sted endret. Ny tid: ${hour} den ${formattedStarttime}. Nytt sted: ${location}. Trykk her for å se den oppdaterte informasjonen.`
-            englishBody = `Time and location changed. New time: ${hour} on ${formattedStarttime}. New location: ${location}. Tap here for details.`
+            norwegianBody = `Tid og sted endret. Ny tid: ${hour} den ${formattedStarttime}. Nytt sted: ${newLocation}. Trykk her for å se den oppdaterte informasjonen.`
+            englishBody = `Time and location changed. New time: ${hour} on ${formattedStarttime}. New location: ${newLocation}. Tap here for details.`
         }else if (link && newLocation) {
-            norwegianBody = `Nytt sted: ${location}. Påmeldingslink har også blitt endret. Trykk her for mer informasjon.`
-            englishBody = `New location: ${location}. Registration link has also changed. Click here for more information.`        
+            norwegianBody = `Nytt sted: ${newLocation}. Påmeldingslink har også blitt endret. Trykk her for mer informasjon.`
+            englishBody = `New location: ${newLocation}. Registration link has also changed. Click here for more information.`        
         }else if (time) {
             norwegianBody = `Tidspunkt endret til kl ${hour} den ${formattedStarttime}.`
             englishBody = `Time changed to ${hour} on ${formattedStarttime}.`           
@@ -92,3 +96,4 @@ export default async function slowMonitored() {
     else console.log("Found nothing new.")
 
 }
+slowMonitored()
