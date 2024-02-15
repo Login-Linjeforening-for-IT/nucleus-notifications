@@ -1,4 +1,4 @@
-import { detailedEvents, timeToEvent } from "./fetch.js"
+import { detailedEvents, fetchAdDetails, fetchAds, timeToEvent } from "./fetch.js"
 import sendNotification from "./sendNotification.js"
 import { readFile, writeFile } from "./file.js"
 import sortEvents from "./sort.js"
@@ -160,6 +160,17 @@ export async function heal(arg: string) {
             default: {
                 // Fetches events
                 const events = await detailedEvents(true)
+                
+                // Fetches ads
+                const APIundetailedAds = await fetchAds()
+                const APIads = [] as DetailedAd[]
+
+                for (const ad of APIundetailedAds) {
+                    const response = await fetchAdDetails(ad)
+                    if (response) {
+                        APIads.push(response)
+                    }
+                }
 
                 // Notifies maintenance team that interval files are unable to be healed
                 if (!events) handleError({
@@ -167,7 +178,7 @@ export async function heal(arg: string) {
                     error: `Unable to heal interval files, events is undefined`
                 })
 
-                // Declaring new intervals
+                // Declaring new intervals events
                 const new10m: DetailedEvent[] = []
                 const new30m: DetailedEvent[] = []
                 const new1h: DetailedEvent[] = []
@@ -177,6 +188,11 @@ export async function heal(arg: string) {
                 const new1d: DetailedEvent[] = []
                 const new2d: DetailedEvent[] = []
                 const new1w: DetailedEvent[] = []
+
+                // Declaring new intervals for ads
+                const newA2H: DetailedAd[] = []
+                const newA6H: DetailedAd[] = []
+                const newA24H: DetailedAd[] = []
 
                 // Filters events to appropriate interval
                 events.forEach(event => {
@@ -193,6 +209,16 @@ export async function heal(arg: string) {
                     else if (time <= 86400 && time > 21600) new6h.push(event)
                     else if (time <= 3600 && time > 1800) new30m.push(event)
                     else if (time <= 1800 && time > 600) new10m.push(event)
+                })
+
+                APIads.forEach(ad => {
+                    // Defines time to event
+                    const time = timeToEvent(ad)
+
+                    // Adds each event to the appropriate array
+                    if (time <= 172800 && time > 86400) newA24H.push(ad)
+                    else if (time <= 10800 && time > 7200) newA2H.push(ad)
+                    else if (time <= 86400 && time > 21600) newA6H.push(ad)
                 })
     
                 // Stores events in proper files

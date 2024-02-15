@@ -5,7 +5,7 @@ import { stable } from "../data/info.js"
 type sendNotificationProps = {
     title: string
     body: string
-    screen?: DetailedEvent
+    screen?: DetailedEvent | DetailedAd
     topic?: string
 }
 
@@ -21,6 +21,7 @@ const app = initializeApp({
  * @param topic    Notification topic
  */
 export default function sendNotification({title, body, screen, topic}: sendNotificationProps): void {
+    console.log(screen)
     // Sets the topic to maintenance if the topic is not available
     if (!topic || !stable) topic = "maintenance"
     

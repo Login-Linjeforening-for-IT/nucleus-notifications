@@ -212,15 +212,19 @@ export function fetchEmoji(event: EventProps | DetailedEvent): string {
  * 
  * @returns {number} Seconds till event
  */
-export function timeToEvent (event: DetailedEvent): number {
+export function timeToEvent (item: DetailedEvent | DetailedAd): number {
     // Current full date
     const currentTime = new Date()
+    let startTime = new Date()
 
-    // Converting from string to date old and correct version
-    const eventTime = new Date(event.time_start)
-
+    if ('application_deadline' in item) {
+        startTime = new Date(item.application_deadline)
+    } else {
+        startTime = new Date(item.time_start)
+    }
+    
     // Subtracting and dividing from milliseconds to seconds
-    const seconds = (eventTime.getTime() - currentTime.getTime()) / 1000
+    const seconds = (startTime.getTime() - currentTime.getTime()) / 1000
 
     // Checks for and subtracts two hours during summertime
     if (summertime()) return seconds - 9800
