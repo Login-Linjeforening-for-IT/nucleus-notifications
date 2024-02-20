@@ -27,7 +27,10 @@ export default async function handleAds() {
 
     for (const APIad of APIads) {
         const deadline = new Date(APIad.application_deadline).getTime() - new Date().getTime()
-        if (deadline < 86400000 && !hasAd({ads: a2h, ad: APIad})) {
+        
+        if (deadline < 0) continue;
+        
+        if (deadline < 7200000 && !hasAd({ads: a2h, ad: APIad})) {
             sendNotification({title: APIad.title_no, body: "Søknadsfrist om 2 timer!", topic: `a${APIad.id}`, screen: APIad})
             sendNotification({title: APIad.title_en, body: "Application deadline in 2 hours!", topic: `a${APIad.id}`, screen: APIad})
             newA2H.push(APIad)
@@ -41,7 +44,7 @@ export default async function handleAds() {
             continue
         }
         
-        if (deadline < 7200000 && !hasAd({ads: a24h, ad: APIad})) {
+        if (deadline < 86400000 && !hasAd({ads: a24h, ad: APIad})) {
             const deadline = new Date();
             const localTime = deadline.toLocaleString('en-US', {timeZone: 'Europe/Oslo'});
             const localDeadline = new Date(localTime);

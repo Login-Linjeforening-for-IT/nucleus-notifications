@@ -1,5 +1,6 @@
 import { initializeApp, applicationDefault } from "firebase-admin/app"
 import { Message, getMessaging } from "firebase-admin/messaging"
+import handleNestedObjects from "./stringifyNestedObjects.js"
 import { stable } from "../data/info.js"
 
 type sendNotificationProps = {
@@ -21,7 +22,6 @@ const app = initializeApp({
  * @param topic    Notification topic
  */
 export default function sendNotification({title, body, screen, topic}: sendNotificationProps): void {
-    console.log(screen)
     // Sets the topic to maintenance if the topic is not available
     if (!topic || !stable) topic = "maintenance"
     
@@ -30,14 +30,7 @@ export default function sendNotification({title, body, screen, topic}: sendNotif
         screen.id = screen.id.toString()
     }
 
-    const data: any = screen || {}
-
-    for (const key in data) {
-        if (data[key] === null) data[key] = 'null'
-        if (typeof data[key] === 'number' || typeof data[key] === 'boolean') {
-            data[key] = data[key].toString();
-        }
-    }
+    const data: any = handleNestedObjects(screen)
 
     // Defines the message to be sent
     const message: Message = {
@@ -56,7 +49,7 @@ export default function sendNotification({title, body, screen, topic}: sendNotif
 }
 
 // Examples of direct notifications that can be sent by node sendNotifications.ts
-// Topics: norwegianTOPIC, englishTOPIC, ...
+// Topics: nTOPIC, eTOPIC, ...
 
 // sendNotification({title: "Tittel", body: "Beskrivelse", topic: "maintenance"})
 // sendNotification("Title", "English description", "", "maintenace")
