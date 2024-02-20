@@ -44,6 +44,7 @@ export default function sendNotification({title, body, screen, topic}: sendNotif
 
     // Sends the message
     getMessaging().send(message).then(response => {
+        console.log("title", title, body)
         console.log(`Successfully sent notification to topic ${topic} at ${new Date().toISOString()}`)
     }).catch(error => {console.error("Error sending notification:", error)})
 }

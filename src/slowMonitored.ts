@@ -1,7 +1,6 @@
 import { storeSlowMonitored } from "./functions/store.js"
 import sendNotification from "./functions/sendNotification.js"
-import { detailedEvents, fetchAdDetails, fetchAds } from "./functions/fetch.js"
-import joinlink from "./functions/joinlink.js"
+import { detailedEvents } from "./functions/fetch.js"
 import { readFile } from "./functions/file.js"
 import handleAds from "./functions/ads.js"
 
@@ -41,7 +40,7 @@ export default async function slowMonitored() {
         // Boolean for if the event has a time
         const time = slow && slow.time_start !== APIevent.time_start ? true : false
         // Boolean for if the event has a link
-        const link = slow && joinlink(slow) !== joinlink(APIevent) && joinlink(APIevent) ? true : false
+        const link = slow && slow.link_signup.includes("http") !== APIevent.link_signup.includes("http") && APIevent.link_signup.includes("http") ? true : false
         // Formats date of the event
         const formattedStarttime = `${APIevent.time_start[8]}${APIevent.time_start[9]}.${APIevent.time_start[5]}${APIevent.time_start[6]}`
         // Event name
@@ -90,7 +89,7 @@ export default async function slowMonitored() {
     // Logs the length of the new array
     console.log("newslow", newSlow.length)
     
-    // Overwrites slowMonitored.txt after checking for changes.
+    // Overwrites slowMonitored.json after checking for changes.
     if (newSlow.length > 0) storeSlowMonitored({events: newSlow, overwrite: true})
     // Otherwise logs that there are no events in api.
     else console.log("Found nothing new.")

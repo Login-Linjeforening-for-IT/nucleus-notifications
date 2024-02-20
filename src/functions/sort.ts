@@ -1,6 +1,5 @@
 import schedule from "./notify.js"
 import fetchEvents, { timeToEvent } from "./fetch.js"
-import joinlink from "./joinlink.js"
 import handleError from "./error.js"
 import { readFile } from "./file.js"
 
@@ -37,7 +36,7 @@ export default function sortEvents({events, notify}: sortEventsProps): SortedObj
 
     // Goes through each event
     events.forEach(event => {
-        if (!joinlink(event)) {
+        if (!event.link_signup.includes("http")) {
             // Event is far away, console log when it will be added and return
             if (timeToEvent(event) > 1209600) {
                 return console.log("Event", event.id, "will be added in", Number((timeToEvent(event) - 1209600).toFixed(0)), "seconds.")
@@ -75,7 +74,7 @@ export default function sortEvents({events, notify}: sortEventsProps): SortedObj
 }
 
 /**
- * Function for checking notifiedEvents for joinlink and if so move them to slowMonitored.txt
+ * Function for checking notifiedEvents for joinlink and if so move them to slowMonitored.json
  * 
  * @param events Events to check
  * @param notify Option to notify the user that the joinlink is found
@@ -83,7 +82,7 @@ export default function sortEvents({events, notify}: sortEventsProps): SortedObj
  * @see schedule(...) Sends the notification to FCM
  * @see joinlink(...) Fetches the joinlink for an event
  * 
- * @returns Events that need to go to slowMonitored.txt
+ * @returns Events that need to go to slowMonitored.json
  */
 export function sortNotified({events, notify}: sortEventsProps) {
     // Defines array for events to be slowmonitored

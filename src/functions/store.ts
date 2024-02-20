@@ -22,8 +22,8 @@ type storeSlowMonitoredProps = {
  * @param notified   Notified events to act on
  * @param slow       Slow events to act on
  * 
- * @see storeNotified(...)      Writes to notifiedEvents.txt
- * @see storeSlowMonitored(...) Writes to slowMonitored.txt
+ * @see storeNotified(...)      Writes to notifiedEvents.json
+ * @see storeSlowMonitored(...) Writes to slowMonitored.json
  */
 export default function storeNewAndRemoveOldEvents({events, notified, slow}: storeNewAndRemoveOldEventsProps): void {
     // Logs for easy scanning of the console
@@ -40,7 +40,7 @@ export default function storeNewAndRemoveOldEvents({events, notified, slow}: sto
 }
 
 /**
- * Writes events to notifiedEvents.txt (they are coming up but they dont have a join link yet)
+ * Writes events to notifiedEvents.json (they are coming up but they dont have a join link yet)
  * 
  * @param {object} events   Events to store
  * 
@@ -59,9 +59,9 @@ export async function storeNotified({events}: storeNotifiedProps) {
 }
 
 /**
- * Writes events to slowMonitored.txt
+ * Writes events to slowMonitored.json
  * 
- * @param {object} events       Events to be stored in slowMonitored.txt
+ * @param {object} events       Events to be stored in slowMonitored.json
  * @param {boolean} overwrite   Boolean for if the file should be overwritten
  * 
  * @see handleError(...)        Notifies the maintenance team of any error
@@ -82,7 +82,7 @@ export async function storeSlowMonitored({events, overwrite}: storeSlowMonitored
     })
 
     // Returns if there is nothing to store
-    if (!filteredEvents || !filteredEvents.length) return console.log(`Nothing new to store in slowMonitored.txt. Total: ${allevents.length} events.`)
+    if (!filteredEvents || !filteredEvents.length) return console.log(`Nothing new to store in slowMonitored.json. Total: ${allevents.length} events.`)
 
     // Writes filteredEvents to file
     return writeFile({fileName: "slow", content: filteredEvents})

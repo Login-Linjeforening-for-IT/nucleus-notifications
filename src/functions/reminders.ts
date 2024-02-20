@@ -13,7 +13,7 @@ type ReminderProps = {
 }
 
 /**
- * Schedules a notification to FCM if a new event with a join link already available has been found and updates slowMonitored.txt
+ * Schedules a notification to FCM if a new event with a join link already available has been found and updates slowMonitored.json
  * 
  * @see sendNotification(...)   Schedules a notification to FCM
  * @see readFile(...)           Reads from given file

@@ -73,17 +73,17 @@ export async function heal(arg: string) {
         // Checks which file needs to be healed, as each file is healed in a
         // different way, tailored to the needs of that file.    
         switch(arg) {
-            // Heals notified.txt
+            // Heals notified.json
             case "notified": {
                 // Defines notified events, and full list of events
                 const notified: DetailedEvent[] = []
                 const events = await detailedEvents(true)
 
                 // Notifies maintenance team that there is an error in heal.ts,
-                // saying that events are undefined in slow.txt
+                // saying that events are undefined in slow.json
                 if (!events) handleError({file: "heal", error: `Unable to heal ${arg}, events is undefined`})
 
-                // Sorts out events that should not be in notified.txt
+                // Sorts out events that should not be in notified.json
                 const obj = sortEvents({events})
 
                 // Pushes all notified events to the notified array
@@ -105,7 +105,7 @@ export async function heal(arg: string) {
                 break
             }
 
-            // Heals slow.txt
+            // Heals slow.json
             case "slow": {
                 try {
                     // Defines slow events, and full list of events
@@ -113,13 +113,13 @@ export async function heal(arg: string) {
                     const events = await detailedEvents(true)
                     
                     // Notifies maintenance team that there is an error in 
-                    // heal.mjs, saying that events are undefined in slow.txt
+                    // heal.mjs, saying that events are undefined in slow.json
                     if (!events) handleError({
                         file: "heal", 
                         error: `Unable to heal ${arg}, events is undefined`
                     })
 
-                    // Sorts out events that should not be in slow.txt
+                    // Sorts out events that should not be in slow.json
                     const obj = sortEvents({events})
 
                     // Pushes all slow events to the slow array
