@@ -28,9 +28,13 @@ export default async function handleAds() {
     for (const APIad of APIads) {
         const deadline = new Date(APIad.application_deadline).getTime() - new Date().getTime()
         
-        if (deadline < 0) continue;
+        if (deadline < 0) {
+            console.log(`Ad ${APIad.id} has already passed. Ignoring.`)
+            continue;
+        }
         
         if (deadline < 7200000 && !hasAd({ads: a2h, ad: APIad})) {
+            console.log(`Ad ${APIad.id} is less than 2 hours away. Scheduling notification.`)
             sendNotification({title: APIad.title_no, body: "Søknadsfrist om 2 timer!", topic: `a${APIad.id}`, screen: APIad})
             sendNotification({title: APIad.title_en, body: "Application deadline in 2 hours!", topic: `a${APIad.id}`, screen: APIad})
             newA2H.push(APIad)
@@ -38,6 +42,7 @@ export default async function handleAds() {
         }
         
         if (deadline < 21600000 && !hasAd({ads: a6h, ad: APIad})) {
+            console.log(`Ad ${APIad.id} is less than 6 hours away. Scheduling notification.`)
             sendNotification({title: APIad.title_no, body: "Søknadsfrist om 6 timer!", topic: `a${APIad.id}`, screen: APIad})
             sendNotification({title: APIad.title_en, body: "Application deadline in 6 hours!", topic: `a${APIad.id}`, screen: APIad})
             newA6H.push(APIad)
@@ -45,6 +50,7 @@ export default async function handleAds() {
         }
         
         if (deadline < 86400000 && !hasAd({ads: a24h, ad: APIad})) {
+            console.log(`Ad ${APIad.id} is less than 24 hours away. Scheduling notification.`)
             const deadline = new Date();
             const localTime = deadline.toLocaleString('en-US', {timeZone: 'Europe/Oslo'});
             const localDeadline = new Date(localTime);
@@ -54,11 +60,16 @@ export default async function handleAds() {
             sendNotification({title: APIad.title_no, body: `Application deadline tomorrow at ${ampmDeadline}!`, topic: `a${APIad.id}`, screen: APIad})
             newA24H.push(APIad)
         }
+
+        if (deadline >= 86400000) {
+            console.log(`Ad ${APIad.id} is ${deadline - 86400000} seconds away from being notified (24h left).`)
+        }
     }
 
     writeFile({fileName: "a2h", content: newA2H})
     writeFile({fileName: "a6h", content: newA6H})
     writeFile({fileName: "a24h", content: newA24H})
+    console.log(`Wrote ${newA24H.length + newA2H.length + newA6H.length} ads to files.`)
 }
 
 handleAds()
