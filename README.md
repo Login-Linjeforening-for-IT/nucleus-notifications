@@ -10,3 +10,9 @@ minute, to make sure the user does not miss the link being posted. Otherwise,
 the event will be fetched every 30 minutes, as we are not expecting any changes,
 except possibly a location or time change. These are usually changed far in
 advance, therefore this half hour wait time has no negative impact.
+
+## How to set in production
+1. Verify that the service runs correctly locally using `npm run test`
+2. Verify that the service runs correctly in docker using `docker compose up`
+3. Login to docker using `docker login`
+3. Send the service to production using `docker buildx build --platform linux/amd64,linux/arm64 --push -t registry.git.logntnu.no/tekkom/apps/automatednotifications:latest .`
