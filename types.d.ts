@@ -1,3 +1,6 @@
+declare var stable: boolean 
+declare var startTime: string
+
 type EventProps = {
     id: number
     name_no: string

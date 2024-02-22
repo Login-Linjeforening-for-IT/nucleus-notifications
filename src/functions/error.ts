@@ -2,7 +2,6 @@ import { detailedEvents, fetchAdDetails, fetchAds, timeToEvent } from "./fetch.j
 import sendNotification from "./sendNotification.js"
 import { readFile, writeFile } from "./file.js"
 import sortEvents from "./sort.js"
-import { stable } from "../data/info.js"
 
 type handleErrorProps = {
     file: string
@@ -141,18 +140,6 @@ export async function heal(arg: string) {
                 } catch (error) {handleError({file: "heal", error: JSON.stringify(error)})}
 
                 // Breaks the function as the next case is not relevant
-                break
-            }
-
-            case "info": {
-                try {
-                    // Writes startTime to file
-                    const content = `const startTime = "${new Date().toISOString()}"\n\nexport default startTime`
-                    writeFile({fileName: "info", content, removeBrackets: true})
-                } catch (error) {
-                    handleError({file: "heal", error: `Healing of ${arg} failed because the file is still unreadable.`})
-                }
-
                 break
             }
 

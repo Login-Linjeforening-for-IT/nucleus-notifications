@@ -32,7 +32,7 @@ export default function file(file: string): string {
         case "a24h":        return 'dist/src/data/intervals/ads/24h.json'
         case "notified":    return 'dist/src/data/notifiedEvents.json'
         case "slow":        return 'dist/src/data/slowMonitored.json'
-        case "info":        return 'dist/src/data/info.js'
+
         default: {
             handleError({file: "file", error: `Invalid file argument in file.ts: ${file}`})
             return ""

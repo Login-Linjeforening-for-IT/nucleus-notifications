@@ -1,7 +1,6 @@
 import { initializeApp, applicationDefault } from "firebase-admin/app"
 import { Message, getMessaging } from "firebase-admin/messaging"
 import handleNestedObjects from "./stringifyNestedObjects.js"
-import { stable } from "../data/info.js"
 
 type sendNotificationProps = {
     title: string
@@ -43,8 +42,7 @@ export default function sendNotification({title, body, screen, topic}: sendNotif
     }
 
     // Sends the message
-    getMessaging().send(message).then(response => {
-        console.log("title", title, body)
+    getMessaging().send(message).then(() => {
         console.log(`Successfully sent notification to topic ${topic} at ${new Date().toISOString()}`)
     }).catch(error => {console.error("Error sending notification:", error)})
 }

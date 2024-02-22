@@ -4,6 +4,7 @@ import fetchEvents, { detailedEvents } from "./functions/fetch.js"
 import reminders from "./functions/reminders.js"
 import handleError from "./functions/error.js"
 import { readFile } from "./functions/file.js"
+import sendNotification from "./functions/sendNotification.js"
 
 /**
  * **Automated event notifications**
@@ -53,7 +54,7 @@ export default async function automatedNotifications() {
     if (!isDefined(newEvents, "newEvents is undefined")) return
 
     // Sorts events and pushes them to appropriate arrays
-    const sortedEvents = sortEvents({events: newEvents, notify: true})
+    const sortedEvents = sortEvents({events: newEvents, slow, notify: true})
     if (!isDefined(sortedEvents, "sortedEvents is undefined")) return
     sortedEvents.slow.forEach(event => {slow.push(event)})
     sortedEvents.notified.forEach(event => {notified.push(event)})
@@ -64,7 +65,7 @@ export default async function automatedNotifications() {
     }) : []
 
     // Handles notified events, potentially pushing them to slow if a link is found
-    const sortedNotified = sortNotified({events: newNotified, notify: true})
+    const sortedNotified = sortNotified({events: newNotified, slow, notify: true})
     if (!isDefined(sortedNotified, "sortedNotified is undefined")) return
     if (sortedNotified.length) {
         sortedNotified.forEach(event => {

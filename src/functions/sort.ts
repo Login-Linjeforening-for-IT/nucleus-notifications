@@ -5,12 +5,18 @@ import { readFile } from "./file.js"
 
 type sortEventsProps = {
     events: DetailedEvent[]
+    slow?: DetailedEvent[]
     notify?: boolean
 }
 
 type SortedObject = {
     slow: DetailedEvent[], 
     notified: DetailedEvent[]
+}
+
+type IncludesProps = {
+    slow: DetailedEvent[]
+    id: number
 }
 
 /**
@@ -24,9 +30,10 @@ type SortedObject = {
  * 
  * @returns Events and slowevents as objects
  */
-export default function sortEvents({events, notify}: sortEventsProps): SortedObject {
+export default function sortEvents({events, slow, notify}: sortEventsProps): SortedObject {
     // Defines empty arrays
-    const slow: DetailedEvent[] = [], notified: DetailedEvent[] = []
+    const newSlow: DetailedEvent[] = slow || []
+    const notified: DetailedEvent[] = []
 
     // Returns if there are no events to sort
     if (!events || !events.length) {
@@ -56,7 +63,7 @@ export default function sortEvents({events, notify}: sortEventsProps): SortedObj
             notified.push(event)
         }
 
-        if (notify) {
+        if (!Includes({slow: newSlow, id: Number(event.id)}) && notify) {
             schedule({
                 event, 
                 textNO: "Påmelding er allerede ute, trykk her for å lese mer!", 
@@ -66,11 +73,11 @@ export default function sortEvents({events, notify}: sortEventsProps): SortedObj
         }
 
         // Pushes the event to the slowmonitored array
-        slow.push(event)
+        newSlow.push(event)
     })
 
     // Returns the sorted object
-    return { slow: slow, notified: notified }
+    return { slow: newSlow, notified }
 }
 
 /**
@@ -147,4 +154,14 @@ export async function filterEvents(): Promise<EventProps[]> {
         handleError({file: "filterEvents", error: JSON.stringify(error)})
         return []
     }
+}
+
+function Includes({slow, id}: IncludesProps) {
+    for (const event of slow) {
+        if (event.id === id) {
+            return true
+        }
+    }
+
+    return false
 }
