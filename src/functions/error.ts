@@ -1,8 +1,7 @@
-import { detailedEvents, timeToEvent } from "./fetch.js"
+import { detailedEvents, fetchAdDetails, fetchAds, timeToEvent } from "./fetch.js"
 import sendNotification from "./sendNotification.js"
 import { readFile, writeFile } from "./file.js"
 import sortEvents from "./sort.js"
-import { stable } from "../data/info.js"
 
 type handleErrorProps = {
     file: string
@@ -24,7 +23,7 @@ type handleErrorProps = {
 export default function handleError({file, error, topic}: handleErrorProps): undefined {
     // Sends a notification in the app containing the error to users with the
     // maintenance topic enabled.
-    sendNotification({title: `Error in ${file}`, body: error, topic: topic ? topic:"maintenance"})
+    sendNotification({title: `Error in ${file}`, body: error, topic: topic ? topic : "maintenance"})
 
     // Continues with undefined to try executing the rest of the file
     if (stable) return undefined
@@ -73,17 +72,17 @@ export async function heal(arg: string) {
         // Checks which file needs to be healed, as each file is healed in a
         // different way, tailored to the needs of that file.    
         switch(arg) {
-            // Heals notified.txt
+            // Heals notified.json
             case "notified": {
                 // Defines notified events, and full list of events
                 const notified: DetailedEvent[] = []
                 const events = await detailedEvents(true)
 
                 // Notifies maintenance team that there is an error in heal.ts,
-                // saying that events are undefined in slow.txt
+                // saying that events are undefined in slow.json
                 if (!events) handleError({file: "heal", error: `Unable to heal ${arg}, events is undefined`})
 
-                // Sorts out events that should not be in notified.txt
+                // Sorts out events that should not be in notified.json
                 const obj = sortEvents({events})
 
                 // Pushes all notified events to the notified array
@@ -105,7 +104,7 @@ export async function heal(arg: string) {
                 break
             }
 
-            // Heals slow.txt
+            // Heals slow.json
             case "slow": {
                 try {
                     // Defines slow events, and full list of events
@@ -113,13 +112,13 @@ export async function heal(arg: string) {
                     const events = await detailedEvents(true)
                     
                     // Notifies maintenance team that there is an error in 
-                    // heal.mjs, saying that events are undefined in slow.txt
+                    // heal.mjs, saying that events are undefined in slow.json
                     if (!events) handleError({
                         file: "heal", 
                         error: `Unable to heal ${arg}, events is undefined`
                     })
 
-                    // Sorts out events that should not be in slow.txt
+                    // Sorts out events that should not be in slow.json
                     const obj = sortEvents({events})
 
                     // Pushes all slow events to the slow array
@@ -144,22 +143,21 @@ export async function heal(arg: string) {
                 break
             }
 
-            case "info": {
-                try {
-                    // Writes startTime to file
-                    const content = `const startTime = "${new Date().toISOString()}"\n\nexport default startTime`
-                    writeFile({fileName: "info", content, removeBrackets: true})
-                } catch (error) {
-                    handleError({file: "heal", error: `Healing of ${arg} failed because the file is still unreadable.`})
-                }
-
-                break
-            }
-
             // Heals all interval files by default
             default: {
                 // Fetches events
                 const events = await detailedEvents(true)
+                
+                // Fetches ads
+                const APIundetailedAds = await fetchAds()
+                const APIads = [] as DetailedAd[]
+
+                for (const ad of APIundetailedAds) {
+                    const response = await fetchAdDetails(ad)
+                    if (response) {
+                        APIads.push(response)
+                    }
+                }
 
                 // Notifies maintenance team that interval files are unable to be healed
                 if (!events) handleError({
@@ -167,7 +165,7 @@ export async function heal(arg: string) {
                     error: `Unable to heal interval files, events is undefined`
                 })
 
-                // Declaring new intervals
+                // Declaring new intervals events
                 const new10m: DetailedEvent[] = []
                 const new30m: DetailedEvent[] = []
                 const new1h: DetailedEvent[] = []
@@ -177,6 +175,11 @@ export async function heal(arg: string) {
                 const new1d: DetailedEvent[] = []
                 const new2d: DetailedEvent[] = []
                 const new1w: DetailedEvent[] = []
+
+                // Declaring new intervals for ads
+                const newA2H: DetailedAd[] = []
+                const newA6H: DetailedAd[] = []
+                const newA24H: DetailedAd[] = []
 
                 // Filters events to appropriate interval
                 events.forEach(event => {
@@ -193,6 +196,16 @@ export async function heal(arg: string) {
                     else if (time <= 86400 && time > 21600) new6h.push(event)
                     else if (time <= 3600 && time > 1800) new30m.push(event)
                     else if (time <= 1800 && time > 600) new10m.push(event)
+                })
+
+                APIads.forEach(ad => {
+                    // Defines time to event
+                    const time = timeToEvent(ad)
+
+                    // Adds each event to the appropriate array
+                    if (time <= 172800 && time > 86400) newA24H.push(ad)
+                    else if (time <= 10800 && time > 7200) newA2H.push(ad)
+                    else if (time <= 86400 && time > 21600) newA6H.push(ad)
                 })
     
                 // Stores events in proper files

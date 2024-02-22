@@ -1,6 +1,7 @@
 node_modules
 .secrets.ts
 .secrets.js
+.secrets.json
 dist/*.js
 dist/src
 dist/dist/src/data/*.js

@@ -4,7 +4,7 @@ import { detailedEvents, timeToEvent } from "./fetch.js"
 import handleError from "./error.js"
 import { fetchEmoji } from "./fetch.js"
 
-type ScheduleProps = {
+type ReminderProps = {
     event: DetailedEvent
     counter: number
     textNO: string
@@ -13,7 +13,7 @@ type ScheduleProps = {
 }
 
 /**
- * Schedules a notification to FCM if a new event with a join link already available has been found and updates slowMonitored.txt
+ * Schedules a notification to FCM if a new event with a join link already available has been found and updates slowMonitored.json
  * 
  * @see sendNotification(...)   Schedules a notification to FCM
  * @see readFile(...)           Reads from given file
@@ -161,14 +161,14 @@ export default async function reminders() {
     console.log(`Scheduled ${reminders} reminders at ${new Date().toISOString()}`)
 }
 
-function schedule({event, counter, textNO, textEN, suffix}: ScheduleProps) {
+function schedule({event, counter, textNO, textEN, suffix}: ReminderProps) {
     const formattedStarttime = `${event.time_start[8]}${event.time_start[9]}.${event.time_start[5]}${event.time_start[6]}`
     const name_no = `${event.name_no} ${formattedStarttime}`
     const name_en = `${event.name_en} ${formattedStarttime}`
     
     // Notification topic
-    const norwegianTopic = `norwegian${event.id}${(event.category_name_no).toLowerCase()}${suffix}`
-    const englishTopic = `english${event.id}${(event.category_name_en).toLowerCase()}${suffix}`
+    const norwegianTopic = `n${event.id}${(event.category_name_no).toLowerCase()}${suffix}`
+    const englishTopic = `e${event.id}${(event.category_name_en).toLowerCase()}${suffix}`
 
     // Notification body
     const norwegianBody = `${textNO} ${fetchEmoji(event)}`

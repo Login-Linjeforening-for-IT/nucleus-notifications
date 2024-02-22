@@ -1,3 +1,6 @@
+declare var stable: boolean 
+declare var startTime: string
+
 type EventProps = {
     id: number
     name_no: string
@@ -125,7 +128,7 @@ type Category = {
 }
 
 type DetailedEvent = {
-    id: number
+    id: number | string
     visible: boolean
     name_no: string
     name_en: string

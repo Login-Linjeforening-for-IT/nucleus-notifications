@@ -18,18 +18,21 @@ type writeFileProps = {
  */
 export default function file(file: string): string {
     switch (file) {
-        case "10m":         return 'dist/dist/src/data/intervals/10m.txt'
-        case "30m":         return 'dist/dist/src/data/intervals/30m.txt'
-        case "1h":          return 'dist/dist/src/data/intervals/1h.txt'
-        case "2h":          return 'dist/dist/src/data/intervals/2h.txt'
-        case "3h":          return 'dist/dist/src/data/intervals/3h.txt'
-        case "6h":          return 'dist/dist/src/data/intervals/6h.txt'
-        case "1d":          return 'dist/dist/src/data/intervals/1d.txt'
-        case "2d":          return 'dist/dist/src/data/intervals/2d.txt'
-        case "1w":          return 'dist/dist/src/data/intervals/1w.txt'
-        case "notified":    return 'dist/dist/src/data/notifiedEvents.txt'
-        case "slow":        return 'dist/dist/src/data/slowMonitored.txt'
-        case "info":        return 'dist/dist/src/data/info.js'
+        case "10m":         return 'dist/src/data/intervals/events/10m.json'
+        case "30m":         return 'dist/src/data/intervals/events/30m.json'
+        case "1h":          return 'dist/src/data/intervals/events/1h.json'
+        case "2h":          return 'dist/src/data/intervals/events/2h.json'
+        case "3h":          return 'dist/src/data/intervals/events/3h.json'
+        case "6h":          return 'dist/src/data/intervals/events/6h.json'
+        case "1d":          return 'dist/src/data/intervals/events/1d.json'
+        case "2d":          return 'dist/src/data/intervals/events/2d.json'
+        case "1w":          return 'dist/src/data/intervals/events/1w.json'
+        case "a2h":         return 'dist/src/data/intervals/ads/2h.json'
+        case "a6h":         return 'dist/src/data/intervals/ads/6h.json'
+        case "a24h":        return 'dist/src/data/intervals/ads/24h.json'
+        case "notified":    return 'dist/src/data/notifiedEvents.json'
+        case "slow":        return 'dist/src/data/slowMonitored.json'
+
         default: {
             handleError({file: "file", error: `Invalid file argument in file.ts: ${file}`})
             return ""
