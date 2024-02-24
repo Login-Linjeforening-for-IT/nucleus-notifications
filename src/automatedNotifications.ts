@@ -4,7 +4,6 @@ import fetchEvents, { detailedEvents } from "./functions/fetch.js"
 import reminders from "./functions/reminders.js"
 import handleError from "./functions/error.js"
 import { readFile } from "./functions/file.js"
-import sendNotification from "./functions/sendNotification.js"
 
 /**
  * **Automated event notifications**
