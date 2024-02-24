@@ -9,6 +9,7 @@ type sendNotificationProps = {
     topic?: string
 }
 
+// DO NOT REMOVE: App is not being used, but the credentials it creates are.
 const app = initializeApp({
     credential: applicationDefault()
 })
