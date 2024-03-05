@@ -158,7 +158,7 @@ export async function filterEvents(): Promise<EventProps[]> {
 
 function Includes({slow, id}: IncludesProps) {
     for (const event of slow) {
-        if (event.id === id) {
+        if (Number(event.id) === id) {
             return true
         }
     }
