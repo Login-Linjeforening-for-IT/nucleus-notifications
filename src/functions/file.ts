@@ -98,7 +98,7 @@ export async function readFile(arg: string, stop?: boolean): Promise<unknown> {
     // Defines file to read from
     const File = file(arg)
 
-    // await createPath({path: `/${File}`})
+    await createPath({path: `/${File}`})
 
     // Returns a promise
     return new Promise((res) => {
@@ -153,7 +153,6 @@ async function createPath({ path }: createPathProps) {
             return;
         }
     }
-    console.log(`Path created: ${fullPath}`);
 }
 
 async function createFileOrFolder({ entry }: createFileOrFolderProps) {
@@ -166,8 +165,12 @@ async function createFileOrFolder({ entry }: createFileOrFolderProps) {
                 console.log(`File created: ${entry}`);
             }
         } else {
-            await promises.mkdir(entry, { recursive: true });
-            console.log(`Folder created: ${entry}`);
+            try {
+                await promises.access(entry);
+            } catch (error) {
+                await promises.mkdir(entry, { recursive: true });
+                console.log(`Folder created: ${entry}`);
+            }
         }
     } catch (error) {
         throw new Error(`Failed to create ${entry}: ${error}`);
