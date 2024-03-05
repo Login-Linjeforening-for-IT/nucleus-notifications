@@ -15,7 +15,7 @@ type SortedObject = {
 }
 
 type IncludesProps = {
-    slow: DetailedEvent[]
+    events: DetailedEvent[]
     id: number
 }
 
@@ -50,7 +50,7 @@ export default function sortEvents({events, slow, notify}: sortEventsProps): Sor
             }
 
             // If the user should be notified, notifies the user
-            if (notify) {
+            if (!Includes({events: newSlow, id: Number(event.id)}) && notify) {
                 schedule({
                     event, 
                     textNO: "Trykk her for å lese mer.", 
@@ -63,7 +63,7 @@ export default function sortEvents({events, slow, notify}: sortEventsProps): Sor
             notified.push(event)
         }
 
-        if (!Includes({slow: newSlow, id: Number(event.id)}) && notify) {
+        if (!Includes({events: newSlow, id: Number(event.id)}) && notify) {
             schedule({
                 event, 
                 textNO: "Påmelding er allerede ute, trykk her for å lese mer!", 
@@ -101,17 +101,17 @@ export function sortNotified({events, notify}: sortEventsProps) {
     // Goes through each event
     events.forEach(event => {
         // If the user should be notified, notifies the user
-        if (notify) {
+        if (event.link_signup?.includes('http') && notify) {
             schedule({
                 event, 
                 textNO: "Påmelding er ute!", 
                 textEN: "Registration available!",
                 actionName: "notifyLinkFound"
             })
+            
+            // Pushes the event to the notified array
+            slow.push(event)
         }
-
-        // Pushes the event to the notified array
-        slow.push(event)
     })
 
     // Returns the array
@@ -156,9 +156,9 @@ export async function filterEvents(): Promise<EventProps[]> {
     }
 }
 
-function Includes({slow, id}: IncludesProps) {
-    for (const event of slow) {
-        if (event.id === id) {
+function Includes({events, id}: IncludesProps) {
+    for (const event of events) {
+        if (Number(event.id) === id) {
             return true
         }
     }

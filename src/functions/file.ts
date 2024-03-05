@@ -1,10 +1,22 @@
 import handleError, { heal } from "./error.js"
-import * as fs from 'fs'
+import fs, { promises } from 'fs'
 
 type writeFileProps = {
     fileName: string
     content: any
     removeBrackets?: boolean
+}
+
+type createPath = {
+    path: string
+}
+
+type createFileOrFolderProps = {
+    entry: string
+}
+
+type createPathProps = {
+    path: string
 }
 
 /**
@@ -86,13 +98,23 @@ export async function readFile(arg: string, stop?: boolean): Promise<unknown> {
     // Defines file to read from
     const File = file(arg)
 
+    await createPath({path: `/${File}`})
+
     // Returns a promise
     return new Promise((res) => {
         // Reads file
         fs.readFile(File, async (error, data) => {
             
             // Handles potential error
-            if (error) res(handleError({file: "readFile", error: JSON.stringify(error)}))
+            if (error) {
+                if (error?.errno === -2) {
+                    createPath({path: File})
+                    // here I want to retry and not resolve with the error function if the path creation was successful
+                }
+
+                res(handleError({file: "readFile", error: JSON.stringify(error)}))
+            }
+
             try {
                 // Tries to parse the json to string
                 const content = JSON.parse(data.toString())
@@ -114,4 +136,43 @@ export async function readFile(arg: string, stop?: boolean): Promise<unknown> {
             }
         })
     })
+}
+
+async function createPath({ path }: createPathProps) {
+    const cwd = process.cwd();
+    const fullPath = `${cwd}${path}`;
+    const entries = fullPath.split('/');
+    let currentPath = '';
+
+    for (let i = 1; i < entries.length; i++) {
+        currentPath += `/${entries[i]}`;
+        try {
+            await createFileOrFolder({ entry: currentPath });
+        } catch (error) {
+            console.error(`Failed to create entry ${currentPath}:`, error);
+            return;
+        }
+    }
+}
+
+async function createFileOrFolder({ entry }: createFileOrFolderProps) {
+    try {
+        if (entry.includes('.')) {
+            try {
+                await promises.access(entry);
+            } catch (error) {
+                await promises.writeFile(entry, '[]');
+                console.log(`File created: ${entry}`);
+            }
+        } else {
+            try {
+                await promises.access(entry);
+            } catch (error) {
+                await promises.mkdir(entry, { recursive: true });
+                console.log(`Folder created: ${entry}`);
+            }
+        }
+    } catch (error) {
+        throw new Error(`Failed to create ${entry}: ${error}`);
+    }
 }
