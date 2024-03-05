@@ -58,22 +58,22 @@ export default async function slowMonitored() {
         if (time && link && newLocation) {
             norwegianBody = `Arrangementet har blitt endret. Ny tid: ${hour} den ${formattedStarttime}. Nytt sted: ${newLocation}. Trykk her for alle detaljene.`
             englishBody = `Event has changed. New time: ${hour} on ${formattedStarttime}. New location: ${newLocation}. Tap here for details.`
-        }else if (time && link){
+        } else if (time && link){
             norwegianBody = `Tid endret til kl: ${hour} den ${formattedStarttime}. Påmeldingslinken er også endret. Trykk her for flere detaljer.`
             englishBody = `Time changed to: ${hour} on ${formattedStarttime}. Registration link has also changed. Tap here for details.`           
-        }else if (time && newLocation) {
+        } else if (time && newLocation) {
             norwegianBody = `Tid og sted endret. Ny tid: ${hour} den ${formattedStarttime}. Nytt sted: ${newLocation}. Trykk her for å se den oppdaterte informasjonen.`
             englishBody = `Time and location changed. New time: ${hour} on ${formattedStarttime}. New location: ${newLocation}. Tap here for details.`
-        }else if (link && newLocation) {
+        } else if (link && newLocation) {
             norwegianBody = `Nytt sted: ${newLocation}. Påmeldingslink har også blitt endret. Trykk her for mer informasjon.`
             englishBody = `New location: ${newLocation}. Registration link has also changed. Click here for more information.`        
-        }else if (time) {
+        } else if (time) {
             norwegianBody = `Tidspunkt endret til kl ${hour} den ${formattedStarttime}.`
             englishBody = `Time changed to ${hour} on ${formattedStarttime}.`           
-        }else if (newLocation) {
+        } else if (newLocation) {
             norwegianBody = `Sted endret til ${location}.`
             englishBody = `Location changed to ${location}.`
-        }else if (link) {
+        } else if (link) {
             norwegianBody = "Ny påmeldingslink lagt ut!"
             englishBody = "New registration link available!"
         }
@@ -95,4 +95,3 @@ export default async function slowMonitored() {
     else console.log("Found nothing new.")
 
 }
-slowMonitored()
