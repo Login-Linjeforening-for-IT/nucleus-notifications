@@ -5,3 +5,4 @@ node_modules
 dist/*.js
 dist/src
 dist/dist/src/data/*.js
+tmp

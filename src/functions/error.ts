@@ -2,6 +2,7 @@ import { detailedEvents, fetchAdDetails, fetchAds, timeToEvent } from "./fetch.j
 import sendNotification from "./sendNotification.js"
 import { readFile, writeFile } from "./file.js"
 import sortEvents from "./sort.js"
+import { removeHealthyFile } from "./file.js"
 
 type handleErrorProps = {
     file: string
@@ -21,10 +22,13 @@ type handleErrorProps = {
  * @returns {undefined}
  */
 export default function handleError({file, error, topic}: handleErrorProps): undefined {
+    // Removes healthy file indicating that the service is no longer healthy and should be restarted
+    removeHealthyFile()
+
     // Sends a notification in the app containing the error to users with the
     // maintenance topic enabled.
     sendNotification({title: `Error in ${file}`, body: error, topic: topic ? topic : "maintenance"})
-
+    
     // Continues with undefined to try executing the rest of the file
     if (stable) return undefined
 

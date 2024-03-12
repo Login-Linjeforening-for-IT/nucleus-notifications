@@ -1,5 +1,6 @@
 import automatedNotifications from "./automatedNotifications.js"
 import slowMonitored from "./slowMonitored.js"
+import { createPath } from "./functions/file.js"
 
 /**
  * Test function for the repository. Will run for 5 minutes then put the
@@ -21,7 +22,7 @@ export default async function test() {
         ? time.getHours() + Math.abs(hoursToUTC)
         : time.getHours() + hoursToUTC
     )
-
+        
     // Writes startTime to file
     globalThis.stable = false
     globalThis.startTime = time.toISOString()
@@ -45,6 +46,8 @@ export default async function test() {
     globalThis.stable = true
 
     // Logs success
+    createPath({path: '/tmp/ready.txt'})
+    createPath({path: '/tmp/healthy.txt'})
     console.log("No errors found. Putting repository into production.")
 }
 
