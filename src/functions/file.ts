@@ -178,7 +178,7 @@ async function createFileOrFolder({ entry }: createFileOrFolderProps) {
 }
 
 export function removeHealthyFile() {
-    const healthyFilePath = './tmp/healthy';
+    const healthyFilePath = './tmp/healthy.txt';
     
     fs.unlink(healthyFilePath, (err) => {
         if (err) throw err;
