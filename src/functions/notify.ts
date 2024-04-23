@@ -29,8 +29,8 @@ export default function schedule({event, textNO, textEN, actionName}: SchedulePr
     const formattedStarttime = `${event.time_start[8]}${event.time_start[9]}.${event.time_start[5]}${event.time_start[6]}`
 
     // Formats title
-    const name_no = `${event.name_no} ${formattedStarttime}`
-    const name_en = `${event.name_en} ${formattedStarttime}`
+    const name_no = `${event.name_no || event.name_en} ${formattedStarttime}`
+    const name_en = `${event.name_en || event.name_no} ${formattedStarttime}`
 
     // Defines body
     const norwegianBody = `${textNO} ${fetchEmoji(event)}`

@@ -33,23 +33,32 @@ export default async function slowMonitored() {
     // Checks all events with earlier version for potential changes
     for (const APIevent of APIevents) {
         const slow = slowEvents.find((event: DetailedEvent) => event.id === APIevent.id)
+
         // Defines norwegian topic
         const norwegianTopic = `n${APIevent.id}`
+
         // Defines english topic
         const englishTopic = `e${APIevent.id}`
+
         // Boolean for if the event has a time
         const time = slow && slow.time_start !== APIevent.time_start ? true : false
+
         // Boolean for if the event has a link
         const link = slow && slow.link_signup.includes("http") !== APIevent.link_signup.includes("http") && APIevent.link_signup.includes("http") ? true : false
+        
         // Formats date of the event
         const formattedStarttime = `${APIevent.time_start[8]}${APIevent.time_start[9]}.${APIevent.time_start[5]}${APIevent.time_start[6]}`
+        
         // Event name
-        const name_no = `${APIevent.name_no} ${formattedStarttime}`
-        const name_en = `${APIevent.name_en} ${formattedStarttime}`
+        const name_no = `${APIevent.name_no || APIevent.name_en} ${formattedStarttime}`
+        const name_en = `${APIevent.name_en || APIevent.name_no} ${formattedStarttime}`
+        
         // Location of the event
         const newLocation = slow && slow.location !== APIevent.location ? true : false
+        
         // Formats hour of the event
         const hour = `${APIevent.time_start[11]}${APIevent.time_start[12]}:${APIevent.time_start[14]}${APIevent.time_start[15]}`
+        
         // Body of the notification
         let norwegianBody = ""
         let englishBody = ""
@@ -106,6 +115,7 @@ export default async function slowMonitored() {
     
     // Overwrites slowMonitored.json after checking for changes.
     if (newSlow.length > 0) storeSlowMonitored({events: newSlow, overwrite: true})
+    
     // Otherwise logs that there are no events in api.
     else console.log("Found nothing new.")
 
