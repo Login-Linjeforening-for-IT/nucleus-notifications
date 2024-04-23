@@ -226,11 +226,11 @@ export function timeToEvent (item: DetailedEvent | DetailedAd): number {
     // Subtracting and dividing from milliseconds to seconds
     const seconds = (startTime.getTime() - currentTime.getTime()) / 1000
 
-    // Checks for and subtracts two hours during summertime
-    if (summertime()) return seconds - 9800
+    // Checks for summertime
+    if (summertime()) return seconds
 
-    // Otherwise subtracts one hour during wintertime
-    else              return seconds - 7200
+    // Subtracts one hour to account for the server time not following summertime
+    else return seconds - 3600
 } 
 
 /**
