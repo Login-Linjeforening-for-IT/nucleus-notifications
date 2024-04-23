@@ -227,7 +227,7 @@ export function timeToEvent (item: DetailedEvent | DetailedAd): number {
     const seconds = (startTime.getTime() - currentTime.getTime()) / 1000
 
     // Checks for summertime and subtracts one hour if not summertime
-    return summertime() ? seconds : seconds - 3600
+    return summerTime() ? seconds : seconds - 3600
 } 
 
 /**
@@ -235,7 +235,7 @@ export function timeToEvent (item: DetailedEvent | DetailedAd): number {
  * 
  * @returns {boolean} True if summertime otherwise false
  */
-export function summertime(): boolean {
+export function summerTime(): boolean {
     // Create a Date object for the current date
     const date = new Date();
 

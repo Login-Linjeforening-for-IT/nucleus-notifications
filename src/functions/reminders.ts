@@ -188,8 +188,8 @@ function schedule({event, counter, textNO, textEN, suffix}: ReminderProps) {
     const name_en = `${event.name_en || event.name_no} ${formattedStarttime}`
     
     // Notification topic
-    const norwegianTopic = `n${event.id}${(event.category_name_no).toLowerCase()}${suffix}`
-    const englishTopic = `e${event.id}${(event.category_name_en).toLowerCase()}${suffix}`
+    const norwegianTopic = `n${(event.category_name_no).toLowerCase()}${suffix}`
+    const englishTopic = `e${(event.category_name_en).toLowerCase()}${suffix}`
 
     // Notification body
     const norwegianBody = `${textNO} ${fetchEmoji(event)}`
