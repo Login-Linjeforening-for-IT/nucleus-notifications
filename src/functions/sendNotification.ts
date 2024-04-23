@@ -24,7 +24,7 @@ const app = initializeApp({
 export default function sendNotification({title, body, screen, topic}: sendNotificationProps): void {
     // Sets the topic to maintenance if the topic is not available
     if (!topic || !stable) topic = "maintenance"
-    
+
     // Change the id to string if screen is defined
     if(screen) {
         screen.id = screen.id.toString()

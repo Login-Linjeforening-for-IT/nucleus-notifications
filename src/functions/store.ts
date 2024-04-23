@@ -82,7 +82,9 @@ export async function storeSlowMonitored({events, overwrite}: storeSlowMonitored
     })
 
     // Returns if there is nothing to store
-    if (!filteredEvents || !filteredEvents.length) return console.log(`Nothing new to store in slowMonitored.json. Total: ${allevents.length} events.`)
+    if (!filteredEvents || !filteredEvents.length) {
+        return console.log(`Nothing new to store in slowMonitored.json. Total: ${allevents.length} events.`)
+    }
 
     // Writes filteredEvents to file
     return writeFile({fileName: "slow", content: filteredEvents})

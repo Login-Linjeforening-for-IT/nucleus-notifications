@@ -136,7 +136,9 @@ export async function filterEvents(): Promise<EventProps[]> {
         const slowEvents = await readFile("slow") as DetailedEvent[]
         
         // Filters events to avoid multiples of the same event 
-        const filteredEvents = slowEvents.length ? events.filter(event => !slowEvents.some(slowevents => slowevents.id === event.id)):events
+        const filteredEvents = slowEvents.length 
+            ? events.filter(event => !slowEvents.some(slowevents => slowevents.id === event.id))
+            : events
 
         // Handles error where the filtered events are undefined
         if (!filteredEvents) {

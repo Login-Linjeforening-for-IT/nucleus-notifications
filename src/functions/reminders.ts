@@ -175,8 +175,22 @@ function schedule({event, counter, textNO, textEN, suffix}: ReminderProps) {
     const englishBody = `${textEN} ${fetchEmoji(event)}`
     
     // Sends notifications
-    if (norwegianTopic) sendNotification({title: name_no, body: norwegianBody, screen: event, topic: norwegianTopic})
-    if (englishTopic)   sendNotification({title: name_en, body: englishBody, screen: event, topic: englishTopic})
+    if (norwegianTopic) {
+        sendNotification({
+            title: name_no, 
+            body: norwegianBody, 
+            screen: event, 
+            topic: norwegianTopic
+        })
+    }
+
+    if (englishTopic) {
+        sendNotification({title: name_en, 
+            body: englishBody, 
+            screen: event, 
+            topic: englishTopic
+        })
+    }
 
     // Increases reminders sent
     counter += 2

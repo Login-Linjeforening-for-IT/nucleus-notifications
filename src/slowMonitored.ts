@@ -78,8 +78,23 @@ export default async function slowMonitored() {
             englishBody = "New registration link available!"
         }
 
-        if (norwegianBody) sendNotification({title: name_no, body: norwegianBody, screen: APIevent, topic: norwegianTopic})
-        if (englishBody) sendNotification({title: name_en, body: englishBody, screen: APIevent, topic: englishTopic})
+        if (norwegianBody) {
+            sendNotification({
+                title: name_no, 
+                body: norwegianBody, 
+                screen: APIevent, 
+                topic: norwegianTopic
+            })
+        }
+
+        if (englishBody) {
+            sendNotification({
+                title: name_en, 
+                body: englishBody, 
+                screen: APIevent, 
+                topic: englishTopic
+            })
+        }
     }
 
     // Defines the new array of events to be slowmonitored

@@ -37,8 +37,23 @@ export default function schedule({event, textNO, textEN, actionName}: SchedulePr
     const englishBody = `${textEN} ${fetchEmoji(event)}`
 
     // Sends the notification
-    if (norwegianTopic)  sendNotification({title: name_no, body: norwegianBody, screen: event, topic: norwegianTopic})
-    if (englishTopic)    sendNotification({title: name_en, body: englishBody, screen: event, topic: englishTopic})
+    if (norwegianTopic) {
+        sendNotification({
+            title: name_no, 
+            body: norwegianBody, 
+            screen: event, 
+            topic: norwegianTopic
+        })
+    }
+
+    if (englishTopic) {
+        sendNotification({
+            title: name_en, 
+            body: englishBody, 
+            screen: event, 
+            topic: englishTopic
+        })
+    }
 
     // Logs success
     console.log(`Scheduled ${actionName} notification for event ${event.id}`)
