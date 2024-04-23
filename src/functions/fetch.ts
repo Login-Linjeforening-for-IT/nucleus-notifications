@@ -226,11 +226,8 @@ export function timeToEvent (item: DetailedEvent | DetailedAd): number {
     // Subtracting and dividing from milliseconds to seconds
     const seconds = (startTime.getTime() - currentTime.getTime()) / 1000
 
-    // Checks for summertime
-    if (summertime()) return seconds
-
-    // Subtracts one hour to account for the server time not following summertime
-    else return seconds - 3600
+    // Checks for summertime and subtracts one hour if not summertime
+    return summertime() ? seconds : seconds - 3600
 } 
 
 /**
@@ -239,15 +236,25 @@ export function timeToEvent (item: DetailedEvent | DetailedAd): number {
  * @returns {boolean} True if summertime otherwise false
  */
 export function summertime(): boolean {
-    // Date object for March 1st
-    const date = new Date('2023-03-01')
+    // Create a Date object for the current date
+    const date = new Date();
 
-    // Time zone offset in minutes
-    const offset = date.getTimezoneOffset()
+    // Get the current year
+    const year = date.getFullYear();
 
-    // True if summertime
-    if (offset < 0) return true
+    // Start and end dates for summertime (Daylight Saving Time) in Norway
+    // Last Sunday in March
+    const summertimeStart = new Date(Date.UTC(year, 2, 31));
+    
+    // Last Sunday in October
+    const summertimeEnd = new Date(Date.UTC(year, 9, 31));
 
-    // False if wintertime
-    else            return false
+    // Calculate the last Sunday in March
+    summertimeStart.setDate(31 - ((summertimeStart.getDay() + 1) % 7));
+
+    // Calculate the last Sunday in October
+    summertimeEnd.setDate(31 - ((summertimeEnd.getDay() + 1) % 7));
+
+    // Check if the current date is between summertimeStart and summertimeEnd
+    return date >= summertimeStart && date <= summertimeEnd;
 }
