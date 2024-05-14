@@ -25,7 +25,7 @@ type storeSlowMonitoredProps = {
  * @see storeNotified(...)      Writes to notifiedEvents.json
  * @see storeSlowMonitored(...) Writes to slowMonitored.json
  */
-export default async function storeNewAndRemoveOldEvents({events, notified, slow}: storeNewAndRemoveOldEventsProps): Promise<void> {
+export default function storeNewAndRemoveOldEvents({events, notified, slow}: storeNewAndRemoveOldEventsProps): void {
     // Logs for easy scanning of the console
     console.log("Stored new events, and removed events that have already taken place.")
     console.log(`events ${events.length} notified ${notified.length}, slowmonitored ${slow.length}`)
@@ -35,8 +35,8 @@ export default async function storeNewAndRemoveOldEvents({events, notified, slow
     const newSlowEvents = slow.filter(slow => events.some(APIevent => APIevent.id === slow.id))
 
     // Stores each event in its appropriate file
-    await storeNotified({events: newNotifiedEvents})
-    await storeSlowMonitored({events: newSlowEvents})
+    storeNotified({events: newNotifiedEvents})
+    storeSlowMonitored({events: newSlowEvents})
 }
 
 /**
@@ -48,7 +48,7 @@ export default async function storeNewAndRemoveOldEvents({events, notified, slow
  * @see handleError(...)    Notifies the maintenance team of any error that occurs
  * @see writeFile(...)      Writes given content to given file
  */
-export async function storeNotified({events}: storeNotifiedProps) {
+export function storeNotified({events}: storeNotifiedProps) {
     // Removes duplicates
     const unique = events.filter((event, index) => {
         return events.findIndex(obj => obj.id === event.id) === index

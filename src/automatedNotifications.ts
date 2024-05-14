@@ -78,7 +78,7 @@ export default async function automatedNotifications() {
     if (!isDefined(slow, "slow is undefined when storing")) return
 
     // Removes events that have already taken place and stores new events
-    await storeNewAndRemoveOldEvents({events, notified: newNotified, slow})
+    storeNewAndRemoveOldEvents({events, notified: newNotified, slow})
 
     // Logs interval end time
     console.log(`Version: ${process.env.npm_package_version} Interval complete at ${new Date().toISOString()}`)
