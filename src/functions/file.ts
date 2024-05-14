@@ -1,4 +1,4 @@
-import handleError, { heal } from "./error.js"
+import handleError, { fixJSONContent } from "./error.js"
 import fs, { promises } from 'fs'
 
 type writeFileProps = {
@@ -90,7 +90,7 @@ export function writeFile({fileName, content, removeBrackets}: writeFileProps) {
  * @param {string} arg      Time interval for the specified file
  * 
  * @see handleError(...)    Notifies the maintenance team of any error
- * @see heal(...)           Tries to fix any unreadable file
+ * @see fixJSONContent(...) Tries to fix malformed json content in input file
  * 
  * @returns                 Contents of given file
  */
@@ -109,7 +109,9 @@ export async function readFile(arg: string, stop?: boolean): Promise<unknown> {
             if (error) {
                 if (error?.errno === -2) {
                     createPath({path: File})
-                    // here I want to retry and not resolve with the error function if the path creation was successful
+                    
+                    const content = JSON.parse(data.toString())
+                    if (content) res(content)
                 }
 
                 res(handleError({file: "readFile", error: JSON.stringify(error)}))
@@ -127,11 +129,11 @@ export async function readFile(arg: string, stop?: boolean): Promise<unknown> {
             
             // Handles case where the json cannot be parsed
             } catch (error) {
-                // Stopping the process if the file has already been healed unsuccessfully
+                // Stopping the process if the file has already been fixed unsuccessfully
                 if (stop) return handleError({file: "readFile", error: JSON.stringify(error)})
 
-                // Most likely there is an error with the json. Trying to heal
-                await heal(arg)
+                // Most likely there is an error with the json. Trying to fix malformed json content
+                await fixJSONContent(arg)
                 await readFile(arg, true)
             }
         })

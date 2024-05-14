@@ -25,7 +25,7 @@ type storeSlowMonitoredProps = {
  * @see storeNotified(...)      Writes to notifiedEvents.json
  * @see storeSlowMonitored(...) Writes to slowMonitored.json
  */
-export default function storeNewAndRemoveOldEvents({events, notified, slow}: storeNewAndRemoveOldEventsProps): void {
+export default async function storeNewAndRemoveOldEvents({events, notified, slow}: storeNewAndRemoveOldEventsProps): Promise<void> {
     // Logs for easy scanning of the console
     console.log("Stored new events, and removed events that have already taken place.")
     console.log(`events ${events.length} notified ${notified.length}, slowmonitored ${slow.length}`)
@@ -35,8 +35,8 @@ export default function storeNewAndRemoveOldEvents({events, notified, slow}: sto
     const newSlowEvents = slow.filter(slow => events.some(APIevent => APIevent.id === slow.id))
 
     // Stores each event in its appropriate file
-    storeNotified({events: newNotifiedEvents})
-    storeSlowMonitored({events: newSlowEvents})
+    await storeNotified({events: newNotifiedEvents})
+    await storeSlowMonitored({events: newSlowEvents})
 }
 
 /**

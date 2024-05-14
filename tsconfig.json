@@ -2,6 +2,7 @@
     "compilerOptions": {
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
         "module": "ES6",
         "moduleResolution": "node",
         "outDir": "./dist",

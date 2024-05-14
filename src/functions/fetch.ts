@@ -20,7 +20,7 @@ export default async function fetchEvents(): Promise<EventProps[]> {
         // Test API
         // const response = await fetch(`${testapi}events`)
 
-        // Turns the text response into a JSON object
+        // Turns the text response into a json object
         const events = await response.json() as EventProps[]
 
         // Handles case where the response is recieved, but undefined.
@@ -54,7 +54,7 @@ export async function fetchAds(): Promise<AdProps[]> {
         // Dev
         // const response = await fetch(`${testapi}jobs/`)
 
-        // Turns the text response into a JSON object
+        // Turns the text response into a json object
         const ads = await response.json() as AdProps[]
 
         // Handles case where the response is recieved, but undefined.
@@ -206,9 +206,9 @@ export function fetchEmoji(event: EventProps | DetailedEvent): string {
 /**
  * Returns the time till an event in seconds
  * 
- * @param {event} event Event to get the time for
+ * @param {item} item Event or Ad to get the time for
  * 
- * @see summertime()    Returns if the current time is summertime or wintertime
+ * @see summertime() Returns if the current time is summertime or wintertime
  * 
  * @returns {number} Seconds till event
  */
@@ -227,27 +227,21 @@ export function timeToEvent (item: DetailedEvent | DetailedAd): number {
     const seconds = (startTime.getTime() - currentTime.getTime()) / 1000
 
     // Checks for and subtracts two hours during summertime
-    if (summertime()) return seconds - 9800
+    if (isDaylightSavingTime()) return seconds - 9800
 
     // Otherwise subtracts one hour during wintertime
     else              return seconds - 7200
-} 
+}
 
 /**
- * Checks for summertime
+ * Checks for Daylight Savings Time (DST)
  * 
- * @returns {boolean} True if summertime otherwise false
+ * @param {object} date [OPTIONAL] Date to check for DST, defaults to the current time
+ * 
+ * @returns {boolean} True if DST otherwise false
  */
-export function summertime(): boolean {
-    // Date object for March 1st
-    const date = new Date('2023-03-01')
-
-    // Time zone offset in minutes
-    const offset = date.getTimezoneOffset()
-
-    // True if summertime
-    if (offset < 0) return true
-
-    // False if wintertime
-    else            return false
+export function isDaylightSavingTime(date: Date = new Date()): boolean {
+    const dstStart = new Date(date.getFullYear(), 2, 31)
+    const dstEnd = new Date(date.getFullYear(), 9, 27)
+    return date > dstStart && date < dstEnd;
 }
