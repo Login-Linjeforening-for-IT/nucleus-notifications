@@ -1,5 +1,5 @@
-# Latest node image
-FROM node:latest
+# Uses node 20 alpine image for apk package manager
+FROM node:20-alpine
 
 # Installs required system dependencies
 RUN apk add --no-cache python3 make g++
