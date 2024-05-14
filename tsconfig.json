@@ -12,7 +12,7 @@
     "include": [
         "**/*.ts",
         "**/*.d.ts",
-        "**/*.json",
+        "**/*.json"
     ],
     "exclude": ["node_modules", "dist"]
 }

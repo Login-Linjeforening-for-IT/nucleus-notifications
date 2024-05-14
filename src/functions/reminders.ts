@@ -91,7 +91,14 @@ export default async function reminders() {
         const time = `${event.time_start[11]}${event.time_start[12]}:${event.time_start[14]}${event.time_start[15]}`
         const hour = Number(event.time_start[11]+event.time_start[12])
         const ampm = (hour > 0 && hour <= 12) ? "am":"pm"
-        schedule({event, counter: reminders, textNO: `I morgen klokken ${time}!`, textEN: `Tomorrow at ${hour}${ampm}!`, suffix: "1d"})
+
+        schedule({
+            event, 
+            counter: reminders, 
+            textNO: `I morgen klokken ${time}!`, 
+            textEN: `Tomorrow at ${hour}${ampm}!`, 
+            suffix: "1d"
+        })
     })
 
     // Schedules notifications for events 2 days away.
@@ -99,7 +106,14 @@ export default async function reminders() {
         const time = `${event.time_start[11]}${event.time_start[12]}:${event.time_start[14]}${event.time_start[15]}`
         const hour = Number(event.time_start[11]+event.time_start[12])
         const ampm = (hour > 0 && hour <= 12) ? "am":"pm"
-        schedule({event, counter: reminders, textNO: `Overimorgen ${time}!`, textEN: `In 2 days at ${hour}${ampm}!`, suffix: "2d"})
+
+        schedule({
+            event, 
+            counter: reminders, 
+            textNO: `Overimorgen ${time}!`, 
+            textEN: `In 2 days at ${hour}${ampm}!`, 
+            suffix: "2d"
+        })
     })
 
     // Schedules notifications for events 1 week away.
@@ -113,7 +127,14 @@ export default async function reminders() {
         const date = new Date(`${year}-${month}-${day}`)
         const ukedag = ukedager[date.getDay()]
         const weekday = weekdays[date.getDay()]
-        schedule({event, counter: reminders, textNO: `Neste ${ukedag} kl. ${time}!`, textEN: `Next ${weekday} at ${hour}${ampm}!`, suffix: "1w"})
+
+        schedule({
+            event, 
+            counter: reminders, 
+            textNO: `Neste ${ukedag} kl. ${time}!`, 
+            textEN: `Next ${weekday} at ${hour}${ampm}!`, 
+            suffix: "1w"
+        })
     })
 
     // Declaring new intervals
@@ -163,20 +184,35 @@ export default async function reminders() {
 
 function schedule({event, counter, textNO, textEN, suffix}: ReminderProps) {
     const formattedStarttime = `${event.time_start[8]}${event.time_start[9]}.${event.time_start[5]}${event.time_start[6]}`
-    const name_no = `${event.name_no} ${formattedStarttime}`
-    const name_en = `${event.name_en} ${formattedStarttime}`
+    const name_no = `${event.name_no || event.name_en} ${formattedStarttime}`
+    const name_en = `${event.name_en || event.name_no} ${formattedStarttime}`
     
     // Notification topic
-    const norwegianTopic = `n${event.id}${(event.category_name_no).toLowerCase()}${suffix}`
-    const englishTopic = `e${event.id}${(event.category_name_en).toLowerCase()}${suffix}`
+    const norwegianTopic = `n${(event.category_name_no).toLowerCase()}${suffix}`
+    const englishTopic = `e${(event.category_name_en).toLowerCase()}${suffix}`
 
     // Notification body
     const norwegianBody = `${textNO} ${fetchEmoji(event)}`
     const englishBody = `${textEN} ${fetchEmoji(event)}`
     
     // Sends notifications
-    if (norwegianTopic) sendNotification({title: name_no, body: norwegianBody, screen: event, topic: norwegianTopic})
-    if (englishTopic)   sendNotification({title: name_en, body: englishBody, screen: event, topic: englishTopic})
+    if (norwegianTopic) {
+        sendNotification({
+            title: name_no, 
+            body: norwegianBody, 
+            screen: event, 
+            topic: norwegianTopic
+        })
+    }
+
+    if (englishTopic) {
+        sendNotification({
+            title: name_en, 
+            body: englishBody, 
+            screen: event, 
+            topic: englishTopic
+        })
+    }
 
     // Increases reminders sent
     counter += 2

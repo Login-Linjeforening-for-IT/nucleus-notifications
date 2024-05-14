@@ -140,7 +140,7 @@ export async function readFile(arg: string, stop?: boolean): Promise<unknown> {
     })
 }
 
-async function createPath({ path }: createPathProps) {
+export async function createPath({ path }: createPathProps) {
     const cwd = process.cwd();
     const fullPath = `${cwd}${path}`;
     const entries = fullPath.split('/');
@@ -177,4 +177,13 @@ async function createFileOrFolder({ entry }: createFileOrFolderProps) {
     } catch (error) {
         throw new Error(`Failed to create ${entry}: ${error}`);
     }
+}
+
+export function removeHealthyFile() {
+    const healthyFilePath = './tmp/healthy.txt';
+    
+    fs.unlink(healthyFilePath, (err) => {
+        if (err) throw err;
+        console.log('Healthy file removed successfully.');
+    });
 }
