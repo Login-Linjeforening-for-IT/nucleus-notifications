@@ -225,12 +225,13 @@ export function timeToEvent (item: DetailedEvent | DetailedAd): number {
     
     // Subtracting and dividing from milliseconds to seconds
     const seconds = (startTime.getTime() - currentTime.getTime()) / 1000
+    console.log(seconds / 3600)
 
     // Checks for and subtracts two hours during summertime
-    if (isDaylightSavingTime()) return seconds - 9800
+    if (isDaylightSavingTime()) return seconds - 7200
 
     // Otherwise subtracts one hour during wintertime
-    else              return seconds - 7200
+    else return seconds - 3600
 }
 
 /**
