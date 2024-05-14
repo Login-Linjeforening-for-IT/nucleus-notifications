@@ -20,7 +20,7 @@ export default async function fetchEvents(): Promise<EventProps[]> {
         // Test API
         // const response = await fetch(`${testapi}events`)
 
-        // Turns the text response into a JSON object
+        // Turns the text response into a json object
         const events = await response.json() as EventProps[]
 
         // Handles case where the response is recieved, but undefined.
@@ -54,7 +54,7 @@ export async function fetchAds(): Promise<AdProps[]> {
         // Dev
         // const response = await fetch(`${testapi}jobs/`)
 
-        // Turns the text response into a JSON object
+        // Turns the text response into a json object
         const ads = await response.json() as AdProps[]
 
         // Handles case where the response is recieved, but undefined.
@@ -206,9 +206,9 @@ export function fetchEmoji(event: EventProps | DetailedEvent): string {
 /**
  * Returns the time till an event in seconds
  * 
- * @param {event} event Event to get the time for
+ * @param {item} item Event or Ad to get the time for
  * 
- * @see summertime()    Returns if the current time is summertime or wintertime
+ * @see summertime() Returns if the current time is summertime or wintertime
  * 
  * @returns {number} Seconds till event
  */
@@ -226,35 +226,21 @@ export function timeToEvent (item: DetailedEvent | DetailedAd): number {
     // Subtracting and dividing from milliseconds to seconds
     const seconds = (startTime.getTime() - currentTime.getTime()) / 1000
 
-    // Checks for summertime and subtracts one hour if not summertime
-    return summerTime() ? seconds : seconds - 3600
-} 
+    // Checks for and subtracts one hour during the winter
+    if (!isDaylightSavingTime()) return seconds - 3600
+
+    return seconds
+}
 
 /**
- * Checks for summertime
+ * Checks for Daylight Savings Time (DST)
  * 
- * @returns {boolean} True if summertime otherwise false
+ * @param {object} date [OPTIONAL] Date to check for DST, defaults to the current time
+ * 
+ * @returns {boolean} True if DST otherwise false
  */
-export function summerTime(): boolean {
-    // Create a Date object for the current date
-    const date = new Date();
-
-    // Get the current year
-    const year = date.getFullYear();
-
-    // Start and end dates for summertime (Daylight Saving Time) in Norway
-    // Last Sunday in March
-    const summertimeStart = new Date(Date.UTC(year, 2, 31));
-    
-    // Last Sunday in October
-    const summertimeEnd = new Date(Date.UTC(year, 9, 31));
-
-    // Calculate the last Sunday in March
-    summertimeStart.setDate(31 - ((summertimeStart.getDay() + 1) % 7));
-
-    // Calculate the last Sunday in October
-    summertimeEnd.setDate(31 - ((summertimeEnd.getDay() + 1) % 7));
-
-    // Check if the current date is between summertimeStart and summertimeEnd
-    return date >= summertimeStart && date <= summertimeEnd;
+export function isDaylightSavingTime(date: Date = new Date()): boolean {
+    const dstStart = new Date(date.getFullYear(), 2, 31)
+    const dstEnd = new Date(date.getFullYear(), 9, 27)
+    return date > dstStart && date < dstEnd;
 }

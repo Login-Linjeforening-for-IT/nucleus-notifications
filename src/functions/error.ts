@@ -38,14 +38,14 @@ export default function handleError({file, error, topic}: handleErrorProps): und
 }
 
 /**
- * Function for healing JSON issues that may occur due to any type of bug.
+ * Function for resolving json issues that may occur due to any type of bug.
  *  
  * This function will run until resolved, as it is trying to fix a critical
  * error that has to be resolved for the project to work. Notifies maintenance
  * team and keeps track of time for better knowledge of how long the situation
  * has been ongoing.
  * 
- * @param {string} arg File to heal
+ * @param {string} arg File with malformed json content
  * 
  * @see sendNotification(...)   Schedule notifications instantly
  * @see detailedEvents(...)     Fetches details for events
@@ -55,15 +55,15 @@ export default function handleError({file, error, topic}: handleErrorProps): und
  * @see writeFile(...)          Writes events to file
  * @see readFile(...)           Reads events from file
  */
-export async function heal(arg: string) {
+export async function fixJSONContent(arg: string) {
     // Minutes elapsed since function was entered
     let minutesElapsed = 0 
 
-    // Console logs the file being healed, and at what time
-    console.log(`Trying to heal ${arg} at ${new Date().toISOString()}`)
+    // Console logs the file with malformed json content, and the current time
+    console.log(`Trying to fix malformed json content in ${arg} at ${new Date().toISOString()}`)
 
-    // Notifies the maintenance team with file being healed, and time of error.
-    sendNotification({title: `Trying to heal ${arg}`, body: `Unknown issue occured at ${new Date().toISOString()}`})
+    // Notifies the maintenance team with file that has malformed json content, and the current time
+    sendNotification({title: `Trying to fix malformed json in ${arg}`, body: `Failed to parse json content in ${arg} at ${new Date().toISOString()}`})
 
     // Boolean for if the issue has been fixed
     let issueFixed = false
@@ -73,18 +73,18 @@ export async function heal(arg: string) {
         // 1 minute timeout after each time the function has run
         if (minutesElapsed) await new Promise(resolve => setTimeout(resolve, 60000))
     
-        // Checks which file needs to be healed, as each file is healed in a
-        // different way, tailored to the needs of that file.    
+        // Checks which file has malformed json input, as each file can be
+        // fixed in different ways, tailored to the function of that file.    
         switch(arg) {
-            // Heals notified.json
+            // Fixes malformed json content in notified.json
             case "notified": {
                 // Defines notified events, and full list of events
                 const notified: DetailedEvent[] = []
                 const events = await detailedEvents(true)
 
-                // Notifies maintenance team that there is an error in heal.ts,
+                // Notifies maintenance team that there is an error in error.ts,
                 // saying that events are undefined in slow.json
-                if (!events) handleError({file: "heal", error: `Unable to heal ${arg}, events is undefined`})
+                if (!events) handleError({file: "error.ts", error: `Unable to fix json content in ${arg}, events is undefined`})
 
                 // Sorts out events that should not be in notified.json
                 const obj = sortEvents({events})
@@ -102,13 +102,13 @@ export async function heal(arg: string) {
                 if (fix) issueFixed = true
 
                 // Otherwise notifies maintenance team that the file is still unreadable
-                else handleError({file: "heal", error: `Healing of ${arg} failed because the file is still unreadable.`})
+                else handleError({file: "error.ts", error: `Fixing malformed json content in ${arg} failed because the file is still unreadable. Attempt: ${minutesElapsed}. Trying again in 1 minute.`})
 
                 // Breaks the function as the next case is not relevant
                 break
             }
 
-            // Heals slow.json
+            // Fixes malformed json content in slow.json
             case "slow": {
                 try {
                     // Defines slow events, and full list of events
@@ -116,10 +116,10 @@ export async function heal(arg: string) {
                     const events = await detailedEvents(true)
                     
                     // Notifies maintenance team that there is an error in 
-                    // heal.mjs, saying that events are undefined in slow.json
+                    // error.ts, saying that events are undefined in slow.json
                     if (!events) handleError({
-                        file: "heal", 
-                        error: `Unable to heal ${arg}, events is undefined`
+                        file: "error.ts", 
+                        error: `Unable to fix malformed json content in ${arg}, events is undefined`
                     })
 
                     // Sorts out events that should not be in slow.json
@@ -138,16 +138,16 @@ export async function heal(arg: string) {
                     if (fix) issueFixed = true
 
                     // Otherwise notifies maintenance team that the file is still unreadable
-                    else handleError({file: "heal", error: `Healing of ${arg} failed because the file is still unreadable.`})
+                    else handleError({file: "error.ts", error: `Fixing malformed json content in ${arg} failed because the file is still unreadable. Attempt: ${minutesElapsed}. Trying again in 1 minute.`})
                 
                 // Notifies maintenance team of any unknown errors
-                } catch (error) {handleError({file: "heal", error: JSON.stringify(error)})}
+                } catch (error) {handleError({file: "error.ts", error: JSON.stringify(error)})}
 
                 // Breaks the function as the next case is not relevant
                 break
             }
 
-            // Heals all interval files by default
+            // Fixes all interval files by default
             default: {
                 // Fetches events
                 const events = await detailedEvents(true)
@@ -163,10 +163,10 @@ export async function heal(arg: string) {
                     }
                 }
 
-                // Notifies maintenance team that interval files are unable to be healed
+                // Notifies maintenance team that interval files with malformed json content are unfixable
                 if (!events) handleError({
-                    file: "heal", 
-                    error: `Unable to heal interval files, events is undefined`
+                    file: "error.ts", 
+                    error: `Unable to fix malformed json in interval files, events is undefined`
                 })
 
                 // Declaring new intervals events
@@ -227,25 +227,25 @@ export async function heal(arg: string) {
                  * If the file is readable we view the issue as resolved. We
                  * could also check that the file is parsable, but if it is not
                  * parsable we will most likely be in an infinite loop where the
-                 * file can never be healed. This solution will allow the other
-                 * events to run successfully, only trying to heal the broken
-                 * ones when necesarry.
+                 * malformed json content can never be fixed. This solution will 
+                 * allow the other events to run successfully, only trying to 
+                 * fix the broken ones when necesarry.
                  */
                 const fix = await readFile(arg)
                 if (fix) issueFixed = true
 
-                // Otherwise notifies maintenance team that the file is still unreadable
+                // Otherwise notifies maintenance team that the file is still unparsable
                 else handleError({
-                    file: "heal", 
-                    error: `Healing of ${arg} failed because the file is still unreadable. Attempt: ${minutesElapsed}. Trying again in 1 minute.`
+                    file: "error.ts", 
+                    error: `Fixing malformed json content in ${arg} failed because the file is still unreadable. Attempt: ${minutesElapsed}. Trying again in 1 minute.`
                 })
             }
         }
 
-        // Notifies maintenance team of healing lasting 5 minutes, 10 minutes, and every 10 minutes afterwards
+        // Notifies maintenance team of malformed json file lasting 5 minutes, 10 minutes, and every 10 minutes afterwards
         if (minutesElapsed == 5 || (minutesElapsed >= 10 && minutesElapsed % 10 == 0)) handleError({
-            file: "heal", 
-            error: `Healing ${arg} for ${minutesElapsed} minutes unsuccessfully.`
+            file: "error.ts", 
+            error: `Trying to fix malformed json content in ${arg} for ${minutesElapsed} minutes unsuccessfully.`
         })
         
         // Increases minutes elapsed
@@ -254,12 +254,8 @@ export async function heal(arg: string) {
     // Continues till the issue is resolved
     } while (!issueFixed)
 
-    // Notifies maintenance team of successful healing of file, and how many minutes elapsed
-    sendNotification({
-        title: "heal.mjs", 
-        body: `Healing complete for ${arg} after ${minutesElapsed} ${minutesElapsed == 1 ? "minute":"minutes"}.`
-    })
+    // Info about the time it took to fix the malformed json content
+    const body = `Fixed malformed json content in ${arg} ${minutesElapsed <= 1 ? 'in less than a minute.' : `after ${minutesElapsed} minutes.`}`
 
-    // Logs that healing has completed for file, containing minutes elapsed
-    console.log(`Healing complete for ${arg} at ${new Date().toISOString()} after running for ${minutesElapsed} minutes`)
+    sendNotification({title: "error.ts", body})
 }

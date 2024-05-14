@@ -48,7 +48,7 @@ export default function storeNewAndRemoveOldEvents({events, notified, slow}: sto
  * @see handleError(...)    Notifies the maintenance team of any error that occurs
  * @see writeFile(...)      Writes given content to given file
  */
-export async function storeNotified({events}: storeNotifiedProps) {
+export function storeNotified({events}: storeNotifiedProps) {
     // Removes duplicates
     const unique = events.filter((event, index) => {
         return events.findIndex(obj => obj.id === event.id) === index

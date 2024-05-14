@@ -22,7 +22,7 @@ import { readFile } from "./functions/file.js"
  */
 export default async function automatedNotifications() {
     // Logs interval start time
-    console.log("Interval started at", new Date().toISOString())
+    console.log(`Version: ${process.env.npm_package_version} Interval started at ${new Date().toISOString()}`)
 
     // Terminates early if there are no events in database
     if (!(await fetchEvents()).length) {
@@ -81,7 +81,7 @@ export default async function automatedNotifications() {
     storeNewAndRemoveOldEvents({events, notified: newNotified, slow})
 
     // Logs interval end time
-    console.log("Interval complete at", new Date().toISOString())
+    console.log(`Version: ${process.env.npm_package_version} Interval complete at ${new Date().toISOString()}`)
 }
 
 /**

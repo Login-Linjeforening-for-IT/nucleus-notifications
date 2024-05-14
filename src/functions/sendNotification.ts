@@ -21,31 +21,39 @@ const app = initializeApp({
  * @param screen   Event to navigate to in the app, give the full object.
  * @param topic    Notification topic
  */
-export default function sendNotification({title, body, screen, topic}: sendNotificationProps): void {
-    // Sets the topic to maintenance if the topic is not available
-    if (!topic || !stable) topic = "maintenance"
+export default async function sendNotification({title, body, screen, topic}: sendNotificationProps): Promise<void> {
+    try {
+        // Sets the topic to maintenance if the topic is not available
+        if (!topic || !stable) topic = "maintenance"
+        
+        // Change the id to string if screen is defined
+        if(screen) {
+            screen.id = screen.id.toString()
+        }
 
-    // Change the id to string if screen is defined
-    if(screen) {
-        screen.id = screen.id.toString()
+        const data: any = handleNestedObjects(screen)
+
+        // Defines the message to be sent
+        const message: Message = {
+            topic: topic,
+            notification: {
+                title: title,
+                body: body,
+            },
+            data: data
+        }
+
+        const response = await getMessaging().send(message)
+
+        if (typeof response != 'string') {
+            throw new Error("Error sending notification: Unexpected response from FCM.")
+        }
+
+        // Logs the response with the ID of the notification that was sent
+        console.log(`Sent notification "${title}" with body "${body}" to topic "${topic}" at ${new Date().toISOString()}: ${response}`)
+    } catch (error) {
+        console.error(`Error sending notification "${title}" with body "${body}"${screen ? ` to screen "${screen}"` : ''} to topic "${topic}". The following error occured: `, error)
     }
-
-    const data: any = handleNestedObjects(screen)
-
-    // Defines the message to be sent
-    const message: Message = {
-        topic: topic,
-        notification: {
-            title: title,
-            body: body,
-        },
-        data: data
-    }
-
-    // Sends the message
-    getMessaging().send(message).then(() => {
-        console.log(`Successfully sent notification to topic ${topic} at ${new Date().toISOString()}`)
-    }).catch(error => {console.error("Error sending notification:", error)})
 }
 
 // Examples of direct notifications that can be sent by node sendNotifications.ts
