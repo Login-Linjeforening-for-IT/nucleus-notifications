@@ -251,7 +251,7 @@ export async function fixJSONContent(arg: string) {
     } while (!issueFixed)
 
     // Info about the time it took to fix the malformed json content
-    const body = `Fixed malformed json content in ${arg} ${minutesElapsed <= 1 ? 'in less than a minute' : `after ${minutesElapsed} minutes.`}`
+    const body = `Fixed malformed json content in ${arg} ${minutesElapsed <= 1 ? 'in less than a minute.' : `after ${minutesElapsed} minutes.`}`
 
     sendNotification({title: "error.ts", body})
 }
