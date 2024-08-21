@@ -55,15 +55,15 @@ export default function handleError({file, error, topic}: handleErrorProps): und
  * @see writeFile(...)          Writes events to file
  * @see readFile(...)           Reads events from file
  */
-export async function fixJSONContent(arg: string) {
+export async function fixJSONContent(arg: string, error: unknown) {
     // Minutes elapsed since function was entered
     let minutesElapsed = 0 
 
     // Console logs the file with malformed json content, and the current time
-    console.log(`Trying to fix malformed json content in ${arg} at ${new Date().toISOString()}`)
+    console.log(`Trying to fix malformed json content in ${arg} at ${new Date().toISOString()}\nError: ${error}`)
 
     // Notifies the maintenance team with file that has malformed json content, and the current time
-    sendNotification({title: `Trying to fix malformed json in ${arg}`, body: `Failed to parse json content in ${arg} at ${new Date().toISOString()}`})
+    sendNotification({title: `Trying to fix malformed json in ${arg}`, body: `Failed to parse json content in ${arg} at ${new Date().toISOString()}\nError: ${error}`})
 
     // Boolean for if the issue has been fixed
     let issueFixed = false

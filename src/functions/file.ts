@@ -133,7 +133,7 @@ export async function readFile(arg: string, stop?: boolean): Promise<unknown> {
                 if (stop) return handleError({file: "readFile", error: JSON.stringify(error)})
 
                 // Most likely there is an error with the json. Trying to fix malformed json content
-                await fixJSONContent(arg)
+                await fixJSONContent(arg, error)
                 await readFile(arg, true)
             }
         })
