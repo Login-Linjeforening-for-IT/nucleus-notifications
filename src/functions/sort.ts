@@ -153,7 +153,7 @@ export async function filterEvents(): Promise<EventProps[]> {
     
     // Catches and handles any unknown errors
     } catch (error) {
-        handleError({file: "filterEvents", error: JSON.stringify(error)})
+        handleError({file: "filterEvents", error: error})
         return []
     }
 }

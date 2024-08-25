@@ -6,7 +6,7 @@ import { removeHealthyFile } from "./file.js"
 
 type handleErrorProps = {
     file: string
-    error: string
+    error: unknown
     topic?: string
 }
 
@@ -25,9 +25,23 @@ export default function handleError({file, error, topic}: handleErrorProps): und
     // Removes healthy file indicating that the service is no longer healthy and should be restarted
     removeHealthyFile()
 
-    // Sends a notification in the app containing the error to users with the
-    // maintenance topic enabled.
-    sendNotification({title: `Error in ${file}`, body: error, topic: topic ? topic : "maintenance"})
+    // Checks if the error is a SyntaxError
+    if (error instanceof SyntaxError) {
+        // @ts-expect-error
+        console.error("SyntaxError details:", error.message, "at position", error.position);
+        // @ts-expect-error
+        sendNotification({title: `SyntaxError in ${file}`, body: `Name: ${error.name}, Message: ${error}, Position: ${error.position}, Stack: ${error.stack}`, topic: topic ? topic : "maintenance"})
+    } else if (typeof error === "string") {
+        console.error(`Error in ${file}:`, error);
+    } else {
+        // @ts-expect-error
+        console.error(`Error in ${file}`, `Name: ${error.name}, Message: ${error}, Stack: ${error.stack}`);
+        // Sends a notification in the app containing the error to users with the
+        // maintenance topic enabled.
+        // @ts-expect-error
+        sendNotification({title: `Error in ${file}`, body: `Name: ${error.name}, Message: ${error}, Stack: ${error.stack}`, topic: topic ? topic : "maintenance"})
+    }
+
     
     // Continues with undefined to try executing the rest of the file
     if (stable) return undefined
@@ -141,7 +155,7 @@ export async function fixJSONContent(arg: string, error: unknown) {
                     else handleError({file: "error.ts", error: `Fixing malformed json content in ${arg} failed because the file is still unreadable. Attempt: ${minutesElapsed}. Trying again in 1 minute.`})
                 
                 // Notifies maintenance team of any unknown errors
-                } catch (error) {handleError({file: "error.ts", error: JSON.stringify(error)})}
+                } catch (error) {handleError({file: "error.ts", error: error})}
 
                 // Breaks the function as the next case is not relevant
                 break
