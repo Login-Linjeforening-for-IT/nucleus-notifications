@@ -2,3 +2,5 @@ node_modules
 .secrets.ts
 .secrets.js
 .secrets.json
+dist
+.DS_Store
