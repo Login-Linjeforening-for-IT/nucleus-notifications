@@ -1,4 +1,3 @@
-version: '3'
 services:
   nucleus-notifications:
     build:
