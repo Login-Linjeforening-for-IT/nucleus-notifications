@@ -5,16 +5,16 @@
  * to use and maintain.
  */
 
-import automatedNotifications from "./src/automatedNotifications.js"
+import nucleusNotifications from "./src/nucleusNotifications.js"
 import slowMonitored from "./src/slowMonitored.js"
 import { schedule } from "node-cron"
 import test from "./src/test.js"
 
-// Tests the application before putting it in automated production
+// Internal test of the application before allowing it to send notifications to end users
 test()
 
-// Schedules automatedNotifications to run every minute
-schedule("* * * * *", automatedNotifications)
+// Schedules nucleusNotifications to run every minute
+schedule("* * * * *", nucleusNotifications)
 
 // Schedules slowMonitored to run every 30 minutes
 schedule("*/30 * * * *", slowMonitored)

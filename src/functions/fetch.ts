@@ -1,6 +1,5 @@
 import { filterEvents } from "./sort.js"
 import handleError from "./error.js"
-import fetch from "node-fetch"
 
 const api = "https://workerbee.login.no/api/"
 const testapi = "https://testapi.login.no/api/"

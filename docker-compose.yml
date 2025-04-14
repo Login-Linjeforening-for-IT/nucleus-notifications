@@ -3,5 +3,5 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - .:/app
+    environment:
+      FIREBASE_SECRET: ${FIREBASE_SECRET}

@@ -1,6 +1,11 @@
-import { initializeApp, applicationDefault } from "firebase-admin/app"
+import admin from 'firebase-admin'
 import { Message, getMessaging } from "firebase-admin/messaging"
 import handleNestedObjects from "./stringifyNestedObjects.js"
+import SERVICE_ACCOUNT from '../config.js'
+
+admin.initializeApp({
+  credential: admin.credential.cert(SERVICE_ACCOUNT)
+})
 
 type sendNotificationProps = {
     title: string
@@ -9,10 +14,6 @@ type sendNotificationProps = {
     topic?: string
 }
 
-// DO NOT REMOVE: App is not being used, but the credentials it creates are.
-const app = initializeApp({
-    credential: applicationDefault()
-})
 
 /**
  * Posts notification to FCM.

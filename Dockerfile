@@ -4,10 +4,6 @@ FROM node:20-alpine
 # Installs required system dependencies
 RUN apk add --no-cache python3 make g++
 
-# Sets environment variables to point to Python and secrets
-ENV PYTHON python3
-ENV GOOGLE_APPLICATION_CREDENTIALS /usr/src/app/secrets/.secrets.json
-
 # Sets the working directory
 WORKDIR /usr/src/app
 
@@ -20,5 +16,8 @@ RUN npm install
 # Copies contents
 COPY . .
 
+# Builds the application
+RUN npm run build
+
 # Starts the application
-CMD npm run prod
+CMD npm start

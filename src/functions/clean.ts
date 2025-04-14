@@ -21,7 +21,7 @@ function removeJsFiles(dir: string) {
             removeJsFiles(filePath)
         }
         
-        if (file.endsWith('.js') && !file.endsWith('secrets.js') && !file.endsWith('clean.js')) {
+        if (file.endsWith('.js') && !file.endsWith('clean.js')) {
             // If it's a .js file, remove it
             unlinkSync(filePath)
             console.log(`Removed: ${filePath}`)

@@ -20,7 +20,7 @@ import { readFile } from "./functions/file.js"
  * @see sortNotified(...)           Filters out events not meant for notified
  * @see reminders()                 Schedules reminders for every event
  */
-export default async function automatedNotifications() {
+export default async function nucleusNotifications() {
     // Logs interval start time
     console.log(`Version: ${process.env.npm_package_version} Interval started at ${new Date().toISOString()}`)
 
@@ -92,7 +92,7 @@ export default async function automatedNotifications() {
  */
 function isDefined(item: any, error: string) {
     if (item == undefined) {
-        handleError({file: "automatedNotifications", error})
+        handleError({file: "nucleusNotifications", error})
         return false
     }
     

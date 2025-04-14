@@ -1,4 +1,4 @@
-import automatedNotifications from "./automatedNotifications.js"
+import nucleusNotifications from "./nucleusNotifications.js"
 import slowMonitored from "./slowMonitored.js"
 import { createPath } from "./functions/file.js"
 
@@ -6,7 +6,7 @@ import { createPath } from "./functions/file.js"
  * Test function for the repository. Will run for 5 minutes then put the
  * repository into production if no errors are found.
  * 
- * @see automatedNotifications()    Main entry point of application, running every minute
+ * @see nucleusNotifications()    Main entry point of application, running every minute
  * @see slowMonitored()             Entry point for events that does not need to be checked often
  * @see writeFile()                 Writes given content to given file
  */
@@ -30,7 +30,7 @@ export default async function test() {
     // Runs the two entry points of the application 5 times to ensure stability
     do {
         // Runs main application entry points
-        automatedNotifications()
+        nucleusNotifications()
         slowMonitored()
 
         // Increases count

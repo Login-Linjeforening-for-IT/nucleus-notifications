@@ -1,5 +1,5 @@
-# Automated Notifications
-Automated notifications is a collection of functions to automate management of
+# Nucleus Notifications
+Nucleus notifications is a collection of functions to automate management of
 notifications for the Login app.
 
 ## How it works
@@ -14,5 +14,4 @@ advance, therefore this half hour wait time has no negative impact.
 ## How to set in production
 1. Verify that the service runs correctly locally using `npm run test`
 2. Verify that the service runs correctly in docker using `docker compose up`
-3. Login to docker using `docker login`
-3. Send the service to production using `docker buildx build --platform linux/amd64,linux/arm64 --push -t registry.git.logntnu.no/tekkom/apps/automatednotifications:latest .`
+3. Send the service to production using the `/deploy` command followed by the `/release` command of the TekKom Bot.
