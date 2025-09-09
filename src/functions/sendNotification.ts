@@ -4,7 +4,7 @@ import handleNestedObjects from "./stringifyNestedObjects.js"
 import SERVICE_ACCOUNT from '../config.js'
 
 admin.initializeApp({
-  credential: admin.credential.cert(SERVICE_ACCOUNT)
+    credential: admin.credential.cert(SERVICE_ACCOUNT)
 })
 
 type sendNotificationProps = {
