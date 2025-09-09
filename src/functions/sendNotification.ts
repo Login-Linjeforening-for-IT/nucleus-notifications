@@ -24,7 +24,9 @@ type sendNotificationProps = {
 export default async function sendNotification({ title, body, screen, topic }: sendNotificationProps): Promise<void> {
     try {
         // Sets the topic to maintenance if the topic is not available
-        if (!topic || !stable) topic = "maintenance"
+        if (!topic || !stable) {
+            topic = "maintenance"
+        }
 
         // Change the id to string if screen is defined
         if (screen) {
