@@ -14,7 +14,6 @@ type sendNotificationProps = {
     topic?: string
 }
 
-
 /**
  * Posts notification to FCM.
  * @param title    Notification title
