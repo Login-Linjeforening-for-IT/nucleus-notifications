@@ -18,6 +18,3 @@ COPY . .
 
 # Builds the application
 RUN npm run build
-
-# Starts the application
-CMD npm start
