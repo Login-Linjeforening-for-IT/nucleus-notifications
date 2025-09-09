@@ -22,13 +22,13 @@ type sendNotificationProps = {
  * @param screen   Event to navigate to in the app, give the full object.
  * @param topic    Notification topic
  */
-export default async function sendNotification({title, body, screen, topic}: sendNotificationProps): Promise<void> {
+export default async function sendNotification({ title, body, screen, topic }: sendNotificationProps): Promise<void> {
     try {
         // Sets the topic to maintenance if the topic is not available
         if (!topic || !stable) topic = "maintenance"
-        
+
         // Change the id to string if screen is defined
-        if(screen) {
+        if (screen) {
             screen.id = screen.id.toString()
         }
 
