@@ -1,4 +1,10 @@
-node_modules/
-dist/
 .gitlab-ci.yml
 docker-compose.yml
+Dockerfile
+.dockerignore
+node_modules
+dist
+npm-debug.log
+README.md
+.next
+.git
