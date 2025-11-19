@@ -4,5 +4,5 @@ services:
       context: .
       dockerfile: Dockerfile
     command: npm start
-    environment:
-      FIREBASE_SECRET: ${FIREBASE_SECRET}
+    env_file:
+      .env
