@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 
 # Installs required dependencies
-RUN npm ci
+RUN npm ci || (echo "==== DEBUG LOG ====" && cat /root/.npm/_logs/*-debug-0.log && exit 1)
 
 # Copies contents
 COPY . .
