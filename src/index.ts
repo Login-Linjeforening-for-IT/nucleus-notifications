@@ -6,13 +6,15 @@
  */
 
 import nucleusNotifications from "./nucleusNotifications.ts"
-import schedule from './schedule.ts'
 import slowMonitored from "./slowMonitored.ts"
+import { schedule } from "node-cron"
 import test from "./test.ts"
 
 // Internal test of the application before allowing it to send notifications to end users
 test()
 
 // Schedules nucleusNotifications to run every minute
-schedule(1, () => nucleusNotifications())
-schedule(30, () => slowMonitored())
+schedule("* * * * *", nucleusNotifications)
+
+// Schedules slowMonitored to run every 30 minutes
+schedule("*/30 * * * *", slowMonitored)
