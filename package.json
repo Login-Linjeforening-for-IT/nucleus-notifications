@@ -15,12 +15,10 @@
     },
     "dependencies": {
         "dotenv": "^17.2.3",
-        "firebase-admin": "^13.6.0",
-        "node-cron": "^4.2.1"
+        "firebase-admin": "^13.6.0"
     },
     "devDependencies": {
         "@types/node": "^24.10.1",
-        "@types/node-cron": "^3.0.11",
         "typescript": "^5.9.3"
     },
     "imports": {

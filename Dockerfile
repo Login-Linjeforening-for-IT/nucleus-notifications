@@ -1,5 +1,5 @@
 # Uses latest node alpine image
-FROM node:23.11.1-alpine
+FROM node:lts-alpine
 
 # Sets the working directory
 WORKDIR /usr/src/app
@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 
 # Installs required dependencies
-RUN npm ci || (echo "==== DEBUG LOG ====" && cat /root/.npm/_logs/*-debug-0.log && exit 1)
+RUN npm ci
 
 # Copies contents
 COPY . .
