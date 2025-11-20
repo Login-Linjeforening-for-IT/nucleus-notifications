@@ -1,28 +1,31 @@
 {
     "name": "nucleus-notifications",
-    "version": "2.3.0",
+    "version": "3.0.0",
     "description": "Automated notifications for the Login app",
     "main": "index.ts",
     "author": "Login - Linjeforeningen for IT",
     "license": "ISC",
     "type": "module",
     "scripts": {
-        "dev": "tsc && node dist/index.js",
-        "slow": "tsc && node dist/src/slowMonitored.js",
-        "test": "tsc && node dist/src/test.js",
-        "clean": "tsc && node dist/src/functions/clean.js",
-        "notify": "tsc && node dist/src/functions/sendNotification.js",
-        "build": "rm -rf dist && tsc",
-        "start": "node dist/index.js"
+        "dev": "node src/index.ts",
+        "slow": "node src/slowMonitored.ts",
+        "test": "node src/test.ts",
+        "notify": "node src/functions/sendNotification.ts",
+        "start": "node src/index.ts"
     },
     "dependencies": {
-        "dotenv": "^17.2.2",
-        "firebase-admin": "^13.5.0",
+        "dotenv": "^17.2.3",
+        "firebase-admin": "^13.6.0",
         "node-cron": "^4.2.1"
     },
     "devDependencies": {
-        "@types/node": "^24.3.1",
+        "@types/node": "^24.10.1",
         "@types/node-cron": "^3.0.11",
-        "typescript": "^5.9.2"
+        "typescript": "^5.9.3"
+    },
+    "imports": {
+        "#utils/*": "./src/utils/*",
+        "#config": "./src/config.ts",
+        "#/*": "./src/*"
     }
 }

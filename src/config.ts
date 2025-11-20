@@ -8,5 +8,10 @@ if (!FIREBASE_SECRET) {
     throw new Error("Missing FIREBASE_SECRET.")
 }
 
-const SERVICE_ACCOUNT = JSON.parse(FIREBASE_SECRET)
-export default SERVICE_ACCOUNT as object
+const config = {
+    api: "https://workerbee.login.no/api/v2",
+    test_api: "https://dev.workerbee.login.no/api/v2",
+    service_account: JSON.parse(FIREBASE_SECRET)
+}
+
+export default config

@@ -1,9 +1,9 @@
-import storeNewAndRemoveOldEvents from "./functions/store.js"
-import sortEvents, { sortNotified } from "./functions/sort.js"
-import fetchEvents, { detailedEvents } from "./functions/fetch.js"
-import reminders from "./functions/reminders.js"
-import handleError from "./functions/error.js"
-import { readFile } from "./functions/file.js"
+import storeNewAndRemoveOldEvents from "./utils/store.ts"
+import sortEvents, { sortNotified } from "./utils/sort.ts"
+import fetchEvents, { detailedEvents } from "./utils/fetch.ts"
+import reminders from "./utils/reminders.ts"
+import handleError from "./utils/error.ts"
+import { readFile } from "./utils/file.ts"
 
 /**
  * **Automated event notifications**
@@ -34,14 +34,22 @@ export default async function nucleusNotifications() {
     await reminders()
 
     // Fetches api and txt files
-    const events = await detailedEvents() as DetailedEvent[]
-    const notified = await readFile("notified") as DetailedEvent[]
-    const slow = await readFile("slow") as DetailedEvent[]
+    const events = await detailedEvents() as GetEventProps[]
+    const notified = await readFile("notified") as GetEventProps[]
+    const slow = await readFile("slow") as GetEventProps[]
 
     // Returns if any variable is undefined
-    if (!isDefined(events, "events is initally undefined")) return
-    if (!isDefined(notified, "notiifed is initally undefined")) return
-    if (!isDefined(slow, "slow is initally undefined")) return
+    if (!isDefined(events, "events is initally undefined")) {
+        return
+    }
+
+    if (!isDefined(notified, "notiifed is initally undefined")) {
+        return
+    }
+
+    if (!isDefined(slow, "slow is initally undefined")) {
+        return
+    }
 
     // Logs amount of events of each type
     console.log("events:", events.length, "notified:", notified ? notified.length : 0, "slowmonitored:", slow ? slow.length : 0)
@@ -49,14 +57,19 @@ export default async function nucleusNotifications() {
     // Finds new events
     const newEvents = (notified.length > 0 || slow.length > 0) ? events.filter(event => {
         return (!slow.some(slowEvent => slowEvent.id === event.id) && !notified.some(notifiedEvent => notifiedEvent.id === event.id))
-    }):events
-    if (!isDefined(newEvents, "newEvents is undefined")) return
+    }) : events
+    if (!isDefined(newEvents, "newEvents is undefined")) {
+        return
+    }
 
     // Sorts events and pushes them to appropriate arrays
-    const sortedEvents = sortEvents({events: newEvents, slow, notify: true})
-    if (!isDefined(sortedEvents, "sortedEvents is undefined")) return
-    sortedEvents.slow.forEach(event => {slow.push(event)})
-    sortedEvents.notified.forEach(event => {notified.push(event)})
+    const sortedEvents = sortEvents({ events: newEvents, slow, notify: true })
+    if (!isDefined(sortedEvents, "sortedEvents is undefined")) {
+        return
+    }
+
+    sortedEvents.slow.forEach(event => { slow.push(event) })
+    sortedEvents.notified.forEach(event => { notified.push(event) })
 
     // Finds newest version of events in notifiedarray
     const newNotified = notified.length > 0 ? events.filter(event => {
@@ -64,8 +77,11 @@ export default async function nucleusNotifications() {
     }) : []
 
     // Handles notified events, potentially pushing them to slow if a link is found
-    const sortedNotified = sortNotified({events: newNotified, slow, notify: true})
-    if (!isDefined(sortedNotified, "sortedNotified is undefined")) return
+    const sortedNotified = sortNotified({ events: newNotified, slow, notify: true })
+    if (!isDefined(sortedNotified, "sortedNotified is undefined")) {
+        return
+    }
+
     if (sortedNotified.length) {
         sortedNotified.forEach(event => {
             slow.push(event)
@@ -73,12 +89,20 @@ export default async function nucleusNotifications() {
     }
 
     // Returns if any variable to be stored is undefined
-    if (!isDefined(events, "events is undefined when storing")) return
-    if (!isDefined(newNotified, "newNotified is undefined when storing")) return
-    if (!isDefined(slow, "slow is undefined when storing")) return
+    if (!isDefined(events, "events is undefined when storing")) {
+        return
+    }
+
+    if (!isDefined(newNotified, "newNotified is undefined when storing")) {
+        return
+    }
+
+    if (!isDefined(slow, "slow is undefined when storing")) {
+        return
+    }
 
     // Removes events that have already taken place and stores new events
-    storeNewAndRemoveOldEvents({events, notified: newNotified, slow})
+    storeNewAndRemoveOldEvents({ events, notified: newNotified, slow })
 
     // Logs interval end time
     console.log(`Version: ${process.env.npm_package_version} Interval complete at ${new Date().toISOString()}`)
@@ -92,9 +116,9 @@ export default async function nucleusNotifications() {
  */
 function isDefined(item: any, error: string) {
     if (item == undefined) {
-        handleError({file: "nucleusNotifications", error})
+        handleError({ file: "nucleusNotifications", error })
         return false
     }
-    
+
     return true
 }

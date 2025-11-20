@@ -1,8 +1,5 @@
-# Uses node 20 alpine image for apk package manager
-FROM node:20-alpine
-
-# Installs required system dependencies
-RUN apk add --no-cache python3 make g++
+# Uses latest node alpine image
+FROM node:alpine
 
 # Sets the working directory
 WORKDIR /usr/src/app
@@ -16,5 +13,5 @@ RUN npm install
 # Copies contents
 COPY . .
 
-# Builds the application
-RUN npm run build
+# Starts the application
+CMD npm start

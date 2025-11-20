@@ -5,10 +5,10 @@
  * to use and maintain.
  */
 
-import nucleusNotifications from "./src/nucleusNotifications.js"
-import slowMonitored from "./src/slowMonitored.js"
+import nucleusNotifications from "./nucleusNotifications.ts"
+import slowMonitored from "./slowMonitored.ts"
 import { schedule } from "node-cron"
-import test from "./src/test.js"
+import test from "./test.ts"
 
 // Internal test of the application before allowing it to send notifications to end users
 test()

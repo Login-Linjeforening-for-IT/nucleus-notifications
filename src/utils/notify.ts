@@ -1,8 +1,8 @@
-import sendNotification from "./sendNotification.js"
-import { fetchEmoji } from "./fetch.js"
+import sendNotification from "./sendNotification.ts"
+import { fetchEmoji } from "./fetch.ts"
 
 type ScheduleProps = {
-    event: DetailedEvent
+    event: GetEventProps
     textNO: string
     textEN: string
     actionName: string
@@ -16,10 +16,10 @@ type ScheduleProps = {
  * @see sendNotification(...)   Posts the notification to FCM
  * @see fetchEmoji(...)         Fetches a relevant emoji for the event
  */
-export default function schedule({event, textNO, textEN, actionName}: ScheduleProps) {
+export default function schedule({ event, textNO, textEN, actionName }: ScheduleProps) {
     // Event category
-    const category_name_no = event.category_name_no.toUpperCase()
-    const category_name_en = event.category_name_en.toUpperCase()
+    const category_name_no = event.category.name_no.toUpperCase()
+    const category_name_en = event.category.name_en.toUpperCase()
 
     // Norwegian and english notification topics
     const norwegianTopic = `n${category_name_no}`
@@ -39,18 +39,18 @@ export default function schedule({event, textNO, textEN, actionName}: SchedulePr
     // Sends the notification
     if (norwegianTopic) {
         sendNotification({
-            title: name_no, 
-            body: norwegianBody, 
-            screen: event, 
+            title: name_no,
+            body: norwegianBody,
+            screen: event,
             topic: norwegianTopic
         })
     }
 
     if (englishTopic) {
         sendNotification({
-            title: name_en, 
-            body: englishBody, 
-            screen: event, 
+            title: name_en,
+            body: englishBody,
+            screen: event,
             topic: englishTopic
         })
     }

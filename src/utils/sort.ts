@@ -1,21 +1,21 @@
-import schedule from "./notify.js"
-import fetchEvents, { timeToEvent } from "./fetch.js"
-import handleError from "./error.js"
-import { readFile } from "./file.js"
+import schedule from "./notify.ts"
+import fetchEvents, { timeToEvent } from "./fetch.ts"
+import handleError from "./error.ts"
+import { readFile } from "./file.ts"
 
 type sortEventsProps = {
-    events: DetailedEvent[]
-    slow?: DetailedEvent[]
+    events: GetEventProps[]
+    slow?: GetEventProps[]
     notify?: boolean
 }
 
 type SortedObject = {
-    slow: DetailedEvent[], 
-    notified: DetailedEvent[]
+    slow: GetEventProps[],
+    notified: GetEventProps[]
 }
 
 type IncludesProps = {
-    events: DetailedEvent[]
+    events: GetEventProps[]
     id: number
 }
 
@@ -30,10 +30,10 @@ type IncludesProps = {
  * 
  * @returns Events and slowevents as objects
  */
-export default function sortEvents({events, slow, notify}: sortEventsProps): SortedObject {
+export default function sortEvents({ events, slow, notify }: sortEventsProps): SortedObject {
     // Defines empty arrays
-    const newSlow: DetailedEvent[] = slow || []
-    const notified: DetailedEvent[] = []
+    const newSlow: GetEventProps[] = slow || []
+    const notified: GetEventProps[] = []
 
     // Returns if there are no events to sort
     if (!events || !events.length) {
@@ -43,18 +43,18 @@ export default function sortEvents({events, slow, notify}: sortEventsProps): Sor
 
     // Goes through each event
     events.forEach(event => {
-        if (!event.link_signup.includes("http")) {
+        if (!event.link_signup?.includes("http")) {
             // Event is far away, console log when it will be added and return
             if (timeToEvent(event) > 1209600) {
                 return console.log("Event", event.id, "will be added in", Number((timeToEvent(event) - 1209600).toFixed(0)), "seconds.")
             }
 
             // If the user should be notified, notifies the user
-            if (!Includes({events: newSlow, id: Number(event.id)}) && notify) {
+            if (!Includes({ events: newSlow, id: Number(event.id) }) && notify) {
                 schedule({
-                    event, 
-                    textNO: "Trykk her for å lese mer.", 
-                    textEN: "Click here to read more.", 
+                    event,
+                    textNO: "Trykk her for å lese mer.",
+                    textEN: "Click here to read more.",
                     actionName: "notifyNewEntry"
                 })
             }
@@ -63,11 +63,11 @@ export default function sortEvents({events, slow, notify}: sortEventsProps): Sor
             notified.push(event)
         }
 
-        if (!Includes({events: newSlow, id: Number(event.id)}) && notify) {
+        if (!Includes({ events: newSlow, id: Number(event.id) }) && notify) {
             schedule({
-                event, 
-                textNO: "Påmelding er allerede ute, trykk her for å lese mer!", 
-                textEN: "Registration already available, click here to read more!", 
+                event,
+                textNO: "Påmelding er allerede ute, trykk her for å lese mer!",
+                textEN: "Registration already available, click here to read more!",
                 actionName: "notifyNewWithLink"
             })
         }
@@ -91,30 +91,27 @@ export default function sortEvents({events, slow, notify}: sortEventsProps): Sor
  * 
  * @returns Events that need to go to slowMonitored.json
  */
-export function sortNotified({events, notify}: sortEventsProps) {
-    // Defines array for events to be slowmonitored
-    const slow: DetailedEvent[] = []
+export function sortNotified({ events, notify }: sortEventsProps) {
+    const slow: GetEventProps[] = []
+    if (!events || !events.length) {
+        return []
+    }
 
-    // Returns a empty array if there are no events to sort
-    if (!events || !events.length) return []
-
-    // Goes through each event
     events.forEach(event => {
         // If the user should be notified, notifies the user
         if (event.link_signup?.includes('http') && notify) {
             schedule({
-                event, 
-                textNO: "Påmelding er ute!", 
+                event,
+                textNO: "Påmelding er ute!",
                 textEN: "Registration available!",
                 actionName: "notifyLinkFound"
             })
-            
+
             // Pushes the event to the notified array
             slow.push(event)
         }
     })
 
-    // Returns the array
     return slow
 }
 
@@ -127,38 +124,36 @@ export function sortNotified({events, notify}: sortEventsProps) {
  * 
  * @returns                 Filtered object
  */
-export async function filterEvents(): Promise<EventProps[]> {
+export async function filterEvents(): Promise<GetEventProps[]> {
     try {
         // Fetches events
         const events = await fetchEvents()
 
         // Fetches slow monitored events (events where changes are unlikely)
-        const slowEvents = await readFile("slow") as DetailedEvent[]
-        
+        const slowEvents = await readFile("slow") as GetEventProps[]
+
         // Filters events to avoid multiples of the same event 
-        const filteredEvents = slowEvents.length 
+        const filteredEvents = slowEvents.length
             ? events.filter(event => !slowEvents.some(slowevents => slowevents.id === event.id))
             : events
 
         // Handles error where the filtered events are undefined
         if (!filteredEvents) {
             handleError({
-                file: "filterEvents", 
+                file: "filterEvents",
                 error: "filteredEvents is undefined"
             })
             return []
         }
-        // returns filtered events
+
         return filteredEvents
-    
-    // Catches and handles any unknown errors
     } catch (error) {
-        handleError({file: "filterEvents", error: error})
+        handleError({ file: "filterEvents", error: error })
         return []
     }
 }
 
-function Includes({events, id}: IncludesProps) {
+function Includes({ events, id }: IncludesProps) {
     for (const event of events) {
         if (Number(event.id) === id) {
             return true

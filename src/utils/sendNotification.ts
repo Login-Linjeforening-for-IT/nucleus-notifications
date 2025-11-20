@@ -1,16 +1,16 @@
 import admin from 'firebase-admin'
-import { Message, getMessaging } from "firebase-admin/messaging"
-import handleNestedObjects from "./stringifyNestedObjects.js"
-import SERVICE_ACCOUNT from '../config.js'
+import { type Message, getMessaging } from "firebase-admin/messaging"
+import handleNestedObjects from "./stringifyNestedObjects.ts"
+import config from '#config'
 
 admin.initializeApp({
-    credential: admin.credential.cert(SERVICE_ACCOUNT)
+    credential: admin.credential.cert(config.service_account)
 })
 
 type sendNotificationProps = {
     title: string
     body: string
-    screen?: DetailedEvent | DetailedAd
+    screen?: GetEventProps | DetailedAd
     topic?: string
 }
 
@@ -26,11 +26,6 @@ export default async function sendNotification({ title, body, screen, topic }: s
         // Sets the topic to maintenance if the topic is not available
         if (!topic || !stable) {
             topic = "maintenance"
-        }
-
-        // Change the id to string if screen is defined
-        if (screen) {
-            screen.id = screen.id.toString()
         }
 
         const data: any = handleNestedObjects(screen)

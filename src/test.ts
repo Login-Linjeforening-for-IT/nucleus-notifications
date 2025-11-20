@@ -1,6 +1,6 @@
-import nucleusNotifications from "./nucleusNotifications.js"
-import slowMonitored from "./slowMonitored.js"
-import { createPath } from "./functions/file.js"
+import nucleusNotifications from "./nucleusNotifications.ts"
+import slowMonitored from "./slowMonitored.ts"
+import { createPath } from "./utils/file.ts"
 
 /**
  * Test function for the repository. Will run for 5 minutes then put the
@@ -18,11 +18,11 @@ export default async function test() {
     const time = new Date()
     const hoursToUTC = time.getTimezoneOffset() / 60
 
-    time.setHours(hoursToUTC < 0 
+    time.setHours(hoursToUTC < 0
         ? time.getHours() + Math.abs(hoursToUTC)
         : time.getHours() + hoursToUTC
     )
-        
+
     // Writes startTime to file
     globalThis.stable = false
     globalThis.startTime = time.toISOString()
@@ -35,22 +35,20 @@ export default async function test() {
 
         // Increases count
         testCount++
-    
+
         // Times out for 1 minute between each run to ensure stability
         await new Promise(resolve => setTimeout(resolve, 60000))
 
-    // Runs 5 times before continuing
+        // Runs 5 times before continuing
     } while (testCount < 5)
 
     // Sets stable as true as it has run both functions 5 times without issues.
     globalThis.stable = true
 
     // Logs success
-    createPath({path: '/tmp/ready.txt'})
-    createPath({path: '/tmp/healthy.txt'})
+    createPath({ path: '/tmp/ready.txt' })
+    createPath({ path: '/tmp/healthy.txt' })
     console.log("No errors found. Putting repository into production.")
 }
 
 test()
-
-// temp

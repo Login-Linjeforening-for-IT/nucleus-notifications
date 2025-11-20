@@ -1,4 +1,4 @@
-import handleError, { fixJSONContent } from "./error.js"
+import handleError, { fixJSONContent } from "./error.ts"
 import fs, { promises } from 'fs'
 
 type writeFileProps = {
@@ -30,20 +30,20 @@ type createPathProps = {
  */
 export default function file(file: string): string {
     switch (file) {
-        case "10m":         return 'dist/src/data/intervals/events/10m.json'
-        case "30m":         return 'dist/src/data/intervals/events/30m.json'
-        case "1h":          return 'dist/src/data/intervals/events/1h.json'
-        case "2h":          return 'dist/src/data/intervals/events/2h.json'
-        case "3h":          return 'dist/src/data/intervals/events/3h.json'
-        case "6h":          return 'dist/src/data/intervals/events/6h.json'
-        case "1d":          return 'dist/src/data/intervals/events/1d.json'
-        case "2d":          return 'dist/src/data/intervals/events/2d.json'
-        case "1w":          return 'dist/src/data/intervals/events/1w.json'
-        case "a2h":         return 'dist/src/data/intervals/ads/2h.json'
-        case "a6h":         return 'dist/src/data/intervals/ads/6h.json'
-        case "a24h":        return 'dist/src/data/intervals/ads/24h.json'
-        case "notified":    return 'dist/src/data/notifiedEvents.json'
-        case "slow":        return 'dist/src/data/slowMonitored.json'
+        case "10m":         return 'data/intervals/events/10m.json'
+        case "30m":         return 'data/intervals/events/30m.json'
+        case "1h":          return 'data/intervals/events/1h.json'
+        case "2h":          return 'data/intervals/events/2h.json'
+        case "3h":          return 'data/intervals/events/3h.json'
+        case "6h":          return 'data/intervals/events/6h.json'
+        case "1d":          return 'data/intervals/events/1d.json'
+        case "2d":          return 'data/intervals/events/2d.json'
+        case "1w":          return 'data/intervals/events/1w.json'
+        case "a2h":         return 'data/intervals/ads/2h.json'
+        case "a6h":         return 'data/intervals/ads/6h.json'
+        case "a24h":        return 'data/intervals/ads/24h.json'
+        case "notified":    return 'data/notifiedEvents.json'
+        case "slow":        return 'data/slowMonitored.json'
 
         default: {
             handleError({file: "file", error: `Invalid file argument in file.ts: ${file}`})
@@ -141,18 +141,18 @@ export async function readFile(arg: string, stop?: boolean): Promise<unknown> {
 }
 
 export async function createPath({ path }: createPathProps) {
-    const cwd = process.cwd();
-    const fullPath = `${cwd}${path}`;
-    const entries = fullPath.split('/');
-    let currentPath = '';
+    const cwd = process.cwd()
+    const fullPath = `${cwd}${path}`
+    const entries = fullPath.split('/')
+    let currentPath = ''
 
     for (let i = 1; i < entries.length; i++) {
-        currentPath += `/${entries[i]}`;
+        currentPath += `/${entries[i]}`
         try {
-            await createFileOrFolder({ entry: currentPath });
+            await createFileOrFolder({ entry: currentPath })
         } catch (error) {
-            console.error(`Failed to create entry ${currentPath}:`, error);
-            return;
+            console.error(`Failed to create entry ${currentPath}:`, error)
+            return
         }
     }
 }
@@ -161,29 +161,32 @@ async function createFileOrFolder({ entry }: createFileOrFolderProps) {
     try {
         if (entry.includes('.')) {
             try {
-                await promises.access(entry);
+                await promises.access(entry)
             } catch (error) {
-                await promises.writeFile(entry, '[]');
-                console.log(`File created: ${entry}`);
+                await promises.writeFile(entry, '[]')
+                console.log(`File created: ${entry}`)
             }
         } else {
             try {
-                await promises.access(entry);
+                await promises.access(entry)
             } catch (error) {
-                await promises.mkdir(entry, { recursive: true });
-                console.log(`Folder created: ${entry}`);
+                await promises.mkdir(entry, { recursive: true })
+                console.log(`Folder created: ${entry}`)
             }
         }
     } catch (error) {
-        throw new Error(`Failed to create ${entry}: ${error}`);
+        throw new Error(`Failed to create ${entry}: ${error}`)
     }
 }
 
 export function removeHealthyFile() {
-    const healthyFilePath = './tmp/healthy.txt';
+    const healthyFilePath = './tmp/healthy.txt'
     
     fs.unlink(healthyFilePath, (err) => {
-        if (err) throw err;
-        console.log('Healthy file removed successfully.');
-    });
+        if (err) {
+            throw err
+        }
+
+        console.log('Healthy file removed successfully.')
+    })
 }

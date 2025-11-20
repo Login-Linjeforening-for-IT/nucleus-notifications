@@ -1,17 +1,17 @@
-import { readFile, writeFile } from './file.js'
+import { readFile, writeFile } from './file.ts'
 
 type storeNewAndRemoveOldEventsProps = {
-    events: DetailedEvent[]
-    notified: DetailedEvent[]
-    slow: DetailedEvent[]
+    events: GetEventProps[]
+    notified: GetEventProps[]
+    slow: GetEventProps[]
 }
 
 type storeNotifiedProps = {
-    events: DetailedEvent[]
+    events: GetEventProps[]
 }
 
 type storeSlowMonitoredProps = {
-    events: DetailedEvent[]
+    events: GetEventProps[]
     overwrite?: boolean
 }
 
@@ -25,18 +25,18 @@ type storeSlowMonitoredProps = {
  * @see storeNotified(...)      Writes to notifiedEvents.json
  * @see storeSlowMonitored(...) Writes to slowMonitored.json
  */
-export default function storeNewAndRemoveOldEvents({events, notified, slow}: storeNewAndRemoveOldEventsProps): void {
+export default function storeNewAndRemoveOldEvents({ events, notified, slow }: storeNewAndRemoveOldEventsProps): void {
     // Logs for easy scanning of the console
     console.log("Stored new events, and removed events that have already taken place.")
     console.log(`events ${events.length} notified ${notified.length}, slowmonitored ${slow.length}`)
-    
+
     // Defines the events to be added to each file
     const newNotifiedEvents = notified.filter(event => events.some(APIevent => APIevent.id === event.id))
     const newSlowEvents = slow.filter(slow => events.some(APIevent => APIevent.id === slow.id))
 
     // Stores each event in its appropriate file
-    storeNotified({events: newNotifiedEvents})
-    storeSlowMonitored({events: newSlowEvents})
+    storeNotified({ events: newNotifiedEvents })
+    storeSlowMonitored({ events: newSlowEvents })
 }
 
 /**
@@ -48,14 +48,14 @@ export default function storeNewAndRemoveOldEvents({events, notified, slow}: sto
  * @see handleError(...)    Notifies the maintenance team of any error that occurs
  * @see writeFile(...)      Writes given content to given file
  */
-export function storeNotified({events}: storeNotifiedProps) {
+export function storeNotified({ events }: storeNotifiedProps) {
     // Removes duplicates
     const unique = events.filter((event, index) => {
         return events.findIndex(obj => obj.id === event.id) === index
     })
 
     // Writes events to file
-    writeFile({fileName: "notified", content: unique})
+    writeFile({ fileName: "notified", content: unique })
 }
 
 /**
@@ -68,17 +68,17 @@ export function storeNotified({events}: storeNotifiedProps) {
  * @see writeFile(...)          Writes given content to given file
  * @see readFile(...)           Reads content of given file
  */
-export async function storeSlowMonitored({events, overwrite}: storeSlowMonitoredProps): Promise<void> {
+export async function storeSlowMonitored({ events, overwrite }: storeSlowMonitoredProps): Promise<void> {
     // Writes events to file
-    if (overwrite) return writeFile({fileName: "slow", content: events})
-    
+    if (overwrite) return writeFile({ fileName: "slow", content: events })
+
     // Adds new events to array of slowmonitored events
-    const slowEvents = await readFile("slow") as DetailedEvent[]
+    const slowEvents = await readFile("slow") as GetEventProps[]
     const allevents = slowEvents.length > 0 ? slowEvents.concat(events) : events
 
     // Removes duplicates
-    const filteredEvents = allevents.filter((event: DetailedEvent, index: number) => {
-        return allevents.findIndex((obj: DetailedEvent) => obj.id === event.id) === index
+    const filteredEvents = allevents.filter((event: GetEventProps, index: number) => {
+        return allevents.findIndex((obj: GetEventProps) => obj.id === event.id) === index
     })
 
     // Returns if there is nothing to store
@@ -87,5 +87,5 @@ export async function storeSlowMonitored({events, overwrite}: storeSlowMonitored
     }
 
     // Writes filteredEvents to file
-    return writeFile({fileName: "slow", content: filteredEvents})
+    return writeFile({ fileName: "slow", content: filteredEvents })
 }

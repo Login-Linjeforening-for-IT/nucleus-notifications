@@ -1,37 +1,29 @@
-import { filterEvents } from "./sort.js"
-import handleError from "./error.js"
-
-const api = "https://workerbee.login.no/api/"
-const testapi = "https://testapi.login.no/api/"
+import { filterEvents } from "./sort.ts"
+import handleError from "./error.ts"
+import config from '#config'
 
 /**
  * Fetches api and returns events
  * 
- * @see handleError(...)    Schedule notifications instantly
+ * @see handleError(...) Schedule notifications instantly
  * 
  * @returns Events
  */
-export default async function fetchEvents(): Promise<EventProps[]> {
+export default async function fetchEvents(): Promise<GetEventProps[]> {
     try {
         // Fetches events
-        const response = await fetch(`${api}events`)
+        const response = await fetch(`${config.api}/events`)
 
         // Test API
-        // const response = await fetch(`${testapi}events`)
+        // const response = await fetch(`${config.testapi}events`)
 
         // Turns the text response into a json object
-        const events = await response.json() as EventProps[]
-
-        // Handles case where the response is recieved, but undefined.
-        if (!events) {
-            handleError({ file: "fetch", error: "Event response from API is undefined" })
+        const data = await response.json() as GetEventsProps
+        if (!data.events) {
             return []
         }
 
-        // Returns events if everything has successfull
-        return events
-
-        // Catches and handles unknown errors
+        return data.events
     } catch (error: any) {
         handleError({ file: "fetchEvents", error })
         return []
@@ -41,31 +33,25 @@ export default async function fetchEvents(): Promise<EventProps[]> {
 /**
  * Fetches api and returns events
  * 
- * @see handleError(...)    Schedule notifications instantly
+ * @see handleError(...) Schedule notifications instantly
  * 
  * @returns Events
  */
 export async function fetchAds(): Promise<AdProps[]> {
     try {
         // Prod
-        const response = await fetch(`${api}jobs/`)
+        const response = await fetch(`${config.api}/jobs`)
 
         // Dev
-        // const response = await fetch(`${testapi}jobs/`)
+        // const response = await fetch(`${config.testapi}jobs/`)
 
         // Turns the text response into a json object
-        const ads = await response.json() as AdProps[]
-
-        // Handles case where the response is recieved, but undefined.
-        if (!ads) {
-            handleError({ file: "fetch", error: "Ad response from API is undefined" })
+        const data = await response.json() as GetJobsProps
+        if (!data.jobs) {
             return []
         }
 
-        // Returns events if everything has successfull
-        return ads
-
-        // Catches and handles unknown errors
+        return data.jobs
     } catch (error: any) {
         handleError({ file: "fetch", error })
         return []
@@ -81,13 +67,13 @@ export async function fetchAds(): Promise<AdProps[]> {
  * 
  * @returns All details for passed event
  */
-export async function fetchEventDetails(event: EventProps): Promise<DetailedEvent | undefined> {
+export async function fetchEventDetails(event: GetEventProps): Promise<GetEventProps | undefined> {
     // Prod API
-    const response = await fetch(`${api}events/${event.id}`)
+    const response = await fetch(`${config.api}/events/${event.id}`)
 
     // Test API
     // const response = await fetch(`${testapi}events/${event.id}`)
-    const eventDetails = await response.json() as DetailedEventResponse
+    const eventDetails = await response.json() as GetEventProps
 
     // Handles error where details are not available
     if (!eventDetails) return handleError({
@@ -96,12 +82,7 @@ export async function fetchEventDetails(event: EventProps): Promise<DetailedEven
     })
 
     // Returns the event as an object, with details attached
-    return {
-        ...event,
-        ...eventDetails.event,
-        category_name_no: eventDetails.category.name_no,
-        category_name_en: eventDetails.category.name_en
-    }
+    return { ...event, ...eventDetails }
 }
 
 /**
@@ -115,7 +96,7 @@ export async function fetchEventDetails(event: EventProps): Promise<DetailedEven
  */
 export async function fetchAdDetails(ad: AdProps) {
     // Prod API
-    const response = await fetch(`${api}jobs/${ad.id}`)
+    const response = await fetch(`${config.api}/jobs/${ad.id}`)
 
     // Test API
     // const response = await fetch(`${testapi}jobs/${ad.id}`)
@@ -137,18 +118,16 @@ export async function fetchAdDetails(ad: AdProps) {
  * @param {object} unfiltered   Boolean option for unfiltered
  * 
  * @see fetchEventDetails(...)  Fetches details for each event
- * @see filterEvents()       Filters events based on their properties
- * @see fetchEvents()        Fetches all events
+ * @see filterEvents()          Filters events based on their properties
+ * @see fetchEvents()           Fetches all events
  * @see handleError(...)        Notifies the maintenance team of any error
  * 
  * @returns All events with all details
  */
-export async function detailedEvents(unfiltered?: boolean): Promise<DetailedEvent[]> {
-
-    // Option to return unfiltered events
+export async function detailedEvents(unfiltered?: boolean): Promise<GetEventProps[]> {
     if (unfiltered) {
         const events = await fetchEvents()
-        const detailedEvents = await Promise.all(events.map(fetchEventDetails)) as DetailedEvent[]
+        const detailedEvents = await Promise.all(events.map(fetchEventDetails)) as GetEventProps[]
 
         if (!detailedEvents) {
             handleError({ file: "detailedEvents", error: "detailedEvents is undefined" })
@@ -160,7 +139,7 @@ export async function detailedEvents(unfiltered?: boolean): Promise<DetailedEven
     }
 
     const events = await filterEvents()
-    const detailedEvents = await Promise.all(events.map(fetchEventDetails)) as DetailedEvent[]
+    const detailedEvents = await Promise.all(events.map(fetchEventDetails)) as GetEventProps[]
 
     if (!detailedEvents) {
         handleError({ file: "detailedEvents", error: "detailedEvents is undefined" })
@@ -178,8 +157,8 @@ export async function detailedEvents(unfiltered?: boolean): Promise<DetailedEven
  * 
  * @returns {string} Emoji
  */
-export function fetchEmoji(event: EventProps | DetailedEvent): string {
-    switch ((event.category_name_no).toLowerCase()) {
+export function fetchEmoji(event: GetEventProps): string {
+    switch ((event.category.name_no).toLowerCase()) {
         case 'tekkom': return '🍕'
         case 'karrieredag': return '👩‍🎓'
         case 'ctf': return '🧑‍💻'
@@ -189,7 +168,7 @@ export function fetchEmoji(event: EventProps | DetailedEvent): string {
         case 'login': return '🚨'
     }
 
-    switch ((event.category_name_en).toLowerCase()) {
+    switch ((event.category.name_en).toLowerCase()) {
         case 'tekkom': return '🍕'
         case 'career_day': return '👩‍🎓'
         case 'ctf': return '🧑‍💻'
@@ -211,8 +190,7 @@ export function fetchEmoji(event: EventProps | DetailedEvent): string {
  * 
  * @returns {number} Seconds till event
  */
-export function timeToEvent(item: DetailedEvent | DetailedAd): number {
-    // Current full date
+export function timeToEvent(item: GetEventProps | DetailedAd): number {
     const currentTime = new Date()
     let startTime = new Date()
 
@@ -226,7 +204,9 @@ export function timeToEvent(item: DetailedEvent | DetailedAd): number {
     const seconds = (startTime.getTime() - currentTime.getTime()) / 1000
 
     // Checks for and subtracts one hour during the winter
-    if (!isDaylightSavingTime()) return seconds - 3600
+    if (!isDaylightSavingTime()) {
+        return seconds - 3600
+    }
 
     return seconds
 }
@@ -241,5 +221,5 @@ export function timeToEvent(item: DetailedEvent | DetailedAd): number {
 export function isDaylightSavingTime(date: Date = new Date()): boolean {
     const dstStart = new Date(date.getFullYear(), 2, 31)
     const dstEnd = new Date(date.getFullYear(), 9, 27)
-    return date > dstStart && date < dstEnd;
+    return date > dstStart && date < dstEnd
 }

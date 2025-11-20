@@ -1,8 +1,8 @@
-import { detailedEvents, fetchAdDetails, fetchAds, timeToEvent } from "./fetch.js"
-import sendNotification from "./sendNotification.js"
-import { readFile, writeFile } from "./file.js"
-import sortEvents from "./sort.js"
-import { removeHealthyFile } from "./file.js"
+import { detailedEvents, fetchAdDetails, fetchAds, timeToEvent } from "./fetch.ts"
+import sendNotification from "./sendNotification.ts"
+import { readFile, writeFile } from "./file.ts"
+import sortEvents from "./sort.ts"
+import { removeHealthyFile } from "./file.ts"
 
 type handleErrorProps = {
     file: string
@@ -21,30 +21,31 @@ type handleErrorProps = {
  * 
  * @returns {undefined}
  */
-export default function handleError({file, error, topic}: handleErrorProps): undefined {
+export default function handleError({ file, error, topic }: handleErrorProps): undefined {
     // Removes healthy file indicating that the service is no longer healthy and should be restarted
     removeHealthyFile()
 
     // Checks if the error is a SyntaxError
     if (error instanceof SyntaxError) {
         // @ts-expect-error
-        console.error("SyntaxError details:", error.message, "at position", error.position);
+        console.error("SyntaxError details:", error.message, "at position", error.position)
         // @ts-expect-error
-        sendNotification({title: `SyntaxError in ${file}`, body: `Name: ${error.name}, Message: ${error}, Position: ${error.position}, Stack: ${error.stack}`, topic: topic ? topic : "maintenance"})
+        sendNotification({ title: `SyntaxError in ${file}`, body: `Name: ${error.name}, Message: ${error}, Position: ${error.position}, Stack: ${error.stack}`, topic: topic ? topic : "maintenance" })
     } else if (typeof error === "string") {
-        console.error(`Error in ${file}:`, error);
+        console.error(`Error in ${file}:`, error)
     } else {
         // @ts-expect-error
-        console.error(`Error in ${file}`, `Name: ${error.name}, Message: ${error}, Stack: ${error.stack}`);
+        console.error(`Error in ${file}`, `Name: ${error.name}, Message: ${error}, Stack: ${error.stack}`)
         // Sends a notification in the app containing the error to users with the
         // maintenance topic enabled.
         // @ts-expect-error
-        sendNotification({title: `Error in ${file}`, body: `Name: ${error.name}, Message: ${error}, Stack: ${error.stack}`, topic: topic ? topic : "maintenance"})
+        sendNotification({ title: `Error in ${file}`, body: `Name: ${error.name}, Message: ${error}, Stack: ${error.stack}`, topic: topic ? topic : "maintenance" })
     }
 
-    
     // Continues with undefined to try executing the rest of the file
-    if (stable) return undefined
+    if (stable) {
+        return undefined
+    }
 
     // Terminates the program if it is not stable
     console.log(`Terminated due to error in file: ${file}, ${error}`)
@@ -71,52 +72,56 @@ export default function handleError({file, error, topic}: handleErrorProps): und
  */
 export async function fixJSONContent(arg: string, error: unknown) {
     // Minutes elapsed since function was entered
-    let minutesElapsed = 0 
+    let minutesElapsed = 0
 
     // Console logs the file with malformed json content, and the current time
     console.log(`Trying to fix malformed json content in ${arg} at ${new Date().toISOString()}\nError: ${error}`)
 
     // Notifies the maintenance team with file that has malformed json content, and the current time
-    sendNotification({title: `Trying to fix malformed json in ${arg}`, body: `Failed to parse json content in ${arg} at ${new Date().toISOString()}\nError: ${error}`})
+    sendNotification({ title: `Trying to fix malformed json in ${arg}`, body: `Failed to parse json content in ${arg} at ${new Date().toISOString()}\nError: ${error}` })
 
     // Boolean for if the issue has been fixed
     let issueFixed = false
 
     // Defines the fix loop
-    do {
+    while (!issueFixed) {
         // 1 minute timeout after each time the function has run
-        if (minutesElapsed) await new Promise(resolve => setTimeout(resolve, 60000))
-    
+        if (minutesElapsed) {
+            await new Promise(resolve => setTimeout(resolve, 60000))
+        }
+
         // Checks which file has malformed json input, as each file can be
         // fixed in different ways, tailored to the function of that file.    
-        switch(arg) {
+        switch (arg) {
             // Fixes malformed json content in notified.json
             case "notified": {
                 // Defines notified events, and full list of events
-                const notified: DetailedEvent[] = []
+                const notified: GetEventProps[] = []
                 const events = await detailedEvents(true)
 
                 // Notifies maintenance team that there is an error in error.ts,
                 // saying that events are undefined in slow.json
-                if (!events) handleError({file: "error.ts", error: `Unable to fix json content in ${arg}, events is undefined`})
+                if (!events) handleError({ file: "error.ts", error: `Unable to fix json content in ${arg}, events is undefined` })
 
                 // Sorts out events that should not be in notified.json
-                const obj = sortEvents({events})
+                const obj = sortEvents({ events })
 
                 // Pushes all notified events to the notified array
-                obj.notified.forEach((event: DetailedEvent) => {notified.push(event)})
+                obj.notified.forEach((event: GetEventProps) => { notified.push(event) })
 
                 // Writes notified array to file
-                writeFile({fileName: arg, content: notified})
+                writeFile({ fileName: arg, content: notified })
 
                 // Defines the fix variable equal to if the file was read successfully
                 const fix = await readFile("notified")
 
                 // If the file was read successfully the issue is likely resolved
-                if (fix) issueFixed = true
-
-                // Otherwise notifies maintenance team that the file is still unreadable
-                else handleError({file: "error.ts", error: `Fixing malformed json content in ${arg} failed because the file is still unreadable. Attempt: ${minutesElapsed}. Trying again in 1 minute.`})
+                if (fix) {
+                    issueFixed = true
+                } else {
+                    // Otherwise notifies maintenance team that the file is still unreadable
+                    handleError({ file: "error.ts", error: `Fixing malformed json content in ${arg} failed because the file is still unreadable. Attempt: ${minutesElapsed}. Trying again in 1 minute.` })
+                }
 
                 // Breaks the function as the next case is not relevant
                 break
@@ -126,36 +131,38 @@ export async function fixJSONContent(arg: string, error: unknown) {
             case "slow": {
                 try {
                     // Defines slow events, and full list of events
-                    const slow: DetailedEvent[] = []
+                    const slow: GetEventProps[] = []
                     const events = await detailedEvents(true)
-                    
+
                     // Notifies maintenance team that there is an error in 
                     // error.ts, saying that events are undefined in slow.json
                     if (!events) handleError({
-                        file: "error.ts", 
+                        file: "error.ts",
                         error: `Unable to fix malformed json content in ${arg}, events is undefined`
                     })
 
                     // Sorts out events that should not be in slow.json
-                    const obj = sortEvents({events})
+                    const obj = sortEvents({ events })
 
                     // Pushes all slow events to the slow array
-                    obj.slow.forEach(event => {slow.push(event)})
-                    
+                    obj.slow.forEach(event => { slow.push(event) })
+
                     // Writes slow array to file
-                    writeFile({fileName: arg, content: slow})
+                    writeFile({ fileName: arg, content: slow })
 
                     // Defines the fix variable equal to if the file was written successfully
                     const fix = await readFile("slow")
 
                     // If the file was read successfully the issue is likely resolved
-                    if (fix) issueFixed = true
+                    if (fix) {
+                        issueFixed = true
+                    } {
+                        // Otherwise notifies maintenance team that the file is still unreadable
+                        handleError({ file: "error.ts", error: `Fixing malformed json content in ${arg} failed because the file is still unreadable. Attempt: ${minutesElapsed}. Trying again in 1 minute.` })
+                    }
 
-                    // Otherwise notifies maintenance team that the file is still unreadable
-                    else handleError({file: "error.ts", error: `Fixing malformed json content in ${arg} failed because the file is still unreadable. Attempt: ${minutesElapsed}. Trying again in 1 minute.`})
-                
-                // Notifies maintenance team of any unknown errors
-                } catch (error) {handleError({file: "error.ts", error: error})}
+                    // Notifies maintenance team of any unknown errors
+                } catch (error) { handleError({ file: "error.ts", error: error }) }
 
                 // Breaks the function as the next case is not relevant
                 break
@@ -163,10 +170,7 @@ export async function fixJSONContent(arg: string, error: unknown) {
 
             // Fixes all interval files by default
             default: {
-                // Fetches events
                 const events = await detailedEvents(true)
-                
-                // Fetches ads
                 const APIundetailedAds = await fetchAds()
                 const APIads = [] as DetailedAd[]
 
@@ -179,20 +183,20 @@ export async function fixJSONContent(arg: string, error: unknown) {
 
                 // Notifies maintenance team that interval files with malformed json content are unfixable
                 if (!events) handleError({
-                    file: "error.ts", 
+                    file: "error.ts",
                     error: `Unable to fix malformed json in interval files, events is undefined`
                 })
 
                 // Declaring new intervals events
-                const new10m: DetailedEvent[] = []
-                const new30m: DetailedEvent[] = []
-                const new1h: DetailedEvent[] = []
-                const new2h: DetailedEvent[] = []
-                const new3h: DetailedEvent[] = []
-                const new6h: DetailedEvent[] = []
-                const new1d: DetailedEvent[] = []
-                const new2d: DetailedEvent[] = []
-                const new1w: DetailedEvent[] = []
+                const new10m: GetEventProps[] = []
+                const new30m: GetEventProps[] = []
+                const new1h: GetEventProps[] = []
+                const new2h: GetEventProps[] = []
+                const new3h: GetEventProps[] = []
+                const new6h: GetEventProps[] = []
+                const new1d: GetEventProps[] = []
+                const new2d: GetEventProps[] = []
+                const new1w: GetEventProps[] = []
 
                 // Declaring new intervals for ads
                 const newA2H: DetailedAd[] = []
@@ -221,22 +225,26 @@ export async function fixJSONContent(arg: string, error: unknown) {
                     const time = timeToEvent(ad)
 
                     // Adds each event to the appropriate array
-                    if (time <= 172800 && time > 86400) newA24H.push(ad)
-                    else if (time <= 10800 && time > 7200) newA2H.push(ad)
-                    else if (time <= 86400 && time > 21600) newA6H.push(ad)
+                    if (time <= 172800 && time > 86400) {
+                        newA24H.push(ad)
+                    } else if (time <= 10800 && time > 7200) {
+                        newA2H.push(ad)
+                    } else if (time <= 86400 && time > 21600) {
+                        newA6H.push(ad)
+                    }
                 })
-    
+
                 // Stores events in proper files
-                writeFile({fileName: "1w", content: new1w})
-                writeFile({fileName: "2d", content: new2d})
-                writeFile({fileName: "1d", content: new1d})
-                writeFile({fileName: "6h", content: new6h})
-                writeFile({fileName: "3h", content: new3h})
-                writeFile({fileName: "2h", content: new2h})
-                writeFile({fileName: "1h", content: new1h})
-                writeFile({fileName: "30m", content: new30m})
-                writeFile({fileName: "10m", content: new10m})
-            
+                writeFile({ fileName: "1w", content: new1w })
+                writeFile({ fileName: "2d", content: new2d })
+                writeFile({ fileName: "1d", content: new1d })
+                writeFile({ fileName: "6h", content: new6h })
+                writeFile({ fileName: "3h", content: new3h })
+                writeFile({ fileName: "2h", content: new2h })
+                writeFile({ fileName: "1h", content: new1h })
+                writeFile({ fileName: "30m", content: new30m })
+                writeFile({ fileName: "10m", content: new10m })
+
                 /**
                  * If the file is readable we view the issue as resolved. We
                  * could also check that the file is parsable, but if it is not
@@ -246,30 +254,34 @@ export async function fixJSONContent(arg: string, error: unknown) {
                  * fix the broken ones when necesarry.
                  */
                 const fix = await readFile(arg)
-                if (fix) issueFixed = true
-
-                // Otherwise notifies maintenance team that the file is still unparsable
-                else handleError({
-                    file: "error.ts", 
-                    error: `Fixing malformed json content in ${arg} failed because the file is still unreadable. Attempt: ${minutesElapsed}. Trying again in 1 minute.`
-                })
+                if (fix) {
+                    issueFixed = true
+                } else {
+                    // Otherwise notifies maintenance team that the file is still unparsable
+                    handleError({
+                        file: "error.ts",
+                        error: `Fixing malformed json content in ${arg} failed because the file is still unreadable. Attempt: ${minutesElapsed}. Trying again in 1 minute.`
+                    })
+                }
             }
         }
 
         // Notifies maintenance team of malformed json file lasting 5 minutes, 10 minutes, and every 10 minutes afterwards
-        if (minutesElapsed == 5 || (minutesElapsed >= 10 && minutesElapsed % 10 == 0)) handleError({
-            file: "error.ts", 
-            error: `Trying to fix malformed json content in ${arg} for ${minutesElapsed} minutes unsuccessfully.`
-        })
-        
+        if (minutesElapsed == 5 || (minutesElapsed >= 10 && minutesElapsed % 10 == 0)) {
+            handleError({
+                file: "error.ts",
+                error: `Trying to fix malformed json content in ${arg} for ${minutesElapsed} minutes unsuccessfully.`
+            })
+        }
+
         // Increases minutes elapsed
         minutesElapsed++
-    
-    // Continues till the issue is resolved
-    } while (!issueFixed)
+
+        // Continues till the issue is resolved
+    }
 
     // Info about the time it took to fix the malformed json content
     const body = `Fixed malformed json content in ${arg} ${minutesElapsed <= 1 ? 'in less than a minute.' : `after ${minutesElapsed} minutes.`}`
 
-    sendNotification({title: "error.ts", body})
+    sendNotification({ title: "error.ts", body })
 }
