@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 
 # Installs required dependencies
-RUN npm install
+RUN npm ci
 
 # Copies contents
 COPY . .
