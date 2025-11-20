@@ -24,16 +24,16 @@ export default async function fetchEvents(): Promise<EventProps[]> {
 
         // Handles case where the response is recieved, but undefined.
         if (!events) {
-            handleError({file: "fetch", error: "Event response from API is undefined"})
+            handleError({ file: "fetch", error: "Event response from API is undefined" })
             return []
         }
 
         // Returns events if everything has successfull
         return events
 
-    // Catches and handles unknown errors
+        // Catches and handles unknown errors
     } catch (error: any) {
-        handleError({file: "fetchEvents", error})
+        handleError({ file: "fetchEvents", error })
         return []
     }
 }
@@ -58,16 +58,16 @@ export async function fetchAds(): Promise<AdProps[]> {
 
         // Handles case where the response is recieved, but undefined.
         if (!ads) {
-            handleError({file: "fetch", error: "Ad response from API is undefined"})
+            handleError({ file: "fetch", error: "Ad response from API is undefined" })
             return []
         }
 
         // Returns events if everything has successfull
         return ads
 
-    // Catches and handles unknown errors
+        // Catches and handles unknown errors
     } catch (error: any) {
-        handleError({file: "fetch", error})
+        handleError({ file: "fetch", error })
         return []
     }
 }
@@ -91,14 +91,14 @@ export async function fetchEventDetails(event: EventProps): Promise<DetailedEven
 
     // Handles error where details are not available
     if (!eventDetails) return handleError({
-        file: "fetchEventDetails", 
+        file: "fetchEventDetails",
         error: `Event ${event} has undefined details`
     })
-    
+
     // Returns the event as an object, with details attached
     return {
         ...event,
-        ...eventDetails.event, 
+        ...eventDetails.event,
         category_name_no: eventDetails.category.name_no,
         category_name_en: eventDetails.category.name_en
     }
@@ -123,12 +123,12 @@ export async function fetchAdDetails(ad: AdProps) {
 
     // Handles error where details are not available
     if (!adDetails) return handleError({
-        file: "fetchAdDetails", 
+        file: "fetchAdDetails",
         error: `Ad ${ad} has undefined details`
     })
-    
+
     // Returns the event as an object, with details attached
-    return {...ad, ...adDetails}
+    return { ...ad, ...adDetails }
 }
 
 /**
@@ -149,9 +149,9 @@ export async function detailedEvents(unfiltered?: boolean): Promise<DetailedEven
     if (unfiltered) {
         const events = await fetchEvents()
         const detailedEvents = await Promise.all(events.map(fetchEventDetails)) as DetailedEvent[]
-        
+
         if (!detailedEvents) {
-            handleError({file: "detailedEvents", error: "detailedEvents is undefined"})
+            handleError({ file: "detailedEvents", error: "detailedEvents is undefined" })
             return []
         }
 
@@ -161,9 +161,9 @@ export async function detailedEvents(unfiltered?: boolean): Promise<DetailedEven
 
     const events = await filterEvents()
     const detailedEvents = await Promise.all(events.map(fetchEventDetails)) as DetailedEvent[]
-   
+
     if (!detailedEvents) {
-        handleError({file: "detailedEvents", error: "detailedEvents is undefined"})
+        handleError({ file: "detailedEvents", error: "detailedEvents is undefined" })
         return []
     }
 
@@ -180,23 +180,23 @@ export async function detailedEvents(unfiltered?: boolean): Promise<DetailedEven
  */
 export function fetchEmoji(event: EventProps | DetailedEvent): string {
     switch ((event.category_name_no).toLowerCase()) {
-        case 'tekkom':        return '🍕'
-        case 'karrieredag':   return '👩‍🎓'
-        case 'ctf':           return '🧑‍💻'
-        case 'fadderuka':     return '🍹'
-        case 'social':        return '🥳'
-        case 'bedpres':       return '👩‍💼'
-        case 'login':         return '🚨'
+        case 'tekkom': return '🍕'
+        case 'karrieredag': return '👩‍🎓'
+        case 'ctf': return '🧑‍💻'
+        case 'fadderuka': return '🍹'
+        case 'social': return '🥳'
+        case 'bedpres': return '👩‍💼'
+        case 'login': return '🚨'
     }
 
     switch ((event.category_name_en).toLowerCase()) {
-        case 'tekkom':        return '🍕'
-        case 'career_day':    return '👩‍🎓'
-        case 'ctf':           return '🧑‍💻'
-        case 'fadderuka':     return '🍹'
-        case 'social':        return '🥳'
-        case 'bedpres':       return '👩‍💼'
-        case 'login':         return '🚨'
+        case 'tekkom': return '🍕'
+        case 'career_day': return '👩‍🎓'
+        case 'ctf': return '🧑‍💻'
+        case 'fadderuka': return '🍹'
+        case 'social': return '🥳'
+        case 'bedpres': return '👩‍💼'
+        case 'login': return '🚨'
     }
 
     return '💻'
@@ -211,7 +211,7 @@ export function fetchEmoji(event: EventProps | DetailedEvent): string {
  * 
  * @returns {number} Seconds till event
  */
-export function timeToEvent (item: DetailedEvent | DetailedAd): number {
+export function timeToEvent(item: DetailedEvent | DetailedAd): number {
     // Current full date
     const currentTime = new Date()
     let startTime = new Date()
@@ -221,7 +221,7 @@ export function timeToEvent (item: DetailedEvent | DetailedAd): number {
     } else {
         startTime = new Date(item.time_start)
     }
-    
+
     // Subtracting and dividing from milliseconds to seconds
     const seconds = (startTime.getTime() - currentTime.getTime()) / 1000
 
