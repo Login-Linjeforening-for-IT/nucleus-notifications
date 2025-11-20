@@ -16,8 +16,6 @@
     "dependencies": {
     },
     "devDependencies": {
-        "@types/node": "^24.10.1",
-        "typescript": "^5.9.3"
     },
     "imports": {
         "#utils/*": "./src/utils/*",
