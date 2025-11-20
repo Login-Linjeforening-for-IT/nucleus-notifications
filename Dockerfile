@@ -1,5 +1,5 @@
 # Uses latest node alpine image
-FROM node:alpine
+FROM node:24-alpine
 
 # Sets the working directory
 WORKDIR /usr/src/app
